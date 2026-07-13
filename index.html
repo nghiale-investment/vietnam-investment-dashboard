@@ -521,10 +521,10 @@
         font-size: 10px;
       }
 
-      .toolbar label:nth-child(4) { grid-column: 1 / -1; }
-
       .toolbar select,
       .toolbar input {
+        width: 100%;
+        min-width: 0;
         min-height: 30px;
         padding: 5px 7px;
         font-size: 12px;
@@ -662,7 +662,14 @@
       "5-20": { short: 5, long: 20, label: "5/20" },
       "10-50": { short: 10, long: 50, label: "10/50" }
     };
+    const SECTOR_LABELS = {
+      "Consumer Staples": "Cons. Staples",
+      "Consumer Discretionary": "Cons. Disc.",
+      "Financial Services": "Fin. Services",
+      "Information Technology": "Technology"
+    };
     const state = { methodology: "flow-rotation", period: "5-20", sector: "All", search: "", tableMode: "sectors", baseDate: "" };
+    const displaySector = sector => SECTOR_LABELS[sector] || sector;
     const fmtPct = value => Number.isFinite(value) ? `${(value * 100).toFixed(1)}%` : "-";
     const fmtSignedPct = value => Number.isFinite(value) ? `${value >= 0 ? "+" : ""}${(value * 100).toFixed(1)}%` : "-";
     const fmtPp = value => Number.isFinite(value) ? `${(value * 100).toFixed(2)}pp` : "-";
@@ -880,7 +887,7 @@
       if (state.sector !== "All") {
         return {
           type: "sector",
-          title: state.sector,
+          title: displaySector(state.sector),
           tickers: [],
           stocks: model.stockStats.filter(d => d.sector === state.sector)
         };
@@ -903,12 +910,12 @@
           labelKey: "sector",
           valueFormat: fmtPp,
           rows: model.sectorStats.map(d => ({
-          label: d.sector,
+          label: displaySector(d.sector),
           value: d.delta,
           share: d.shortShare,
           periodReturn: d.periodReturn,
           clickValue: d.sector,
-          tooltip: `<strong>${d.sector}</strong><br>${short}D share ${fmtPct(d.shortShare)}<br>${long}D share ${fmtPct(d.longShare)}<br>Delta ${fmtPp(d.delta)}<br>${long}D sector return ${fmtPct(d.periodReturn)}`
+          tooltip: `<strong>${displaySector(d.sector)}</strong><br>${short}D share ${fmtPct(d.shortShare)}<br>${long}D share ${fmtPct(d.longShare)}<br>Delta ${fmtPp(d.delta)}<br>${long}D sector return ${fmtPct(d.periodReturn)}`
         }))
         };
       }
@@ -920,7 +927,7 @@
           adtv: d.shortAdtv,
           periodReturn: d.periodReturn,
           clickValue: d.ticker,
-          tooltip: `<strong>${d.ticker}</strong><br>${d.sector}<br>ADTV ${short}D vs ${long}D ${fmtSignedPct(d.adtvGrowth)}<br>${long}D return ${fmtPct(d.periodReturn)}<br>vs ${long}D high ${fmtPct(d.trendProximity)}`
+          tooltip: `<strong>${d.ticker}</strong><br>${displaySector(d.sector)}<br>ADTV ${short}D vs ${long}D ${fmtSignedPct(d.adtvGrowth)}<br>${long}D return ${fmtPct(d.periodReturn)}<br>vs ${long}D high ${fmtPct(d.trendProximity)}`
         }))
         .filter(d => Number.isFinite(d.value))
         .sort((a, b) => b.value - a.value);
@@ -1043,7 +1050,7 @@
         model.sectorStats.forEach(row => {
           const tr = document.createElement("tr");
           tr.innerHTML = `
-            <td>${row.sector}</td>
+            <td>${displaySector(row.sector)}</td>
             <td class="${row.periodReturn >= 0 ? "pos" : "neg"}">${fmtPct(row.periodReturn)}</td>
             <td class="${row.adtvGrowth >= 0 ? "pos" : "neg"}">${fmtSignedPct(row.adtvGrowth)}</td>
             <td class="${row.delta >= 0 ? "pos" : "neg"}">${fmtPp(row.delta)}</td>
@@ -1092,14 +1099,14 @@
       const stocks = filteredStocks(model);
       const top = stocks[0] || model.stockStats.sort((a, b) => b.score - a.score)[0];
       const bottom = stocks.slice().reverse().find(row => Number.isFinite(row.score));
-      document.getElementById("bestSector").textContent = best?.sector || "-";
+      document.getElementById("bestSector").textContent = best ? displaySector(best.sector) : "-";
       document.getElementById("bestSectorNote").textContent = best ? `${fmtPp(best.delta)} rotation delta, ${fmtPct(best.shortShare)} of coverage turnover` : "-";
-      document.getElementById("worstSector").textContent = worst?.sector || "-";
+      document.getElementById("worstSector").textContent = worst ? displaySector(worst.sector) : "-";
       document.getElementById("worstSectorNote").textContent = worst ? `${fmtPp(worst.delta)} rotation delta, ${fmtPct(worst.shortShare)} of coverage turnover` : "-";
       document.getElementById("topStock").textContent = top ? top.ticker : "-";
-      document.getElementById("topStockNote").textContent = top ? `${top.sector}, score ${fmtScore(top.score)}, ${model.period.long}d ${fmtPct(top.periodReturn)}` : "-";
+      document.getElementById("topStockNote").textContent = top ? `${displaySector(top.sector)}, score ${fmtScore(top.score)}, ${model.period.long}d ${fmtPct(top.periodReturn)}` : "-";
       document.getElementById("worstStock").textContent = bottom ? bottom.ticker : "-";
-      document.getElementById("worstStockNote").textContent = bottom ? `${bottom.sector}, score ${fmtScore(bottom.score)}, ${model.period.long}d ${fmtPct(bottom.periodReturn)}` : "-";
+      document.getElementById("worstStockNote").textContent = bottom ? `${displaySector(bottom.sector)}, score ${fmtScore(bottom.score)}, ${model.period.long}d ${fmtPct(bottom.periodReturn)}` : "-";
     }
 
     function renderMethodologyHelp(model) {
