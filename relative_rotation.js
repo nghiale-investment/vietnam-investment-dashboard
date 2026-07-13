@@ -12,7 +12,7 @@
       normalizationWindow: 50,
       smoothingWindow: 10,
       tailSpacing: 1,
-      defaultTailPoints: 10
+      defaultTailPoints: 15
     }
   };
   const MAX_STALE_SESSIONS = 10;
