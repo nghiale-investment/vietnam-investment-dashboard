@@ -303,12 +303,14 @@
       z-index: 1;
     }
 
-    td:first-child, th:first-child,
-    td:nth-child(2), th:nth-child(2) {
+    td:first-child, th:first-child {
       text-align: left;
     }
 
     .stock-table td:nth-child(2), .stock-table th:nth-child(2) { text-align: right; }
+    .sector-table th:first-child { width: 34%; }
+    .sector-table th:not(:first-child) { width: 22%; }
+    .stock-table th { width: 20%; }
 
     tbody tr {
       cursor: pointer;
@@ -519,7 +521,7 @@
         font-size: 10px;
       }
 
-      .toolbar label:nth-child(3) { grid-column: 1 / -1; }
+      .toolbar label:nth-child(4) { grid-column: 1 / -1; }
 
       .toolbar select,
       .toolbar input {
@@ -556,7 +558,7 @@
     <div class="subhead">
       <span id="asOf">Loading data...</span>
       <span id="coverageInfo"></span>
-      <span>Signals use adjusted prices, traded value, volume, and market cap.</span>
+      <span>Signals use adjusted prices and traded value.</span>
     </div>
   </header>
 
@@ -566,6 +568,13 @@
         Methodology
         <select id="methodology">
           <option value="flow-rotation" selected>Flow Rotation</option>
+        </select>
+      </label>
+      <label>
+        Period
+        <select id="period">
+          <option value="5-20" selected>5/20</option>
+          <option value="10-50">10/50</option>
         </select>
       </label>
       <label>
@@ -608,12 +617,12 @@
           <button class="reset-view" id="marketReset" type="button" hidden>Overview</button>
           <button class="info-button" type="button" aria-label="Sector rotation methodology" aria-describedby="rotationHelp">?</button>
           <div class="help-popover" id="rotationHelp" role="tooltip">
-            <p><strong>Sector view:</strong> 10d share is each sector's traded value over the latest 10 trading days divided by total coverage traded value. Prior share uses the preceding 40 trading days.</p>
-            <p><strong>Rotation delta:</strong> 10d share minus prior 40d share. Bars are ranked from the largest positive delta to the weakest delta.</p>
-            <p><strong>Selected sector or custom basket:</strong> the chart switches to stock value surge, calculated as 10d average traded value divided by prior 40d average traded value, then shown as percentage above or below baseline.</p>
+            <p id="sectorViewHelp"></p>
+            <p id="rotationDeltaHelp"></p>
+            <p id="selectedViewHelp"></p>
           </div>
         </div>
-        <div class="hint" id="rotationHint">Recent value-share change vs prior 40 trading days</div>
+        <div class="hint" id="rotationHint">Recent sector value-share change</div>
       </div>
       <div id="sectorChart" class="chart" role="img" aria-label="Sector rotation bar chart"></div>
     </section>
@@ -625,7 +634,7 @@
           <button class="info-button" type="button" aria-label="Stock ranking methodology" aria-describedby="rankingHelp">?</button>
           <div class="help-popover" id="rankingHelp" role="tooltip">
             <p><strong>Score scale:</strong> each input is percentile-ranked across the coverage universe at the selected base date. The stock score is the average of the available percentile ranks, from 0.00 to 1.00.</p>
-            <p><strong>Current 20-day method:</strong> trend proximity, 5d-vs-prior-20d turnover surge, 10d adjusted price momentum, 5d-vs-prior-20d value surge, and sector rotation delta.</p>
+            <p id="scoreMethodHelp"></p>
             <p><strong>Filters:</strong> sector clicks or ticker search only change which stocks are displayed. The percentile score is still calculated against the full coverage universe.</p>
           </div>
         </div>
@@ -649,8 +658,13 @@
   <script>
     const pricePath = "0.pricedata.csv";
     const coveragePath = "0.coverage_universe.csv";
-    const state = { methodology: "flow-rotation", horizon: 20, sector: "All", search: "", tableMode: "sectors", baseDate: "" };
+    const PERIODS = {
+      "5-20": { short: 5, long: 20, label: "5/20" },
+      "10-50": { short: 10, long: 50, label: "10/50" }
+    };
+    const state = { methodology: "flow-rotation", period: "5-20", sector: "All", search: "", tableMode: "sectors", baseDate: "" };
     const fmtPct = value => Number.isFinite(value) ? `${(value * 100).toFixed(1)}%` : "-";
+    const fmtSignedPct = value => Number.isFinite(value) ? `${value >= 0 ? "+" : ""}${(value * 100).toFixed(1)}%` : "-";
     const fmtPp = value => Number.isFinite(value) ? `${(value * 100).toFixed(2)}pp` : "-";
     const fmtBn = value => Number.isFinite(value) ? value.toLocaleString("en-US", { maximumFractionDigits: 0 }) : "-";
     const fmtScore = value => Number.isFinite(value) ? value.toFixed(2) : "-";
@@ -717,7 +731,8 @@
       return Number.isFinite(now) && Number.isFinite(then) && then !== 0 ? now / then - 1 : NaN;
     }
 
-    function buildModel(rawRows, coverage, baseDate = "") {
+    function buildModel(rawRows, coverage, baseDate = "", periodKey = state.period) {
+      const period = PERIODS[periodKey] || PERIODS["5-20"];
       const parsedRows = rawRows.map(row => ({
         date: row.date,
         ticker: row.ticker,
@@ -739,8 +754,8 @@
       rows.sort((a, b) => a.date.localeCompare(b.date) || a.ticker.localeCompare(b.ticker));
       const dates = [...new Set(rows.map(d => d.date))].sort();
       const latestDate = dates[dates.length - 1];
-      const recent10 = dates.slice(-10);
-      const prior40 = dates.slice(-50, -10);
+      const shortDates = dates.slice(-period.short);
+      const longDates = dates.slice(-period.long);
       const byTicker = new Map();
       rows.forEach(row => {
         if (!byTicker.has(row.ticker)) byTicker.set(row.ticker, []);
@@ -764,80 +779,47 @@
       const sectors = [...new Set(rows.map(d => d.sector))].sort();
       const sectorStats = sectors.map(sector => {
         const allRows = rows.filter(row => row.sector === sector);
-        const latestRows = allRows.filter(row => row.date === latestDate);
-        const value10 = sum(allRows.filter(row => recent10.includes(row.date)).map(d => d.value));
-        const total10 = sum(rows.filter(row => recent10.includes(row.date)).map(d => d.value));
-        const valuePrior = sum(allRows.filter(row => prior40.includes(row.date)).map(d => d.value));
-        const totalPrior = sum(rows.filter(row => prior40.includes(row.date)).map(d => d.value));
-        const share10 = value10 / total10;
-        const sharePrior = valuePrior / totalPrior;
-        const sectorSeries = dates.map(date => sectorDaily.get(`${date}|${sector}`)).filter(Boolean);
-        const latest20 = sectorSeries.slice(-20);
-        const ret20 = mean(latest20.map(day => {
-          const dayRows = rows.filter(row => row.date === day.date && row.sector === sector);
-          return mean(dayRows.map(row => {
-            const series = byTicker.get(row.ticker);
-            const index = series.findIndex(item => item.date === row.date);
-            if (index <= 0) return NaN;
-            return series[index].adjustedLast / series[index - 1].adjustedLast - 1;
-          }));
-        }));
-        return { sector, names: new Set(allRows.map(d => d.ticker)).size, share10, sharePrior, delta: share10 - sharePrior, ret20, value10 };
+        const shortValue = sum(allRows.filter(row => shortDates.includes(row.date)).map(d => d.value));
+        const totalShortValue = sum(rows.filter(row => shortDates.includes(row.date)).map(d => d.value));
+        const longValue = sum(allRows.filter(row => longDates.includes(row.date)).map(d => d.value));
+        const totalLongValue = sum(rows.filter(row => longDates.includes(row.date)).map(d => d.value));
+        const shortShare = totalShortValue ? shortValue / totalShortValue : NaN;
+        const longShare = totalLongValue ? longValue / totalLongValue : NaN;
+        const shortAdtv = mean(shortDates.map(date => sectorDaily.get(`${date}|${sector}`)?.value ?? 0));
+        const longAdtv = mean(longDates.map(date => sectorDaily.get(`${date}|${sector}`)?.value ?? 0));
+        const adtvGrowth = longAdtv ? shortAdtv / longAdtv - 1 : NaN;
+        const periodReturn = mean([...new Set(allRows.map(d => d.ticker))].map(ticker => pctChange(byTicker.get(ticker), period.long)));
+        return { sector, shortShare, longShare, delta: shortShare - longShare, periodReturn, adtvGrowth, shortAdtv };
       }).sort((a, b) => b.delta - a.delta);
 
       const sectorDelta = new Map(sectorStats.map(d => [d.sector, d.delta]));
-      const sectorMomentum = new Map(sectorStats.map(d => [d.sector, d.ret20]));
       const stockStats = [...byTicker.entries()].map(([ticker, series]) => {
         const latest = series[series.length - 1];
-        const last20AdjustedHigh = Math.max(...series.slice(-20).map(d => d.adjustedLast).filter(Number.isFinite));
-        const recent = series.filter(row => recent10.includes(row.date));
-        const prior = series.filter(row => prior40.includes(row.date));
-        const recent5 = series.slice(-5);
-        const prior20 = series.slice(-25, -5);
-        const value10 = mean(recent.map(d => d.value));
-        const valuePrior = mean(prior.map(d => d.value));
-        const valueSurge = valuePrior ? value10 / valuePrior : NaN;
-        const value5 = mean(recent5.map(d => d.value));
-        const valuePrior20 = mean(prior20.map(d => d.value));
-        const valueSurge5v20 = valuePrior20 ? value5 / valuePrior20 : NaN;
-        const turnover10 = mean(recent.map(d => Number.isFinite(d.value) && Number.isFinite(d.marketCap) && d.marketCap ? d.value / d.marketCap : NaN));
-        const turnover5 = mean(recent5.map(d => Number.isFinite(d.value) && Number.isFinite(d.marketCap) && d.marketCap ? d.value / d.marketCap : NaN));
-        const turnoverPrior20 = mean(prior20.map(d => Number.isFinite(d.value) && Number.isFinite(d.marketCap) && d.marketCap ? d.value / d.marketCap : NaN));
-        const turnoverSurge5v20 = turnoverPrior20 ? turnover5 / turnoverPrior20 : NaN;
-        const mom10 = pctChange(series, 10);
-        const mom20 = pctChange(series, 20);
-        const trendProximity = Number.isFinite(last20AdjustedHigh) && last20AdjustedHigh ? latest.adjustedLast / last20AdjustedHigh - 1 : NaN;
-        const accumulation = Number.isFinite(mom10) && Number.isFinite(valueSurge) ? mom10 * Math.log1p(valueSurge) : NaN;
+        const periodHigh = Math.max(...series.slice(-period.long).map(d => d.adjustedLast).filter(Number.isFinite));
+        const shortAdtv = mean(series.slice(-period.short).map(d => d.value));
+        const longAdtv = mean(series.slice(-period.long).map(d => d.value));
+        const adtvGrowth = longAdtv ? shortAdtv / longAdtv - 1 : NaN;
+        const periodReturn = pctChange(series, period.long);
+        const trendProximity = Number.isFinite(periodHigh) && periodHigh ? latest.adjustedLast / periodHigh - 1 : NaN;
         return {
           ticker,
           sector: latest.sector,
           last: latest.last,
           marketCap: latest.marketCap,
-          value10,
-          valueSurge,
-          turnover10,
-          mom10,
-          mom20,
+          shortAdtv,
+          adtvGrowth,
+          periodReturn,
           trendProximity,
-          accumulation,
           sectorDelta: sectorDelta.get(latest.sector) || 0,
-          sectorMomentum: sectorMomentum.get(latest.sector) || 0,
-          valueSurge5v20,
-          turnoverSurge5v20,
           series
         };
       });
 
-      return { rows, indexRows, dates, latestDate, requestedDate, effectiveDate, availableDates, sectorStats, stockStats };
+      return { rows, indexRows, dates, latestDate, requestedDate, effectiveDate, availableDates, sectorStats, stockStats, period };
     }
 
-    function scoreStocks(stocks, horizon) {
-      const inputsByHorizon = {
-        5: ["sectorDelta", "sectorMomentum", "trendProximity", "turnoverSurge5v20", "valueSurge"],
-        10: ["sectorDelta", "sectorMomentum", "mom10", "trendProximity", "accumulation"],
-        20: ["trendProximity", "turnoverSurge5v20", "mom10", "valueSurge5v20", "sectorDelta"]
-      };
-      const inputs = inputsByHorizon[horizon] || inputsByHorizon[10];
+    function scoreStocks(stocks) {
+      const inputs = ["trendProximity", "periodReturn", "adtvGrowth", "sectorDelta"];
       const ranks = Object.fromEntries(inputs.map(key => [key, percentileRanks(stocks, key)]));
       stocks.forEach(row => {
         const parts = inputs.map(key => ranks[key].get(row.ticker)).filter(Number.isFinite);
@@ -913,19 +895,20 @@
 
     function rotationChartData(model) {
       const selection = activeSelection(model);
+      const { short, long } = model.period;
       if (selection.type === "market") {
         return {
           title: "Sector Rotation",
-          hint: "Recent sector value-share change vs prior 40 trading days",
+          hint: `${short}D sector value share vs ${long}D share`,
           labelKey: "sector",
           valueFormat: fmtPp,
           rows: model.sectorStats.map(d => ({
           label: d.sector,
           value: d.delta,
-          share: d.share10,
-          ret20: d.ret20,
+          share: d.shortShare,
+          periodReturn: d.periodReturn,
           clickValue: d.sector,
-          tooltip: `<strong>${d.sector}</strong><br>10d share ${fmtPct(d.share10)}<br>Delta ${fmtPp(d.delta)}<br>20d sector return ${fmtPct(d.ret20)}`
+          tooltip: `<strong>${d.sector}</strong><br>${short}D share ${fmtPct(d.shortShare)}<br>${long}D share ${fmtPct(d.longShare)}<br>Delta ${fmtPp(d.delta)}<br>${long}D sector return ${fmtPct(d.periodReturn)}`
         }))
         };
       }
@@ -933,11 +916,11 @@
       const selectedStocks = selection.stocks
         .map(d => ({
           label: d.ticker,
-          value: Number.isFinite(d.valueSurge) ? d.valueSurge - 1 : NaN,
-          share: d.value10,
-          ret20: d.mom20,
+          value: d.adtvGrowth,
+          adtv: d.shortAdtv,
+          periodReturn: d.periodReturn,
           clickValue: d.ticker,
-          tooltip: `<strong>${d.ticker}</strong><br>${d.sector}<br>Value surge ${Number.isFinite(d.valueSurge) ? d.valueSurge.toFixed(1) + "x" : "-"}<br>20d return ${fmtPct(d.mom20)}`
+          tooltip: `<strong>${d.ticker}</strong><br>${d.sector}<br>ADTV ${short}D vs ${long}D ${fmtSignedPct(d.adtvGrowth)}<br>${long}D return ${fmtPct(d.periodReturn)}<br>vs ${long}D high ${fmtPct(d.trendProximity)}`
         }))
         .filter(d => Number.isFinite(d.value))
         .sort((a, b) => b.value - a.value);
@@ -945,8 +928,8 @@
       return {
         title: `${selection.title} Rotation`,
         hint: selection.type === "custom"
-          ? "Custom basket value surge: 10d average traded value vs prior 40d average"
-          : "Stock value surge: 10d average traded value vs prior 40d average",
+          ? `Custom basket ADTV growth: ${short}D vs ${long}D`
+          : `Stock ADTV growth: ${short}D vs ${long}D`,
         labelKey: "ticker",
         valueFormat: value => `${value >= 0 ? "+" : ""}${(value * 100).toFixed(0)}%`,
         rows: selectedStocks
@@ -1037,7 +1020,7 @@
     }
 
     function filteredStocks(model) {
-      scoreStocks(model.stockStats, state.horizon);
+      scoreStocks(model.stockStats);
       return activeSelection(model).stocks
         .slice()
         .sort((a, b) => b.score - a.score);
@@ -1052,18 +1035,18 @@
       const hint = document.getElementById("tableHint");
       body.innerHTML = "";
       if (state.tableMode === "sectors") {
+        const { short, long } = model.period;
         table.className = "sector-table";
         title.textContent = "Sector Table";
         hint.textContent = "Click a sector row to view its stock ranking";
-        head.innerHTML = "<tr><th>Sector</th><th>Names</th><th>10d Share</th><th>Delta</th><th>20d Ret</th></tr>";
+        head.innerHTML = `<tr><th>Sector</th><th>${long}D Ret</th><th>ADTV ${short}/${long}</th><th>Delta ${short}/${long}</th></tr>`;
         model.sectorStats.forEach(row => {
           const tr = document.createElement("tr");
           tr.innerHTML = `
             <td>${row.sector}</td>
-            <td>${row.names}</td>
-            <td>${fmtPct(row.share10)}</td>
+            <td class="${row.periodReturn >= 0 ? "pos" : "neg"}">${fmtPct(row.periodReturn)}</td>
+            <td class="${row.adtvGrowth >= 0 ? "pos" : "neg"}">${fmtSignedPct(row.adtvGrowth)}</td>
             <td class="${row.delta >= 0 ? "pos" : "neg"}">${fmtPp(row.delta)}</td>
-            <td class="${row.ret20 >= 0 ? "pos" : "neg"}">${fmtPct(row.ret20)}</td>
           `;
           tr.addEventListener("click", () => {
             state.sector = row.sector;
@@ -1078,12 +1061,13 @@
       }
 
       const rows = filteredStocks(model).slice(0, 80);
+      const { short, long } = model.period;
       table.className = "stock-table";
       title.textContent = selection.type === "market" ? "Stock Ranking" : `${selection.title} Stock Ranking`;
       hint.textContent = selection.type === "market"
-        ? "All coverage stocks, ranked by the selected 20-day Flow Rotation score"
+        ? `All coverage stocks, ranked by the ${model.period.label} Flow Rotation score`
         : `${selection.stocks.length} stocks in the current selection, ranked against the full coverage universe`;
-      head.innerHTML = "<tr><th>Ticker</th><th>Score</th><th>10d Ret</th><th>20d Ret</th><th>Value Surge</th></tr>";
+      head.innerHTML = `<tr><th>Ticker</th><th>Score</th><th>${long}D Ret</th><th>ADTV ${short}/${long}</th><th>vs ${long}D High</th></tr>`;
       if (!rows.length) {
         body.innerHTML = "<tr><td colspan=\"5\">No matching tickers.</td></tr>";
         return;
@@ -1093,9 +1077,9 @@
         tr.innerHTML = `
           <td><strong>${row.ticker}</strong></td>
           <td>${fmtScore(row.score)}</td>
-          <td class="${row.mom10 >= 0 ? "pos" : "neg"}">${fmtPct(row.mom10)}</td>
-          <td class="${row.mom20 >= 0 ? "pos" : "neg"}">${fmtPct(row.mom20)}</td>
-          <td>${Number.isFinite(row.valueSurge) ? row.valueSurge.toFixed(1) + "x" : "-"}</td>
+          <td class="${row.periodReturn >= 0 ? "pos" : "neg"}">${fmtPct(row.periodReturn)}</td>
+          <td class="${row.adtvGrowth >= 0 ? "pos" : "neg"}">${fmtSignedPct(row.adtvGrowth)}</td>
+          <td class="${row.trendProximity >= 0 ? "pos" : "neg"}">${fmtPct(row.trendProximity)}</td>
         `;
         body.appendChild(tr);
       });
@@ -1104,21 +1088,30 @@
     function renderStats(model) {
       const best = model.sectorStats[0];
       const worst = model.sectorStats[model.sectorStats.length - 1];
-      scoreStocks(model.stockStats, state.horizon);
+      scoreStocks(model.stockStats);
       const stocks = filteredStocks(model);
       const top = stocks[0] || model.stockStats.sort((a, b) => b.score - a.score)[0];
       const bottom = stocks.slice().reverse().find(row => Number.isFinite(row.score));
       document.getElementById("bestSector").textContent = best?.sector || "-";
-      document.getElementById("bestSectorNote").textContent = best ? `${fmtPp(best.delta)} rotation delta, ${fmtPct(best.share10)} of coverage turnover` : "-";
+      document.getElementById("bestSectorNote").textContent = best ? `${fmtPp(best.delta)} rotation delta, ${fmtPct(best.shortShare)} of coverage turnover` : "-";
       document.getElementById("worstSector").textContent = worst?.sector || "-";
-      document.getElementById("worstSectorNote").textContent = worst ? `${fmtPp(worst.delta)} rotation delta, ${fmtPct(worst.share10)} of coverage turnover` : "-";
+      document.getElementById("worstSectorNote").textContent = worst ? `${fmtPp(worst.delta)} rotation delta, ${fmtPct(worst.shortShare)} of coverage turnover` : "-";
       document.getElementById("topStock").textContent = top ? top.ticker : "-";
-      document.getElementById("topStockNote").textContent = top ? `${top.sector}, score ${fmtScore(top.score)}, 20d ${fmtPct(top.mom20)}` : "-";
+      document.getElementById("topStockNote").textContent = top ? `${top.sector}, score ${fmtScore(top.score)}, ${model.period.long}d ${fmtPct(top.periodReturn)}` : "-";
       document.getElementById("worstStock").textContent = bottom ? bottom.ticker : "-";
-      document.getElementById("worstStockNote").textContent = bottom ? `${bottom.sector}, score ${fmtScore(bottom.score)}, 20d ${fmtPct(bottom.mom20)}` : "-";
+      document.getElementById("worstStockNote").textContent = bottom ? `${bottom.sector}, score ${fmtScore(bottom.score)}, ${model.period.long}d ${fmtPct(bottom.periodReturn)}` : "-";
+    }
+
+    function renderMethodologyHelp(model) {
+      const { short, long } = model.period;
+      document.getElementById("sectorViewHelp").innerHTML = `<strong>Sector view:</strong> ${short}D share is each sector's traded value over the latest ${short} trading days divided by total coverage traded value. It is compared with the equivalent ${long}D share.`;
+      document.getElementById("rotationDeltaHelp").innerHTML = `<strong>Rotation delta:</strong> ${short}D share minus ${long}D share. Bars are ranked from the largest positive delta to the weakest delta.`;
+      document.getElementById("selectedViewHelp").innerHTML = `<strong>Selected sector or custom basket:</strong> the chart shows each stock's ${short}D ADTV growth versus its ${long}D ADTV.`;
+      document.getElementById("scoreMethodHelp").innerHTML = `<strong>${model.period.label} method:</strong> proximity to the ${long}D adjusted-price high, ${long}D adjusted-price momentum, ${short}D-vs-${long}D ADTV growth, and ${short}D-vs-${long}D sector rotation delta. Each factor has equal weight.`;
     }
 
     function renderAll(model) {
+      renderMethodologyHelp(model);
       renderStats(model);
       renderSectorChart(model);
       renderCombinedTable(model);
@@ -1133,7 +1126,7 @@
         const rawRows = parseCsv(csvText);
         const coverage = parseCoverage(coverageText);
         const dateInput = document.getElementById("baseDate");
-        const fullModel = buildModel(rawRows, coverage);
+        const fullModel = buildModel(rawRows, coverage, "", state.period);
         state.baseDate = fullModel.latestDate;
         dateInput.min = fullModel.availableDates[0] || "";
         dateInput.max = fullModel.latestDate || "";
@@ -1141,7 +1134,7 @@
         let model = fullModel;
 
         function rebuildAndRender() {
-          model = buildModel(rawRows, coverage, state.baseDate);
+          model = buildModel(rawRows, coverage, state.baseDate, state.period);
           document.getElementById("asOf").textContent = `Data through ${model.latestDate}`;
           document.getElementById("coverageInfo").textContent = `${model.stockStats.length} stocks across ${model.sectorStats.length} sectors`;
           renderAll(model);
@@ -1150,6 +1143,10 @@
         document.getElementById("methodology").addEventListener("change", event => {
           state.methodology = event.target.value;
           renderAll(model);
+        });
+        document.getElementById("period").addEventListener("change", event => {
+          state.period = event.target.value;
+          rebuildAndRender();
         });
         dateInput.addEventListener("change", event => {
           state.baseDate = event.target.value || fullModel.latestDate;
