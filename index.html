@@ -610,6 +610,10 @@
         Tail points
         <input id="tailPoints" type="number" min="3" max="30" step="1" value="10">
       </label>
+      <label id="dateControl">
+        Base date
+        <input id="baseDate" type="date">
+      </label>
       <label>
         Search ticker
         <input id="search" type="search" placeholder="e.g. HDB, VND, HVN">
@@ -663,7 +667,7 @@
             <h2 id="tableTitle">Sector Table</h2>
             <button class="info-button" type="button" aria-label="Stock ranking methodology" aria-describedby="rankingHelp">?</button>
             <div class="help-popover" id="rankingHelp" role="tooltip">
-              <p id="rankingIntroHelp"><strong>Score scale:</strong> each input is percentile-ranked across the coverage universe at the latest available date. The stock score is the average of the available percentile ranks, from 0.00 to 1.00.</p>
+              <p id="rankingIntroHelp"><strong>Score scale:</strong> each input is percentile-ranked across the coverage universe at the selected base date. The stock score is the average of the available percentile ranks, from 0.00 to 1.00.</p>
               <p id="scoreMethodHelp"></p>
               <p><strong>Filters:</strong> sector clicks or ticker search only change which stocks are displayed. The percentile score is still calculated against the full coverage universe.</p>
             </div>
@@ -721,9 +725,12 @@
       tailPoints: 10,
       sector: "All",
       search: "",
-      tableMode: "sectors"
+      tableMode: "sectors",
+      baseDate: ""
     };
     let pinnedRrgEntity = "";
+    let lastRrgTouch = { entityId: "", at: 0 };
+    const RRG_DOUBLE_TAP_MS = 500;
     const displaySector = sector => SECTOR_LABELS[sector] || sector;
     const fmtPct = value => Number.isFinite(value) ? `${(value * 100).toFixed(1)}%` : "-";
     const fmtSignedPct = value => Number.isFinite(value) ? `${value >= 0 ? "+" : ""}${(value * 100).toFixed(1)}%` : "-";
@@ -796,7 +803,7 @@
       return Number.isFinite(now) && Number.isFinite(then) && then !== 0 ? now / then - 1 : NaN;
     }
 
-    function buildModel(rawRows, coverage, periodKey = state.flowPeriod) {
+    function buildModel(rawRows, coverage, baseDate = "", periodKey = state.flowPeriod) {
       const period = PERIODS[periodKey] || PERIODS["5-20"];
       const parsedRows = rawRows.map(row => ({
         date: row.date,
@@ -810,7 +817,8 @@
       })).filter(row => Number.isFinite(row.adjustedLast));
 
       const availableDates = [...new Set(parsedRows.filter(row => row.ticker !== "VNINDEX").map(d => d.date))].sort();
-      const effectiveDate = availableDates[availableDates.length - 1];
+      const requestedDate = baseDate || availableDates[availableDates.length - 1];
+      const effectiveDate = availableDates.filter(date => date <= requestedDate).pop() || availableDates[0];
       const snapshotRows = parsedRows.filter(row => !effectiveDate || row.date <= effectiveDate);
       const indexRows = snapshotRows.filter(row => row.ticker === "VNINDEX");
       const rows = snapshotRows.filter(row => row.ticker !== "VNINDEX");
@@ -879,7 +887,7 @@
         };
       });
 
-      return { rows, indexRows, dates, latestDate, effectiveDate, availableDates, sectorStats, stockStats, period };
+      return { rows, indexRows, dates, latestDate, requestedDate, effectiveDate, availableDates, sectorStats, stockStats, period };
     }
 
     function scoreStocks(stocks) {
@@ -1170,7 +1178,7 @@
 
     function renderMethodologyHelp(model) {
       const { short, long } = model.period;
-      document.getElementById("rankingIntroHelp").innerHTML = `<strong>Score scale:</strong> each input is percentile-ranked across the coverage universe at the latest available date. The stock score is the average of the available percentile ranks, from 0.00 to 1.00.`;
+      document.getElementById("rankingIntroHelp").innerHTML = `<strong>Score scale:</strong> each input is percentile-ranked across the coverage universe at the selected base date. The stock score is the average of the available percentile ranks, from 0.00 to 1.00.`;
       document.getElementById("sectorViewHelp").innerHTML = `<strong>Sector view:</strong> ${short}D share is each sector's traded value over the latest ${short} trading days divided by total coverage traded value. It is compared with the equivalent ${long}D share.`;
       document.getElementById("rotationDeltaHelp").innerHTML = `<strong>Rotation delta:</strong> ${short}D share minus ${long}D share. Bars are ranked from the largest positive delta to the weakest delta.`;
       document.getElementById("selectedViewHelp").innerHTML = `<strong>Selected sector or custom basket:</strong> the chart shows each stock's ${short}D ADTV growth versus its ${long}D ADTV.`;
@@ -1238,6 +1246,7 @@
 
     function drillToRrgSector(sector, model) {
       pinnedRrgEntity = "";
+      lastRrgTouch = { entityId: "", at: 0 };
       state.sector = sector;
       state.search = "";
       state.tableMode = "stocks";
@@ -1274,14 +1283,49 @@
     }
 
     function handleRrgTouchTap(entityId, onSecondTap = null) {
-      if (pinnedRrgEntity === entityId) {
+      const now = Date.now();
+      const isDoubleTap = lastRrgTouch.entityId === entityId && now - lastRrgTouch.at <= RRG_DOUBLE_TAP_MS;
+      if (isDoubleTap && onSecondTap) {
+        lastRrgTouch = { entityId: "", at: 0 };
         pinnedRrgEntity = "";
         clearRrgEntityFocus(true);
-        if (onSecondTap) onSecondTap();
+        onSecondTap();
         return;
       }
+      lastRrgTouch = { entityId, at: now };
       pinnedRrgEntity = entityId;
       focusRrgEntity(entityId);
+    }
+
+    function bindRrgActivation(element, entityId, onMouseClick = null, onDoubleTap = null) {
+      let touchStart = null;
+      let lastHandledTouch = 0;
+      const touchPrimary = () => window.matchMedia?.("(hover: none)")?.matches === true;
+      const isTouchPointer = event => event.pointerType === "touch" || event.pointerType === "pen" || touchPrimary();
+
+      element.addEventListener("pointerdown", event => {
+        if (!isTouchPointer(event)) return;
+        touchStart = { pointerId: event.pointerId, x: event.clientX, y: event.clientY };
+      });
+      element.addEventListener("pointerup", event => {
+        if (!touchStart || event.pointerId !== touchStart.pointerId) return;
+        const movement = Math.hypot(event.clientX - touchStart.x, event.clientY - touchStart.y);
+        touchStart = null;
+        if (movement > 12) return;
+        lastHandledTouch = Date.now();
+        handleRrgTouchTap(entityId, onDoubleTap);
+      });
+      element.addEventListener("pointercancel", () => {
+        touchStart = null;
+      });
+      element.addEventListener("click", event => {
+        if (Date.now() - lastHandledTouch < 700) {
+          event.preventDefault();
+          event.stopPropagation();
+          return;
+        }
+        if (onMouseClick) onMouseClick();
+      });
     }
 
     function addSvgNode(svg, name, attrs, textContent = "") {
@@ -1294,6 +1338,7 @@
 
     function renderRrgChart(model) {
       pinnedRrgEntity = "";
+      lastRrgTouch = { entityId: "", at: 0 };
       const container = document.getElementById("sectorChart");
       container.className = "chart rrg-chart";
       container.setAttribute("aria-label", "Relative Rotation quadrant chart with historical tails");
@@ -1357,10 +1402,8 @@
       series.forEach(item => {
         const color = SECTOR_COLORS[item.row.sector] || "#256f63";
         const group = addSvgNode(svg, "g", { class: "rrg-series", "data-rrg-entity": item.row.id });
-        let activationPointerType = "mouse";
-        group.addEventListener("pointerdown", event => {
-          activationPointerType = event.pointerType || "mouse";
-        });
+        const openSector = isSectorView ? () => drillToRrgSector(item.row.id, model) : null;
+        bindRrgActivation(group, item.row.id, openSector, openSector);
         group.addEventListener("pointerenter", event => {
           if (event.pointerType === "mouse") focusRrgEntity(item.row.id);
         });
@@ -1368,15 +1411,6 @@
           if (event.pointerType === "mouse") {
             clearRrgEntityFocus();
             hideTooltip();
-          }
-        });
-        group.addEventListener("click", () => {
-          const touchActivation = activationPointerType !== "mouse";
-          activationPointerType = "mouse";
-          if (touchActivation) {
-            handleRrgTouchTap(item.row.id, isSectorView ? () => drillToRrgSector(item.row.id, model) : null);
-          } else if (isSectorView) {
-            drillToRrgSector(item.row.id, model);
           }
         });
         const pathData = item.points.map((point, index) => `${index ? "L" : "M"}${x(point.x).toFixed(1)},${y(point.y).toFixed(1)}`).join(" ");
@@ -1433,7 +1467,7 @@
         rows = sortRrgRows(rrgRowsWithMovement(model.sectorCalc, model.latestDate));
         title.textContent = "Sector Ranking";
         hint.textContent = window.matchMedia?.("(hover: none)")?.matches
-          ? "Tap once to focus; tap the same sector again to view its stocks"
+          ? "Tap once to focus; double-tap the same sector to view its stocks"
           : "Hover to focus; click a sector row to view its constituent stocks";
       } else {
         rows = sortRrgRows(selectedRrgStockRows(model));
@@ -1450,24 +1484,13 @@
         const tr = document.createElement("tr");
         tr.dataset.rrgEntity = row.id;
         tr.innerHTML = `<td><strong>${isSectorView ? displaySector(row.label) : row.label}</strong></td><td>${fmtRrg(row.score)}</td><td class="${quadrantClass(row.quadrant)}">${row.quadrant}</td><td>${fmtRrg(row.x)}</td><td>${fmtRrg(row.y)}</td><td>${fmtSignedRrg(row.deltaX)} / ${fmtSignedRrg(row.deltaY)}</td>`;
-        let activationPointerType = "mouse";
-        tr.addEventListener("pointerdown", event => {
-          activationPointerType = event.pointerType || "mouse";
-        });
+        const openSector = isSectorView ? () => drillToRrgSector(row.id, model) : null;
+        bindRrgActivation(tr, row.id, openSector, openSector);
         tr.addEventListener("pointerenter", event => {
           if (event.pointerType === "mouse") focusRrgEntity(row.id);
         });
         tr.addEventListener("pointerleave", event => {
           if (event.pointerType === "mouse") clearRrgEntityFocus();
-        });
-        tr.addEventListener("click", () => {
-          const touchActivation = activationPointerType !== "mouse";
-          activationPointerType = "mouse";
-          if (touchActivation) {
-            handleRrgTouchTap(row.id, isSectorView ? () => drillToRrgSector(row.id, model) : null);
-          } else if (isSectorView) {
-            drillToRrgSector(row.id, model);
-          }
         });
         body.appendChild(tr);
       });
@@ -1494,7 +1517,7 @@
     function renderRrgHelp(model) {
       document.getElementById("sectorViewHelp").innerHTML = `<strong>Sector view:</strong> each sector is a synthetic market-cap-weighted index using previous-session market-cap weights, measured against the VN-Index.`;
       document.getElementById("rotationDeltaHelp").innerHTML = `<strong>MSWerkzeug 10/50 coordinates:</strong> normalize entity and benchmark prices, form their relative-price series, then calculate RS-Ratio from its ${model.mode.normalizationWindow}-session rolling mean and standard deviation. RS-Momentum compares RS-Ratio with ${model.mode.momentumLookback} sessions earlier and normalizes that series over ${model.mode.normalizationWindow} sessions.`;
-      document.getElementById("selectedViewHelp").innerHTML = `<strong>Final stabilization:</strong> both coordinates use a ${model.mode.smoothingWindow}-session simple moving average. Tails show consecutive daily coordinates. On touch screens, tap once to focus and tap the same sector again to open its stocks.`;
+      document.getElementById("selectedViewHelp").innerHTML = `<strong>Final stabilization:</strong> both coordinates use a ${model.mode.smoothingWindow}-session simple moving average. Tails show consecutive daily coordinates. On touch screens, tap once to focus and double-tap the same sector to open its stocks.`;
       document.getElementById("rankingIntroHelp").innerHTML = `<strong>RRG score:</strong> the equal-weight average of Relative Strength and Relative Momentum: (X + Y) / 2. The 100 axes represent each entity's rolling baseline.`;
       document.getElementById("scoreMethodHelp").innerHTML = `<strong>Stable ranking:</strong> all coordinates are calculated before display filters are applied, so sector clicks and ticker searches never change an entity's score.`;
     }
@@ -1518,6 +1541,7 @@
       const isRrg = state.methodology === "relative-rotation";
       document.getElementById("periodLabel").textContent = "Period";
       document.getElementById("tailControl").hidden = !isRrg;
+      document.getElementById("dateControl").hidden = isRrg;
       if (isRrg) {
         period.innerHTML = `<option value="10-50">10/50</option>`;
         period.value = state.rrgMode;
@@ -1538,13 +1562,18 @@
         const rawRows = parseCsv(csvText);
         const coverage = parseCoverage(coverageText);
         const rrgData = RelativeRotation.prepare(rawRows, coverage);
-        const fullModel = buildModel(rawRows, coverage, state.flowPeriod);
+        const dateInput = document.getElementById("baseDate");
+        const fullModel = buildModel(rawRows, coverage, "", state.flowPeriod);
+        state.baseDate = fullModel.latestDate;
+        dateInput.min = fullModel.availableDates[0] || "";
+        dateInput.max = fullModel.latestDate || "";
+        dateInput.value = state.baseDate;
         let model = fullModel;
 
         function rebuildAndRender() {
           model = state.methodology === "relative-rotation"
             ? buildRrgModel(rrgData)
-            : buildModel(rawRows, coverage, state.flowPeriod);
+            : buildModel(rawRows, coverage, state.baseDate, state.flowPeriod);
           document.getElementById("asOf").textContent = `Data through ${model.latestDate}`;
           document.getElementById("coverageInfo").textContent = `${rrgData.tickers.length} stocks across ${rrgData.sectors.length} sectors`;
           renderAll(model);
@@ -1573,6 +1602,10 @@
           state.tailPoints = Math.max(3, Math.min(30, Number(event.target.value) || RelativeRotation.MODE_CONFIG[state.rrgMode].defaultTailPoints));
           event.target.value = state.tailPoints;
           renderAll(model);
+        });
+        dateInput.addEventListener("change", event => {
+          state.baseDate = event.target.value || fullModel.latestDate;
+          if (state.methodology === "flow-rotation") rebuildAndRender();
         });
         document.getElementById("search").addEventListener("input", event => {
           state.search = event.target.value;
@@ -1617,6 +1650,7 @@
           if (!event.target.closest("#tooltip")) hideTooltip();
           if (pinnedRrgEntity && !event.target.closest("[data-rrg-entity]")) {
             pinnedRrgEntity = "";
+            lastRrgTouch = { entityId: "", at: 0 };
             clearRrgEntityFocus(true);
           }
         });
