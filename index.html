@@ -1300,11 +1300,14 @@
     function bindRrgActivation(element, entityId, onMouseClick = null, onDoubleTap = null) {
       let touchStart = null;
       let lastHandledTouch = 0;
-      const touchPrimary = () => window.matchMedia?.("(hover: none)")?.matches === true;
-      const isTouchPointer = event => event.pointerType === "touch" || event.pointerType === "pen" || touchPrimary();
+      const touchEnvironment = () =>
+        window.matchMedia?.("(hover: none)")?.matches === true ||
+        window.matchMedia?.("(pointer: coarse)")?.matches === true;
+      const isTouchPointer = event => event.pointerType === "touch" || event.pointerType === "pen" || touchEnvironment();
 
       element.addEventListener("pointerdown", event => {
         if (!isTouchPointer(event)) return;
+        lastHandledTouch = Date.now();
         touchStart = { pointerId: event.pointerId, x: event.clientX, y: event.clientY };
       });
       element.addEventListener("pointerup", event => {
@@ -1313,15 +1316,18 @@
         touchStart = null;
         if (movement > 12) return;
         lastHandledTouch = Date.now();
+        event.preventDefault?.();
         handleRrgTouchTap(entityId, onDoubleTap);
       });
       element.addEventListener("pointercancel", () => {
         touchStart = null;
       });
       element.addEventListener("click", event => {
-        if (Date.now() - lastHandledTouch < 700) {
+        const pointerGeneratedClick = event.detail !== 0;
+        if (pointerGeneratedClick && (Date.now() - lastHandledTouch < 1500 || touchEnvironment())) {
           event.preventDefault();
           event.stopPropagation();
+          event.stopImmediatePropagation?.();
           return;
         }
         if (onMouseClick) onMouseClick();
