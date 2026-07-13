@@ -73,6 +73,10 @@
       border-radius: 8px;
     }
 
+    .toolbar [hidden] {
+      display: none;
+    }
+
     label {
       display: grid;
       gap: 5px;
@@ -255,6 +259,21 @@
       overflow: hidden;
     }
 
+    .rrg-chart {
+      min-height: 480px;
+    }
+
+    .rrg-series,
+    .rrg-table tbody tr {
+      transition: opacity 140ms ease;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .rrg-table tbody tr.rrg-dim {
+      opacity: 0.28;
+    }
+
     svg {
       display: block;
       width: 100%;
@@ -311,6 +330,7 @@
     .sector-table th:first-child { width: 34%; }
     .sector-table th:not(:first-child) { width: 22%; }
     .stock-table th { width: 20%; }
+    .rrg-table th { width: auto !important; }
 
     tbody tr {
       cursor: pointer;
@@ -336,6 +356,10 @@
 
     .pos { color: var(--good); }
     .neg { color: var(--bad); }
+    .quadrant-leading { color: var(--good); }
+    .quadrant-weakening { color: var(--warn); }
+    .quadrant-lagging { color: var(--bad); }
+    .quadrant-improving { color: var(--accent); }
     .badge {
       display: inline-flex;
       align-items: center;
@@ -495,6 +519,10 @@
         min-height: 220px;
       }
 
+      .rrg-chart {
+        min-height: 360px;
+      }
+
       .table-wrap {
         max-height: 420px;
       }
@@ -568,18 +596,19 @@
         Methodology
         <select id="methodology">
           <option value="flow-rotation" selected>Flow Rotation</option>
+          <option value="relative-rotation">Relative Rotation</option>
         </select>
       </label>
       <label>
-        Period
+        <span id="periodLabel">Period</span>
         <select id="period">
           <option value="5-20" selected>5/20</option>
           <option value="10-50">10/50</option>
         </select>
       </label>
-      <label>
-        Base date
-        <input id="baseDate" type="date">
+      <label id="tailControl" hidden>
+        Tail points
+        <input id="tailPoints" type="number" min="3" max="30" step="1" value="10">
       </label>
       <label>
         Search ticker
@@ -610,51 +639,54 @@
       </div>
     </div>
 
-    <section>
-      <div class="section-head">
-        <div class="title-with-help">
-          <h2 id="rotationTitle">Sector Rotation</h2>
-          <button class="reset-view" id="marketReset" type="button" hidden>Overview</button>
-          <button class="info-button" type="button" aria-label="Sector rotation methodology" aria-describedby="rotationHelp">?</button>
-          <div class="help-popover" id="rotationHelp" role="tooltip">
-            <p id="sectorViewHelp"></p>
-            <p id="rotationDeltaHelp"></p>
-            <p id="selectedViewHelp"></p>
+    <div class="grid-2">
+      <section>
+        <div class="section-head">
+          <div class="title-with-help">
+            <h2 id="rotationTitle">Sector Rotation</h2>
+            <button class="reset-view" id="marketReset" type="button" hidden>Overview</button>
+            <button class="info-button" type="button" aria-label="Sector rotation methodology" aria-describedby="rotationHelp">?</button>
+            <div class="help-popover" id="rotationHelp" role="tooltip">
+              <p id="sectorViewHelp"></p>
+              <p id="rotationDeltaHelp"></p>
+              <p id="selectedViewHelp"></p>
+            </div>
           </div>
+          <div class="hint" id="rotationHint">Recent sector value-share change</div>
         </div>
-        <div class="hint" id="rotationHint">Recent sector value-share change</div>
-      </div>
-      <div id="sectorChart" class="chart" role="img" aria-label="Sector rotation bar chart"></div>
-    </section>
+        <div id="sectorChart" class="chart" role="img" aria-label="Sector rotation bar chart"></div>
+      </section>
 
-    <section>
-      <div class="section-head">
-        <div class="title-with-help">
-          <h2 id="tableTitle">Sector Table</h2>
-          <button class="info-button" type="button" aria-label="Stock ranking methodology" aria-describedby="rankingHelp">?</button>
-          <div class="help-popover" id="rankingHelp" role="tooltip">
-            <p><strong>Score scale:</strong> each input is percentile-ranked across the coverage universe at the selected base date. The stock score is the average of the available percentile ranks, from 0.00 to 1.00.</p>
-            <p id="scoreMethodHelp"></p>
-            <p><strong>Filters:</strong> sector clicks or ticker search only change which stocks are displayed. The percentile score is still calculated against the full coverage universe.</p>
+      <section>
+        <div class="section-head">
+          <div class="title-with-help">
+            <h2 id="tableTitle">Sector Table</h2>
+            <button class="info-button" type="button" aria-label="Stock ranking methodology" aria-describedby="rankingHelp">?</button>
+            <div class="help-popover" id="rankingHelp" role="tooltip">
+              <p id="rankingIntroHelp"><strong>Score scale:</strong> each input is percentile-ranked across the coverage universe at the latest available date. The stock score is the average of the available percentile ranks, from 0.00 to 1.00.</p>
+              <p id="scoreMethodHelp"></p>
+              <p><strong>Filters:</strong> sector clicks or ticker search only change which stocks are displayed. The percentile score is still calculated against the full coverage universe.</p>
+            </div>
+          </div>
+          <div class="table-actions">
+            <button class="reset-view" id="tableOverview" type="button">Overview</button>
+            <button class="reset-view" id="allStockRanking" type="button">Stock Ranking</button>
           </div>
         </div>
-        <div class="table-actions">
-          <button class="reset-view" id="tableOverview" type="button">Overview</button>
-          <button class="reset-view" id="allStockRanking" type="button">Stock Ranking</button>
+        <div class="hint" id="tableHint">Click a sector row to view its stock ranking</div>
+        <div class="table-wrap">
+          <table id="combinedTable">
+            <thead id="combinedTableHead"></thead>
+            <tbody id="combinedTableRows"></tbody>
+          </table>
         </div>
-      </div>
-      <div class="hint" id="tableHint">Click a sector row to view its stock ranking</div>
-      <div class="table-wrap">
-        <table id="combinedTable">
-          <thead id="combinedTableHead"></thead>
-          <tbody id="combinedTableRows"></tbody>
-        </table>
-      </div>
-    </section>
+      </section>
+    </div>
   </main>
 
   <div id="tooltip" class="tooltip"></div>
 
+  <script src="relative_rotation.js"></script>
   <script>
     const pricePath = "0.pricedata.csv";
     const coveragePath = "0.coverage_universe.csv";
@@ -668,13 +700,39 @@
       "Financial Services": "Fin. Services",
       "Information Technology": "Technology"
     };
-    const state = { methodology: "flow-rotation", period: "5-20", sector: "All", search: "", tableMode: "sectors", baseDate: "" };
+    const SECTOR_COLORS = {
+      "Banks": "#256f63",
+      "Capital Goods": "#9b5c2e",
+      "Consumer Discretionary": "#6f5aa8",
+      "Consumer Staples": "#50884f",
+      "Energy": "#b7791f",
+      "Financial Services": "#2678a5",
+      "Information Technology": "#7a5cbd",
+      "Insurance": "#b24d75",
+      "Materials": "#8c6b32",
+      "Real Estate": "#b0443e",
+      "Transportation": "#397c91",
+      "Utilities": "#64748b"
+    };
+    const state = {
+      methodology: "flow-rotation",
+      flowPeriod: "5-20",
+      rrgMode: "10-50",
+      tailPoints: 10,
+      sector: "All",
+      search: "",
+      tableMode: "sectors"
+    };
+    let pinnedRrgEntity = "";
     const displaySector = sector => SECTOR_LABELS[sector] || sector;
     const fmtPct = value => Number.isFinite(value) ? `${(value * 100).toFixed(1)}%` : "-";
     const fmtSignedPct = value => Number.isFinite(value) ? `${value >= 0 ? "+" : ""}${(value * 100).toFixed(1)}%` : "-";
     const fmtPp = value => Number.isFinite(value) ? `${(value * 100).toFixed(2)}pp` : "-";
     const fmtBn = value => Number.isFinite(value) ? value.toLocaleString("en-US", { maximumFractionDigits: 0 }) : "-";
     const fmtScore = value => Number.isFinite(value) ? value.toFixed(2) : "-";
+    const fmtRrg = value => Number.isFinite(value) ? value.toFixed(1) : "-";
+    const fmtSignedRrg = value => Number.isFinite(value) ? `${value >= 0 ? "+" : ""}${value.toFixed(1)}` : "-";
+    const quadrantClass = quadrant => `quadrant-${String(quadrant || "").toLowerCase()}`;
 
     function parseCsv(text) {
       const rows = [];
@@ -738,7 +796,7 @@
       return Number.isFinite(now) && Number.isFinite(then) && then !== 0 ? now / then - 1 : NaN;
     }
 
-    function buildModel(rawRows, coverage, baseDate = "", periodKey = state.period) {
+    function buildModel(rawRows, coverage, periodKey = state.flowPeriod) {
       const period = PERIODS[periodKey] || PERIODS["5-20"];
       const parsedRows = rawRows.map(row => ({
         date: row.date,
@@ -752,8 +810,7 @@
       })).filter(row => Number.isFinite(row.adjustedLast));
 
       const availableDates = [...new Set(parsedRows.filter(row => row.ticker !== "VNINDEX").map(d => d.date))].sort();
-      const requestedDate = baseDate || availableDates[availableDates.length - 1];
-      const effectiveDate = availableDates.filter(date => date <= requestedDate).pop() || availableDates[0];
+      const effectiveDate = availableDates[availableDates.length - 1];
       const snapshotRows = parsedRows.filter(row => !effectiveDate || row.date <= effectiveDate);
       const indexRows = snapshotRows.filter(row => row.ticker === "VNINDEX");
       const rows = snapshotRows.filter(row => row.ticker !== "VNINDEX");
@@ -822,7 +879,7 @@
         };
       });
 
-      return { rows, indexRows, dates, latestDate, requestedDate, effectiveDate, availableDates, sectorStats, stockStats, period };
+      return { rows, indexRows, dates, latestDate, effectiveDate, availableDates, sectorStats, stockStats, period };
     }
 
     function scoreStocks(stocks) {
@@ -945,6 +1002,8 @@
 
     function renderSectorChart(model) {
       const container = document.getElementById("sectorChart");
+      container.className = "chart";
+      container.setAttribute("aria-label", "Flow Rotation bar chart");
       const selection = activeSelection(model);
       const chartData = rotationChartData(model);
       document.getElementById("rotationTitle").textContent = chartData.title;
@@ -1111,53 +1170,409 @@
 
     function renderMethodologyHelp(model) {
       const { short, long } = model.period;
+      document.getElementById("rankingIntroHelp").innerHTML = `<strong>Score scale:</strong> each input is percentile-ranked across the coverage universe at the latest available date. The stock score is the average of the available percentile ranks, from 0.00 to 1.00.`;
       document.getElementById("sectorViewHelp").innerHTML = `<strong>Sector view:</strong> ${short}D share is each sector's traded value over the latest ${short} trading days divided by total coverage traded value. It is compared with the equivalent ${long}D share.`;
       document.getElementById("rotationDeltaHelp").innerHTML = `<strong>Rotation delta:</strong> ${short}D share minus ${long}D share. Bars are ranked from the largest positive delta to the weakest delta.`;
       document.getElementById("selectedViewHelp").innerHTML = `<strong>Selected sector or custom basket:</strong> the chart shows each stock's ${short}D ADTV growth versus its ${long}D ADTV.`;
       document.getElementById("scoreMethodHelp").innerHTML = `<strong>${model.period.label} method:</strong> proximity to the ${long}D adjusted-price high, ${long}D adjusted-price momentum, ${short}D-vs-${long}D ADTV growth, and ${short}D-vs-${long}D sector rotation delta. Each factor has equal weight.`;
     }
 
+    function buildRrgModel(data) {
+      const sectorCalc = RelativeRotation.calculate(data, { view: "sectors", mode: state.rrgMode, benchmark: "vnindex" });
+      const stockCalc = RelativeRotation.calculate(data, { view: "stocks", mode: state.rrgMode, benchmark: "vnindex" });
+      const dateIndex = RelativeRotation.effectiveDateIndex(sectorCalc);
+      return {
+        data,
+        sectorCalc,
+        stockCalc,
+        dateIndex,
+        latestDate: data.dates[dateIndex],
+        availableDates: data.dates,
+        mode: RelativeRotation.MODE_CONFIG[state.rrgMode]
+      };
+    }
+
+    function sortRrgRows(rows) {
+      return rows.slice().sort((a, b) =>
+        b.score - a.score || b.x - a.x || b.y - a.y || a.label.localeCompare(b.label)
+      );
+    }
+
+    function parsedRrgTickers(model) {
+      const available = new Set(model.data.tickers);
+      return state.search
+        .toUpperCase()
+        .split(/[\s,;]+/)
+        .map(item => item.trim())
+        .filter(Boolean)
+        .filter((item, index, items) => items.indexOf(item) === index)
+        .filter(item => available.has(item));
+    }
+
+    function rrgRowsWithMovement(calc, requestedDate) {
+      return RelativeRotation.snapshot(calc, requestedDate).map(row => {
+        const tail = RelativeRotation.selectTail(calc, row.id, requestedDate, 2);
+        const previous = tail.length > 1 ? tail[tail.length - 2] : null;
+        return {
+          ...row,
+          deltaX: previous ? row.x - previous.x : NaN,
+          deltaY: previous ? row.y - previous.y : NaN
+        };
+      });
+    }
+
+    function selectedRrgStockRows(model) {
+      const rows = rrgRowsWithMovement(model.stockCalc, model.latestDate);
+      const tickers = parsedRrgTickers(model);
+      if (tickers.length) return rows.filter(row => tickers.includes(row.id));
+      if (state.sector !== "All") return rows.filter(row => row.sector === state.sector);
+      return rows;
+    }
+
+    function rrgChartRows(model) {
+      if (state.tableMode === "sectors") return rrgRowsWithMovement(model.sectorCalc, model.latestDate);
+      const selected = selectedRrgStockRows(model);
+      if (state.sector !== "All" || parsedRrgTickers(model).length) return selected;
+      return selected.slice().sort((a, b) => (b.marketCap || 0) - (a.marketCap || 0)).slice(0, 15);
+    }
+
+    function drillToRrgSector(sector, model) {
+      pinnedRrgEntity = "";
+      state.sector = sector;
+      state.search = "";
+      state.tableMode = "stocks";
+      document.getElementById("search").value = "";
+      renderAll(model);
+    }
+
+    function rrgTooltip(point, model) {
+      const staleNote = point.staleSessions > 0 ? `<br>Stale price: ${point.staleSessions} session${point.staleSessions === 1 ? "" : "s"}` : "";
+      const ratioMomentum = Number.isFinite(point.ratioMomentum) ? point.ratioMomentum - 1 : NaN;
+      return `<strong>${state.tableMode === "sectors" ? displaySector(point.label) : point.label}</strong> — ${point.date}<br>${model.mode.label} · VN-Index<br>Relative Strength ${fmtRrg(point.x)}<br>Relative Momentum ${fmtRrg(point.y)}<br>RRG score ${fmtRrg(point.score)} · ${point.quadrant}<br>${model.mode.momentumLookback}D entity return ${fmtSignedPct(point.entityReturn)}<br>${model.mode.momentumLookback}D VN-Index return ${fmtSignedPct(point.benchmarkReturn)}<br>Relative outperformance ${fmtSignedPct(point.relativeOutperformance)}<br>Raw RS-Ratio ${fmtRrg(point.rawRatio)} · 10D ratio momentum ${fmtSignedPct(ratioMomentum)}<br>Raw RS-Momentum ${fmtRrg(point.rawMomentum)}${staleNote}`;
+    }
+
+    function focusRrgEntity(entityId) {
+      const chartItems = [...document.querySelectorAll(".rrg-series[data-rrg-entity]")];
+      const chartHasEntity = chartItems.some(item => item.dataset.rrgEntity === entityId);
+      chartItems.forEach(item => {
+        item.style.opacity = !chartHasEntity || item.dataset.rrgEntity === entityId ? "1" : "0.12";
+      });
+      document.querySelectorAll(".rrg-table tbody tr[data-rrg-entity]").forEach(row => {
+        row.classList.toggle("rrg-dim", row.dataset.rrgEntity !== entityId);
+      });
+    }
+
+    function clearRrgEntityFocus(force = false) {
+      if (pinnedRrgEntity && !force) {
+        focusRrgEntity(pinnedRrgEntity);
+        return;
+      }
+      document.querySelectorAll(".rrg-series[data-rrg-entity]").forEach(item => {
+        item.style.opacity = "1";
+      });
+      document.querySelectorAll(".rrg-table tbody tr.rrg-dim").forEach(row => row.classList.remove("rrg-dim"));
+    }
+
+    function handleRrgTouchTap(entityId, onSecondTap = null) {
+      if (pinnedRrgEntity === entityId) {
+        pinnedRrgEntity = "";
+        clearRrgEntityFocus(true);
+        if (onSecondTap) onSecondTap();
+        return;
+      }
+      pinnedRrgEntity = entityId;
+      focusRrgEntity(entityId);
+    }
+
+    function addSvgNode(svg, name, attrs, textContent = "") {
+      const node = document.createElementNS(svg.namespaceURI, name);
+      Object.entries(attrs).forEach(([key, value]) => node.setAttribute(key, value));
+      if (textContent) node.textContent = textContent;
+      svg.appendChild(node);
+      return node;
+    }
+
+    function renderRrgChart(model) {
+      pinnedRrgEntity = "";
+      const container = document.getElementById("sectorChart");
+      container.className = "chart rrg-chart";
+      container.setAttribute("aria-label", "Relative Rotation quadrant chart with historical tails");
+      container.innerHTML = "";
+      const isSectorView = state.tableMode === "sectors";
+      const calc = isSectorView ? model.sectorCalc : model.stockCalc;
+      const rows = rrgChartRows(model);
+      const title = isSectorView
+        ? "Sector Relative Rotation"
+        : state.sector !== "All"
+          ? `${displaySector(state.sector)} Stock Rotation`
+          : parsedRrgTickers(model).length ? "Custom Basket Rotation" : "Stock Relative Rotation";
+      document.getElementById("rotationTitle").textContent = title;
+      document.getElementById("rotationHint").textContent = `${model.mode.label}: ${model.mode.normalizationWindow}D rolling normalization · ${model.mode.momentumLookback}D momentum · ${model.mode.smoothingWindow}D SMA`;
+      document.getElementById("marketReset").hidden = isSectorView;
+      const series = rows.map(row => ({
+        row,
+        points: RelativeRotation.selectTail(calc, row.id, model.latestDate, state.tailPoints)
+      })).filter(item => item.points.length);
+      const allPoints = series.flatMap(item => item.points);
+      if (!allPoints.length) {
+        container.innerHTML = `<div class="error">No eligible Relative Rotation coordinates for this date and selection.</div>`;
+        return;
+      }
+
+      const width = chartWidth(container, 820);
+      const compact = width < 520;
+      const height = compact ? 360 : 480;
+      const margin = compact ? { top: 28, right: 24, bottom: 44, left: 46 } : { top: 34, right: 42, bottom: 52, left: 58 };
+      const innerW = width - margin.left - margin.right;
+      const innerH = height - margin.top - margin.bottom;
+      const farthestDeviation = Math.max(...allPoints.flatMap(point => [
+        Math.abs(point.x - 100),
+        Math.abs(point.y - 100)
+      ]));
+      const axisSpan = Math.max(2.5, farthestDeviation * 1.2 + 0.2);
+      const xSpan = axisSpan;
+      const ySpan = axisSpan;
+      const x = value => margin.left + ((value - (100 - xSpan)) / (2 * xSpan)) * innerW;
+      const y = value => margin.top + ((100 + ySpan - value) / (2 * ySpan)) * innerH;
+      const centerX = x(100);
+      const centerY = y(100);
+      const svg = makeSvg(width, height);
+
+      addSvgNode(svg, "rect", { x: margin.left, y: margin.top, width: innerW / 2, height: innerH / 2, fill: "#edf5f7" });
+      addSvgNode(svg, "rect", { x: centerX, y: margin.top, width: innerW / 2, height: innerH / 2, fill: "#edf6f1" });
+      addSvgNode(svg, "rect", { x: margin.left, y: centerY, width: innerW / 2, height: innerH / 2, fill: "#f8eeee" });
+      addSvgNode(svg, "rect", { x: centerX, y: centerY, width: innerW / 2, height: innerH / 2, fill: "#fbf4e9" });
+      addSvgNode(svg, "line", { x1: centerX, x2: centerX, y1: margin.top, y2: height - margin.bottom, class: "gridline" });
+      addSvgNode(svg, "line", { x1: margin.left, x2: width - margin.right, y1: centerY, y2: centerY, class: "gridline" });
+      addSvgNode(svg, "text", { x: margin.left + 8, y: margin.top + 16, fill: "#256f63", "font-size": compact ? 9 : 11 }, "Improving");
+      addSvgNode(svg, "text", { x: width - margin.right - 8, y: margin.top + 16, fill: "#1c7c54", "font-size": compact ? 9 : 11, "text-anchor": "end" }, "Leading");
+      addSvgNode(svg, "text", { x: margin.left + 8, y: height - margin.bottom - 8, fill: "#b0443e", "font-size": compact ? 9 : 11 }, "Lagging");
+      addSvgNode(svg, "text", { x: width - margin.right - 8, y: height - margin.bottom - 8, fill: "#b7791f", "font-size": compact ? 9 : 11, "text-anchor": "end" }, "Weakening");
+      addSvgNode(svg, "text", { x: width / 2, y: height - 12, fill: "#626b60", "font-size": 11, "text-anchor": "middle" }, "Relative Strength");
+      const yLabel = addSvgNode(svg, "text", { x: 14, y: height / 2, fill: "#626b60", "font-size": 11, "text-anchor": "middle" }, "Relative Momentum");
+      yLabel.setAttribute("transform", `rotate(-90 14 ${height / 2})`);
+      addSvgNode(svg, "text", { x: centerX + 4, y: height - margin.bottom + 15, fill: "#626b60", "font-size": 10 }, "100");
+      addSvgNode(svg, "text", { x: margin.left - 7, y: centerY - 5, fill: "#626b60", "font-size": 10, "text-anchor": "end" }, "100");
+
+      series.forEach(item => {
+        const color = SECTOR_COLORS[item.row.sector] || "#256f63";
+        const group = addSvgNode(svg, "g", { class: "rrg-series", "data-rrg-entity": item.row.id });
+        let activationPointerType = "mouse";
+        group.addEventListener("pointerdown", event => {
+          activationPointerType = event.pointerType || "mouse";
+        });
+        group.addEventListener("pointerenter", event => {
+          if (event.pointerType === "mouse") focusRrgEntity(item.row.id);
+        });
+        group.addEventListener("pointerleave", event => {
+          if (event.pointerType === "mouse") {
+            clearRrgEntityFocus();
+            hideTooltip();
+          }
+        });
+        group.addEventListener("click", () => {
+          const touchActivation = activationPointerType !== "mouse";
+          activationPointerType = "mouse";
+          if (touchActivation) {
+            handleRrgTouchTap(item.row.id, isSectorView ? () => drillToRrgSector(item.row.id, model) : null);
+          } else if (isSectorView) {
+            drillToRrgSector(item.row.id, model);
+          }
+        });
+        const pathData = item.points.map((point, index) => `${index ? "L" : "M"}${x(point.x).toFixed(1)},${y(point.y).toFixed(1)}`).join(" ");
+        addSvgNode(group, "path", { d: pathData, fill: "none", stroke: "transparent", "stroke-width": 12, "pointer-events": "stroke" });
+        for (let index = 1; index < item.points.length; index++) {
+          const previous = item.points[index - 1];
+          const point = item.points[index];
+          const progress = index / Math.max(1, item.points.length - 1);
+          addSvgNode(group, "line", {
+            x1: x(previous.x), y1: y(previous.y), x2: x(point.x), y2: y(point.y),
+            stroke: color, "stroke-width": 2, opacity: (0.14 + 0.66 * progress).toFixed(2),
+            "pointer-events": "none"
+          });
+        }
+        if (isSectorView) {
+          group.style.cursor = "pointer";
+        }
+        item.points.forEach((point, index) => {
+          const isHead = index === item.points.length - 1;
+          const progress = index / Math.max(1, item.points.length - 1);
+          const circle = addSvgNode(group, "circle", {
+            cx: x(point.x), cy: y(point.y), r: isHead ? 5.5 : 2.4,
+            fill: color, opacity: isHead ? 1 : (0.16 + 0.54 * progress).toFixed(2),
+            stroke: isHead ? "#ffffff" : "none", "stroke-width": isHead ? 1.5 : 0
+          });
+          circle.style.cursor = isSectorView ? "pointer" : "default";
+          circle.addEventListener("pointermove", event => {
+            if (event.pointerType === "mouse") showTooltip(rrgTooltip(point, model), event);
+          });
+          circle.addEventListener("pointerleave", hideTooltip);
+          if (isHead) {
+            addSvgNode(group, "text", {
+              x: x(point.x) + 7, y: y(point.y) - 7, fill: color,
+              "font-size": compact ? 9 : 11, "font-weight": 650
+            }, isSectorView ? displaySector(item.row.label) : item.row.label);
+          }
+        });
+      });
+      container.appendChild(svg);
+    }
+
+    function renderRrgTable(model) {
+      const table = document.getElementById("combinedTable");
+      const head = document.getElementById("combinedTableHead");
+      const body = document.getElementById("combinedTableRows");
+      const title = document.getElementById("tableTitle");
+      const hint = document.getElementById("tableHint");
+      const isSectorView = state.tableMode === "sectors";
+      body.innerHTML = "";
+      table.className = `${isSectorView ? "sector-table" : "stock-table"} rrg-table`;
+      head.innerHTML = `<tr><th>${isSectorView ? "Sector" : "Ticker"}</th><th>Score</th><th>Quadrant</th><th>Strength</th><th>Momentum</th><th>ΔX / ΔY</th></tr>`;
+      let rows;
+      if (isSectorView) {
+        rows = sortRrgRows(rrgRowsWithMovement(model.sectorCalc, model.latestDate));
+        title.textContent = "Sector Ranking";
+        hint.textContent = window.matchMedia?.("(hover: none)")?.matches
+          ? "Tap once to focus; tap the same sector again to view its stocks"
+          : "Hover to focus; click a sector row to view its constituent stocks";
+      } else {
+        rows = sortRrgRows(selectedRrgStockRows(model));
+        title.textContent = state.sector !== "All" ? `${displaySector(state.sector)} Stock Ranking` : parsedRrgTickers(model).length ? "Custom Basket Ranking" : "Stock Ranking";
+        hint.textContent = state.sector !== "All" || parsedRrgTickers(model).length
+          ? `${rows.length} selected stocks; scores remain normalized against the full eligible universe`
+          : "All eligible stocks ranked by equal-weight Relative Strength and Relative Momentum";
+      }
+      if (!rows.length) {
+        body.innerHTML = `<tr><td colspan="6">No eligible entities for this date and selection.</td></tr>`;
+        return;
+      }
+      rows.forEach(row => {
+        const tr = document.createElement("tr");
+        tr.dataset.rrgEntity = row.id;
+        tr.innerHTML = `<td><strong>${isSectorView ? displaySector(row.label) : row.label}</strong></td><td>${fmtRrg(row.score)}</td><td class="${quadrantClass(row.quadrant)}">${row.quadrant}</td><td>${fmtRrg(row.x)}</td><td>${fmtRrg(row.y)}</td><td>${fmtSignedRrg(row.deltaX)} / ${fmtSignedRrg(row.deltaY)}</td>`;
+        let activationPointerType = "mouse";
+        tr.addEventListener("pointerdown", event => {
+          activationPointerType = event.pointerType || "mouse";
+        });
+        tr.addEventListener("pointerenter", event => {
+          if (event.pointerType === "mouse") focusRrgEntity(row.id);
+        });
+        tr.addEventListener("pointerleave", event => {
+          if (event.pointerType === "mouse") clearRrgEntityFocus();
+        });
+        tr.addEventListener("click", () => {
+          const touchActivation = activationPointerType !== "mouse";
+          activationPointerType = "mouse";
+          if (touchActivation) {
+            handleRrgTouchTap(row.id, isSectorView ? () => drillToRrgSector(row.id, model) : null);
+          } else if (isSectorView) {
+            drillToRrgSector(row.id, model);
+          }
+        });
+        body.appendChild(tr);
+      });
+    }
+
+    function renderRrgStats(model) {
+      const sectors = sortRrgRows(rrgRowsWithMovement(model.sectorCalc, model.latestDate));
+      const stocks = sortRrgRows(selectedRrgStockRows(model));
+      const bestSector = sectors[0];
+      const worstSector = sectors[sectors.length - 1];
+      const topStock = stocks[0];
+      const worstStock = stocks[stocks.length - 1];
+      const note = row => row ? `${row.quadrant} · score ${fmtRrg(row.score)} · RS ${fmtRrg(row.x)} · momentum ${fmtRrg(row.y)}` : "-";
+      document.getElementById("bestSector").textContent = bestSector ? displaySector(bestSector.label) : "-";
+      document.getElementById("bestSectorNote").textContent = note(bestSector);
+      document.getElementById("worstSector").textContent = worstSector ? displaySector(worstSector.label) : "-";
+      document.getElementById("worstSectorNote").textContent = note(worstSector);
+      document.getElementById("topStock").textContent = topStock ? topStock.label : "-";
+      document.getElementById("topStockNote").textContent = topStock ? `${displaySector(topStock.sector)} · ${note(topStock)}` : "-";
+      document.getElementById("worstStock").textContent = worstStock ? worstStock.label : "-";
+      document.getElementById("worstStockNote").textContent = worstStock ? `${displaySector(worstStock.sector)} · ${note(worstStock)}` : "-";
+    }
+
+    function renderRrgHelp(model) {
+      document.getElementById("sectorViewHelp").innerHTML = `<strong>Sector view:</strong> each sector is a synthetic market-cap-weighted index using previous-session market-cap weights, measured against the VN-Index.`;
+      document.getElementById("rotationDeltaHelp").innerHTML = `<strong>MSWerkzeug 10/50 coordinates:</strong> normalize entity and benchmark prices, form their relative-price series, then calculate RS-Ratio from its ${model.mode.normalizationWindow}-session rolling mean and standard deviation. RS-Momentum compares RS-Ratio with ${model.mode.momentumLookback} sessions earlier and normalizes that series over ${model.mode.normalizationWindow} sessions.`;
+      document.getElementById("selectedViewHelp").innerHTML = `<strong>Final stabilization:</strong> both coordinates use a ${model.mode.smoothingWindow}-session simple moving average. Tails show consecutive daily coordinates. On touch screens, tap once to focus and tap the same sector again to open its stocks.`;
+      document.getElementById("rankingIntroHelp").innerHTML = `<strong>RRG score:</strong> the equal-weight average of Relative Strength and Relative Momentum: (X + Y) / 2. The 100 axes represent each entity's rolling baseline.`;
+      document.getElementById("scoreMethodHelp").innerHTML = `<strong>Stable ranking:</strong> all coordinates are calculated before display filters are applied, so sector clicks and ticker searches never change an entity's score.`;
+    }
+
     function renderAll(model) {
+      if (state.methodology === "relative-rotation") {
+        renderRrgHelp(model);
+        renderRrgStats(model);
+        renderRrgChart(model);
+        renderRrgTable(model);
+        return;
+      }
       renderMethodologyHelp(model);
       renderStats(model);
       renderSectorChart(model);
       renderCombinedTable(model);
     }
 
+    function updateMethodologyControls() {
+      const period = document.getElementById("period");
+      const isRrg = state.methodology === "relative-rotation";
+      document.getElementById("periodLabel").textContent = "Period";
+      document.getElementById("tailControl").hidden = !isRrg;
+      if (isRrg) {
+        period.innerHTML = `<option value="10-50">10/50</option>`;
+        period.value = state.rrgMode;
+        document.getElementById("tailPoints").value = state.tailPoints;
+      } else {
+        period.innerHTML = `<option value="5-20">5/20</option><option value="10-50">10/50</option>`;
+        period.value = state.flowPeriod;
+      }
+    }
+
     async function boot() {
       try {
+        if (typeof RelativeRotation === "undefined") throw new Error("Relative Rotation engine did not load");
         const [csvText, coverageText] = await Promise.all([
           fetchDashboardText(pricePath),
           fetchDashboardText(coveragePath)
         ]);
         const rawRows = parseCsv(csvText);
         const coverage = parseCoverage(coverageText);
-        const dateInput = document.getElementById("baseDate");
-        const fullModel = buildModel(rawRows, coverage, "", state.period);
-        state.baseDate = fullModel.latestDate;
-        dateInput.min = fullModel.availableDates[0] || "";
-        dateInput.max = fullModel.latestDate || "";
-        dateInput.value = state.baseDate;
+        const rrgData = RelativeRotation.prepare(rawRows, coverage);
+        const fullModel = buildModel(rawRows, coverage, state.flowPeriod);
         let model = fullModel;
 
         function rebuildAndRender() {
-          model = buildModel(rawRows, coverage, state.baseDate, state.period);
+          model = state.methodology === "relative-rotation"
+            ? buildRrgModel(rrgData)
+            : buildModel(rawRows, coverage, state.flowPeriod);
           document.getElementById("asOf").textContent = `Data through ${model.latestDate}`;
-          document.getElementById("coverageInfo").textContent = `${model.stockStats.length} stocks across ${model.sectorStats.length} sectors`;
+          document.getElementById("coverageInfo").textContent = `${rrgData.tickers.length} stocks across ${rrgData.sectors.length} sectors`;
           renderAll(model);
         }
 
         document.getElementById("methodology").addEventListener("change", event => {
           state.methodology = event.target.value;
-          renderAll(model);
+          state.sector = "All";
+          state.search = "";
+          state.tableMode = "sectors";
+          document.getElementById("search").value = "";
+          updateMethodologyControls();
+          rebuildAndRender();
         });
         document.getElementById("period").addEventListener("change", event => {
-          state.period = event.target.value;
+          if (state.methodology === "relative-rotation") {
+            state.rrgMode = event.target.value;
+            state.tailPoints = RelativeRotation.MODE_CONFIG[state.rrgMode].defaultTailPoints;
+            document.getElementById("tailPoints").value = state.tailPoints;
+          } else {
+            state.flowPeriod = event.target.value;
+          }
           rebuildAndRender();
         });
-        dateInput.addEventListener("change", event => {
-          state.baseDate = event.target.value || fullModel.latestDate;
-          rebuildAndRender();
+        document.getElementById("tailPoints").addEventListener("change", event => {
+          state.tailPoints = Math.max(3, Math.min(30, Number(event.target.value) || RelativeRotation.MODE_CONFIG[state.rrgMode].defaultTailPoints));
+          event.target.value = state.tailPoints;
+          renderAll(model);
         });
         document.getElementById("search").addEventListener("input", event => {
           state.search = event.target.value;
@@ -1200,7 +1615,12 @@
         document.addEventListener("pointerdown", event => {
           if (!event.target.closest(".title-with-help")) closeHelpPopovers();
           if (!event.target.closest("#tooltip")) hideTooltip();
+          if (pinnedRrgEntity && !event.target.closest("[data-rrg-entity]")) {
+            pinnedRrgEntity = "";
+            clearRrgEntityFocus(true);
+          }
         });
+        updateMethodologyControls();
         rebuildAndRender();
       } catch (error) {
         document.getElementById("app").innerHTML = `<div class="error">${error.message}. Serve this folder over HTTP so the dashboard can read the CSV.</div>`;
