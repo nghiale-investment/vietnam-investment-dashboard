@@ -1,0 +1,104 @@
+ticker,gics_sector,exchange,status
+VCB,Banks,HOSE,listed
+CTG,Banks,HOSE,listed
+BID,Banks,HOSE,listed
+ACB,Banks,HOSE,listed
+MBB,Banks,HOSE,listed
+TCB,Banks,HOSE,listed
+VPB,Banks,HOSE,listed
+STB,Banks,HOSE,listed
+HDB,Banks,HOSE,listed
+TPB,Banks,HOSE,listed
+VIB,Banks,HOSE,listed
+OCB,Banks,HOSE,listed
+NAB,Banks,HOSE,listed
+MSB,Banks,HOSE,listed
+SHB,Banks,HOSE,listed
+SSB,Banks,HOSE,listed
+EIB,Banks,HOSE,listed
+LPB,Banks,HOSE,listed
+SSI,Financial Services,HOSE,listed
+HCM,Financial Services,HOSE,listed
+VCI,Financial Services,HOSE,listed
+TCX,Financial Services,HOSE,listed
+VPX,Financial Services,HOSE,listed
+VCK,Financial Services,HOSE,listed
+VIX,Financial Services,HOSE,listed
+VND,Financial Services,HOSE,listed
+BVH,Insurance,HOSE,listed
+PVI,Insurance,HNX,listed
+VHM,Real Estate,HOSE,listed
+VIC,Real Estate,HOSE,listed
+VRE,Real Estate,HOSE,listed
+KDH,Real Estate,HOSE,listed
+NLG,Real Estate,HOSE,listed
+NVL,Real Estate,HOSE,listed
+PDR,Real Estate,HOSE,listed
+DXG,Real Estate,HOSE,listed
+DXS,Real Estate,HOSE,listed
+KBC,Real Estate,HOSE,listed
+IDC,Capital Goods,HNX,listed
+SIP,Real Estate,HOSE,listed
+BCM,Real Estate,HOSE,listed
+VGC,Capital Goods,HOSE,listed
+TCH,Capital Goods,HOSE,listed
+HHS,Capital Goods,HOSE,listed
+VEA,Capital Goods,UPCOM,listed
+HDC,Real Estate,HOSE,listed
+SZC,Capital Goods,HOSE,listed
+VNM,Consumer Staples,HOSE,listed
+MSN,Consumer Staples,HOSE,listed
+MCH,Consumer Staples,HOSE,listed
+SAB,Consumer Staples,HOSE,listed
+VHC,Consumer Staples,HOSE,listed
+ANV,Consumer Staples,HOSE,listed
+PAN,Consumer Staples,HOSE,listed
+DBC,Consumer Staples,HOSE,listed
+MWG,Consumer Discretionary,HOSE,listed
+DMX,Consumer Discretionary,HOSE,ipo_pending
+PNJ,Consumer Discretionary,HOSE,listed
+FRT,Consumer Discretionary,HOSE,listed
+VPL,Consumer Discretionary,HOSE,listed
+TCM,Consumer Discretionary,HOSE,listed
+TNG,Consumer Discretionary,HNX,listed
+FPT,Information Technology,HOSE,listed
+DGW,Information Technology,HOSE,listed
+HPG,Materials,HOSE,listed
+HSG,Capital Goods,HOSE,listed
+NKG,Materials,HOSE,listed
+BMP,Capital Goods,HOSE,listed
+DGC,Materials,HOSE,listed
+GVR,Materials,HOSE,listed
+MSR,Materials,UPCOM,listed
+PHR,Materials,HOSE,listed
+DCM,Materials,HOSE,listed
+DPM,Materials,HOSE,listed
+CSV,Materials,HOSE,listed
+GMD,Transportation,HOSE,listed
+HVN,Transportation,HOSE,listed
+VJC,Transportation,HOSE,listed
+ACV,Transportation,UPCOM,listed
+HAH,Transportation,HOSE,listed
+SCS,Transportation,HOSE,listed
+VTP,Transportation,HOSE,listed
+HDG,Capital Goods,HOSE,listed
+CTD,Capital Goods,HOSE,listed
+REE,Capital Goods,HOSE,listed
+GEX,Capital Goods,HOSE,listed
+GEE,Capital Goods,HOSE,listed
+GEL,Capital Goods,HOSE,listed
+PC1,Capital Goods,HOSE,listed
+VCG,Capital Goods,HOSE,listed
+DPG,Capital Goods,HOSE,listed
+CTR,Capital Goods,HOSE,listed
+PLX,Energy,HOSE,listed
+PVD,Energy,HOSE,listed
+PVT,Energy,HOSE,listed
+PVS,Energy,HNX,listed
+OIL,Energy,UPCOM,listed
+BSR,Energy,HOSE,listed
+GAS,Utilities,HOSE,listed
+POW,Utilities,HOSE,listed
+PGV,Utilities,HOSE,listed
+NT2,Utilities,HOSE,listed
+BWE,Utilities,HOSE,listed

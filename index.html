@@ -1,0 +1,1210 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Investment Dashboard</title>
+  <style>
+    :root {
+      --bg: #f6f7f4;
+      --surface: #ffffff;
+      --surface-2: #eef2ec;
+      --text: #20231f;
+      --muted: #626b60;
+      --line: #d8ddd4;
+      --accent: #256f63;
+      --accent-2: #9b5c2e;
+      --good: #1c7c54;
+      --bad: #b0443e;
+      --warn: #b7791f;
+      --shadow: 0 12px 30px rgba(32, 35, 31, 0.08);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    header {
+      padding: 22px 28px 14px;
+      border-bottom: 1px solid var(--line);
+      background: var(--surface);
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+
+    h1 {
+      font-size: 22px;
+      line-height: 1.2;
+      margin: 0 0 6px;
+      font-weight: 650;
+      letter-spacing: 0;
+    }
+
+    .subhead {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    main {
+      padding: 18px 28px 32px;
+      display: grid;
+      gap: 18px;
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: end;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      border-radius: 8px;
+    }
+
+    label {
+      display: grid;
+      gap: 5px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    select, input {
+      appearance: none;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--surface);
+      color: var(--text);
+      padding: 8px 10px;
+      min-width: 150px;
+      font: inherit;
+      font-size: 14px;
+    }
+
+    input { min-width: 190px; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .stat, section {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .stat {
+      padding: 14px;
+      min-height: 86px;
+    }
+
+    .stat .label {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 7px;
+    }
+
+    .stat .value {
+      font-size: 22px;
+      font-weight: 650;
+      line-height: 1.15;
+    }
+
+    .stat .note {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 5px;
+    }
+
+    section {
+      padding: 16px;
+      overflow: visible;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 12px;
+      position: relative;
+    }
+
+    h2 {
+      font-size: 16px;
+      margin: 0;
+      font-weight: 650;
+      letter-spacing: 0;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .title-with-help {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      position: relative;
+      min-width: 0;
+      flex-wrap: wrap;
+    }
+
+    .reset-view {
+      appearance: none;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--surface-2);
+      color: var(--text);
+      padding: 4px 8px;
+      font: inherit;
+      font-size: 12px;
+      line-height: 1.2;
+      cursor: pointer;
+    }
+
+    .reset-view:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .reset-view[hidden] {
+      display: none;
+    }
+
+    .info-button {
+      appearance: none;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      width: 20px;
+      height: 20px;
+      display: inline-grid;
+      place-items: center;
+      padding: 0;
+      background: var(--surface-2);
+      color: var(--muted);
+      font: inherit;
+      font-size: 12px;
+      line-height: 1;
+      cursor: help;
+    }
+
+    .help-popover {
+      position: absolute;
+      top: 28px;
+      left: 0;
+      width: min(420px, calc(100vw - 56px));
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-4px);
+      transition: opacity 120ms ease, transform 120ms ease, visibility 120ms ease;
+      background: var(--text);
+      color: var(--surface);
+      border-radius: 8px;
+      padding: 10px 12px;
+      box-shadow: var(--shadow);
+      font-size: 12px;
+      line-height: 1.45;
+      z-index: 5;
+    }
+
+    .help-popover strong {
+      color: var(--surface);
+      font-weight: 650;
+    }
+
+    .help-popover p {
+      margin: 0 0 7px;
+    }
+
+    .help-popover p:last-child {
+      margin-bottom: 0;
+    }
+
+    .title-with-help.help-visible .help-popover {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .chart {
+      width: 100%;
+      min-height: 300px;
+      overflow: hidden;
+    }
+
+    svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      overflow: visible;
+    }
+
+    .axis text {
+      fill: var(--muted);
+      font-size: 11px;
+    }
+
+    .axis line, .axis path, .gridline {
+      stroke: var(--line);
+      stroke-width: 1;
+    }
+
+    .bar-pos { fill: var(--accent); }
+    .bar-neg { fill: var(--bad); }
+    .mark-line { fill: none; stroke: var(--accent); stroke-width: 2; }
+    .mark-line-2 { fill: none; stroke: var(--accent-2); stroke-width: 2; }
+    .dot { fill: var(--accent); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th, td {
+      padding: 8px 8px;
+      border-bottom: 1px solid var(--line);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 650;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      background: var(--surface);
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    td:first-child, th:first-child,
+    td:nth-child(2), th:nth-child(2) {
+      text-align: left;
+    }
+
+    .stock-table td:nth-child(2), .stock-table th:nth-child(2) { text-align: right; }
+
+    tbody tr {
+      cursor: pointer;
+    }
+
+    tbody tr:hover, tbody tr.selected {
+      background: var(--surface-2);
+    }
+
+    .table-wrap {
+      max-height: 520px;
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    .table-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .pos { color: var(--good); }
+    .neg { color: var(--bad); }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 2px 8px;
+      color: var(--muted);
+      background: var(--surface-2);
+      font-size: 12px;
+    }
+
+    .detail {
+      display: grid;
+      gap: 12px;
+    }
+
+    .detail-title {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 2px;
+    }
+
+    .detail-title strong {
+      font-size: 18px;
+    }
+
+    .mini-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .mini {
+      border: 1px solid var(--line);
+      background: var(--surface-2);
+      border-radius: 8px;
+      padding: 10px;
+    }
+
+    .mini div:first-child {
+      color: var(--muted);
+      font-size: 11px;
+      margin-bottom: 4px;
+    }
+
+    .mini div:last-child {
+      font-weight: 650;
+      font-size: 15px;
+    }
+
+    .tooltip {
+      position: fixed;
+      pointer-events: none;
+      background: var(--text);
+      color: var(--surface);
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      max-width: 260px;
+      opacity: 0;
+      transform: translate(-50%, -110%);
+      transition: opacity 120ms ease;
+      z-index: 4;
+    }
+
+    .error {
+      padding: 18px;
+      border: 1px solid var(--bad);
+      color: var(--bad);
+      background: var(--surface);
+      border-radius: 8px;
+    }
+
+    @media (max-width: 980px) {
+      header {
+        position: static;
+        padding: 14px 16px 10px;
+      }
+
+      h1 {
+        font-size: 18px;
+        margin-bottom: 4px;
+      }
+
+      .subhead {
+        gap: 8px;
+        font-size: 12px;
+      }
+
+      main {
+        padding: 12px 12px 24px;
+        gap: 12px;
+      }
+
+      .toolbar {
+        padding: 10px;
+        gap: 10px;
+      }
+
+      label {
+        flex: 1 1 160px;
+      }
+
+      select, input {
+        width: 100%;
+        min-width: 0;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .stat {
+        min-height: 0;
+        padding: 10px;
+      }
+
+      .stat .label {
+        margin-bottom: 4px;
+      }
+
+      .stat .value {
+        font-size: 17px;
+        overflow-wrap: anywhere;
+      }
+
+      .stat .note {
+        font-size: 11px;
+        line-height: 1.35;
+      }
+
+      .grid-2 { grid-template-columns: 1fr; }
+
+      section {
+        padding: 12px;
+        overflow: hidden;
+      }
+
+      .section-head {
+        align-items: flex-start;
+        gap: 6px;
+        flex-direction: column;
+      }
+
+      .hint {
+        line-height: 1.35;
+      }
+
+      .help-popover {
+        width: min(330px, calc(100vw - 40px));
+      }
+
+      .chart {
+        min-height: 220px;
+      }
+
+      .table-wrap {
+        max-height: 420px;
+      }
+
+      .mini-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      th, td { padding: 7px 6px; }
+    }
+
+    @media (max-width: 560px) {
+      .subhead span:nth-child(3) {
+        display: none;
+      }
+
+      .toolbar {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px;
+        padding: 7px;
+      }
+
+      .toolbar label {
+        min-width: 0;
+        gap: 3px;
+        font-size: 10px;
+      }
+
+      .toolbar label:nth-child(3) { grid-column: 1 / -1; }
+
+      .toolbar select,
+      .toolbar input {
+        min-height: 30px;
+        padding: 5px 7px;
+        font-size: 12px;
+      }
+
+      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+
+      .stat { padding: 7px 8px; }
+      .stat .label { font-size: 10px; margin-bottom: 2px; }
+      .stat .value { font-size: 15px; }
+      .stat .note { display: none; }
+
+      .chart { min-height: 190px; }
+
+      .table-actions { width: 100%; }
+      .table-actions .reset-view { flex: 1 1 auto; }
+
+      .table-wrap {
+        font-size: 12px;
+      }
+
+      th, td {
+        padding: 6px 5px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Investment Dashboard</h1>
+    <div class="subhead">
+      <span id="asOf">Loading data...</span>
+      <span id="coverageInfo"></span>
+      <span>Signals use adjusted prices, traded value, volume, and market cap.</span>
+    </div>
+  </header>
+
+  <main id="app">
+    <div class="toolbar" aria-label="Dashboard controls">
+      <label>
+        Methodology
+        <select id="methodology">
+          <option value="flow-rotation" selected>Flow Rotation</option>
+        </select>
+      </label>
+      <label>
+        Base date
+        <input id="baseDate" type="date">
+      </label>
+      <label>
+        Search ticker
+        <input id="search" type="search" placeholder="e.g. HDB, VND, HVN">
+      </label>
+    </div>
+
+    <div class="stats" aria-label="Summary metrics">
+      <div class="stat">
+        <div class="label">Best current sector</div>
+        <div class="value" id="bestSector">-</div>
+        <div class="note" id="bestSectorNote">-</div>
+      </div>
+      <div class="stat">
+        <div class="label">Worst current sector</div>
+        <div class="value" id="worstSector">-</div>
+        <div class="note" id="worstSectorNote">-</div>
+      </div>
+      <div class="stat">
+        <div class="label">Top stock score</div>
+        <div class="value" id="topStock">-</div>
+        <div class="note" id="topStockNote">-</div>
+      </div>
+      <div class="stat">
+        <div class="label">Worst stock score</div>
+        <div class="value" id="worstStock">-</div>
+        <div class="note" id="worstStockNote">-</div>
+      </div>
+    </div>
+
+    <section>
+      <div class="section-head">
+        <div class="title-with-help">
+          <h2 id="rotationTitle">Sector Rotation</h2>
+          <button class="reset-view" id="marketReset" type="button" hidden>Overview</button>
+          <button class="info-button" type="button" aria-label="Sector rotation methodology" aria-describedby="rotationHelp">?</button>
+          <div class="help-popover" id="rotationHelp" role="tooltip">
+            <p><strong>Sector view:</strong> 10d share is each sector's traded value over the latest 10 trading days divided by total coverage traded value. Prior share uses the preceding 40 trading days.</p>
+            <p><strong>Rotation delta:</strong> 10d share minus prior 40d share. Bars are ranked from the largest positive delta to the weakest delta.</p>
+            <p><strong>Selected sector or custom basket:</strong> the chart switches to stock value surge, calculated as 10d average traded value divided by prior 40d average traded value, then shown as percentage above or below baseline.</p>
+          </div>
+        </div>
+        <div class="hint" id="rotationHint">Recent value-share change vs prior 40 trading days</div>
+      </div>
+      <div id="sectorChart" class="chart" role="img" aria-label="Sector rotation bar chart"></div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div class="title-with-help">
+          <h2 id="tableTitle">Sector Table</h2>
+          <button class="info-button" type="button" aria-label="Stock ranking methodology" aria-describedby="rankingHelp">?</button>
+          <div class="help-popover" id="rankingHelp" role="tooltip">
+            <p><strong>Score scale:</strong> each input is percentile-ranked across the coverage universe at the selected base date. The stock score is the average of the available percentile ranks, from 0.00 to 1.00.</p>
+            <p><strong>Current 20-day method:</strong> trend proximity, 5d-vs-prior-20d turnover surge, 10d adjusted price momentum, 5d-vs-prior-20d value surge, and sector rotation delta.</p>
+            <p><strong>Filters:</strong> sector clicks or ticker search only change which stocks are displayed. The percentile score is still calculated against the full coverage universe.</p>
+          </div>
+        </div>
+        <div class="table-actions">
+          <button class="reset-view" id="tableOverview" type="button">Overview</button>
+          <button class="reset-view" id="allStockRanking" type="button">Stock Ranking</button>
+        </div>
+      </div>
+      <div class="hint" id="tableHint">Click a sector row to view its stock ranking</div>
+      <div class="table-wrap">
+        <table id="combinedTable">
+          <thead id="combinedTableHead"></thead>
+          <tbody id="combinedTableRows"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <div id="tooltip" class="tooltip"></div>
+
+  <script>
+    const pricePath = "0.pricedata.csv";
+    const coveragePath = "0.coverage_universe.csv";
+    const state = { methodology: "flow-rotation", horizon: 20, sector: "All", search: "", tableMode: "sectors", baseDate: "" };
+    const fmtPct = value => Number.isFinite(value) ? `${(value * 100).toFixed(1)}%` : "-";
+    const fmtPp = value => Number.isFinite(value) ? `${(value * 100).toFixed(2)}pp` : "-";
+    const fmtBn = value => Number.isFinite(value) ? value.toLocaleString("en-US", { maximumFractionDigits: 0 }) : "-";
+    const fmtScore = value => Number.isFinite(value) ? value.toFixed(2) : "-";
+
+    function parseCsv(text) {
+      const rows = [];
+      let row = [], field = "", quoted = false;
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i], next = text[i + 1];
+        if (quoted) {
+          if (char === '"' && next === '"') { field += '"'; i++; }
+          else if (char === '"') quoted = false;
+          else field += char;
+        } else {
+          if (char === '"') quoted = true;
+          else if (char === ",") { row.push(field); field = ""; }
+          else if (char === "\n") { row.push(field); rows.push(row); row = []; field = ""; }
+          else if (char !== "\r") field += char;
+        }
+      }
+      if (field.length || row.length) { row.push(field); rows.push(row); }
+      const header = rows.shift();
+      return rows.filter(r => r.length === header.length).map(r => Object.fromEntries(header.map((h, i) => [h, r[i]])));
+    }
+
+    async function fetchDashboardText(path) {
+      const response = await fetch(path);
+      if (!response.ok) throw new Error(`Could not load ${path}`);
+      if (!response.headers.get("content-type")?.includes("application/gzip")) return response.text();
+      if (!response.body || typeof DecompressionStream === "undefined") {
+        throw new Error(`This browser cannot unpack ${path}`);
+      }
+      return new Response(response.body.pipeThrough(new DecompressionStream("gzip"))).text();
+    }
+
+    function parseCoverage(text) {
+      const map = new Map();
+      parseCsv(text).forEach(row => {
+        if (row.ticker && row.gics_sector) map.set(row.ticker, row.gics_sector);
+      });
+      return map;
+    }
+
+    function mean(values) {
+      const valid = values.filter(Number.isFinite);
+      return valid.length ? valid.reduce((a, b) => a + b, 0) / valid.length : NaN;
+    }
+
+    function sum(values) {
+      return values.filter(Number.isFinite).reduce((a, b) => a + b, 0);
+    }
+
+    function percentileRanks(items, key) {
+      const valid = items.filter(d => Number.isFinite(d[key])).sort((a, b) => a[key] - b[key]);
+      const ranks = new Map();
+      valid.forEach((d, i) => ranks.set(d.ticker, valid.length > 1 ? i / (valid.length - 1) : 0.5));
+      return ranks;
+    }
+
+    function pctChange(series, lookback) {
+      if (series.length <= lookback) return NaN;
+      const now = series[series.length - 1].adjustedLast;
+      const then = series[series.length - 1 - lookback].adjustedLast;
+      return Number.isFinite(now) && Number.isFinite(then) && then !== 0 ? now / then - 1 : NaN;
+    }
+
+    function buildModel(rawRows, coverage, baseDate = "") {
+      const parsedRows = rawRows.map(row => ({
+        date: row.date,
+        ticker: row.ticker,
+        sector: row.ticker === "VNINDEX" ? "Index" : coverage.get(row.ticker) || "Unknown",
+        adjustedLast: Number(row.adjusted_last),
+        last: Number(row.last),
+        value: Number(row.value_vnd_bn),
+        volume: Number(row.volume),
+        marketCap: Number(row.market_cap_vnd_bn)
+      })).filter(row => Number.isFinite(row.adjustedLast));
+
+      const availableDates = [...new Set(parsedRows.filter(row => row.ticker !== "VNINDEX").map(d => d.date))].sort();
+      const requestedDate = baseDate || availableDates[availableDates.length - 1];
+      const effectiveDate = availableDates.filter(date => date <= requestedDate).pop() || availableDates[0];
+      const snapshotRows = parsedRows.filter(row => !effectiveDate || row.date <= effectiveDate);
+      const indexRows = snapshotRows.filter(row => row.ticker === "VNINDEX");
+      const rows = snapshotRows.filter(row => row.ticker !== "VNINDEX");
+
+      rows.sort((a, b) => a.date.localeCompare(b.date) || a.ticker.localeCompare(b.ticker));
+      const dates = [...new Set(rows.map(d => d.date))].sort();
+      const latestDate = dates[dates.length - 1];
+      const recent10 = dates.slice(-10);
+      const prior40 = dates.slice(-50, -10);
+      const byTicker = new Map();
+      rows.forEach(row => {
+        if (!byTicker.has(row.ticker)) byTicker.set(row.ticker, []);
+        byTicker.get(row.ticker).push(row);
+      });
+      const sectorDaily = new Map();
+      dates.forEach(date => {
+        const dayRows = rows.filter(row => row.date === date);
+        const totalValue = sum(dayRows.map(d => d.value));
+        const bySector = new Map();
+        dayRows.forEach(row => {
+          if (!bySector.has(row.sector)) bySector.set(row.sector, []);
+          bySector.get(row.sector).push(row);
+        });
+        bySector.forEach((items, sector) => {
+          const key = `${date}|${sector}`;
+          sectorDaily.set(key, { date, sector, value: sum(items.map(d => d.value)), share: sum(items.map(d => d.value)) / totalValue });
+        });
+      });
+
+      const sectors = [...new Set(rows.map(d => d.sector))].sort();
+      const sectorStats = sectors.map(sector => {
+        const allRows = rows.filter(row => row.sector === sector);
+        const latestRows = allRows.filter(row => row.date === latestDate);
+        const value10 = sum(allRows.filter(row => recent10.includes(row.date)).map(d => d.value));
+        const total10 = sum(rows.filter(row => recent10.includes(row.date)).map(d => d.value));
+        const valuePrior = sum(allRows.filter(row => prior40.includes(row.date)).map(d => d.value));
+        const totalPrior = sum(rows.filter(row => prior40.includes(row.date)).map(d => d.value));
+        const share10 = value10 / total10;
+        const sharePrior = valuePrior / totalPrior;
+        const sectorSeries = dates.map(date => sectorDaily.get(`${date}|${sector}`)).filter(Boolean);
+        const latest20 = sectorSeries.slice(-20);
+        const ret20 = mean(latest20.map(day => {
+          const dayRows = rows.filter(row => row.date === day.date && row.sector === sector);
+          return mean(dayRows.map(row => {
+            const series = byTicker.get(row.ticker);
+            const index = series.findIndex(item => item.date === row.date);
+            if (index <= 0) return NaN;
+            return series[index].adjustedLast / series[index - 1].adjustedLast - 1;
+          }));
+        }));
+        return { sector, names: new Set(allRows.map(d => d.ticker)).size, share10, sharePrior, delta: share10 - sharePrior, ret20, value10 };
+      }).sort((a, b) => b.delta - a.delta);
+
+      const sectorDelta = new Map(sectorStats.map(d => [d.sector, d.delta]));
+      const sectorMomentum = new Map(sectorStats.map(d => [d.sector, d.ret20]));
+      const stockStats = [...byTicker.entries()].map(([ticker, series]) => {
+        const latest = series[series.length - 1];
+        const last20AdjustedHigh = Math.max(...series.slice(-20).map(d => d.adjustedLast).filter(Number.isFinite));
+        const recent = series.filter(row => recent10.includes(row.date));
+        const prior = series.filter(row => prior40.includes(row.date));
+        const recent5 = series.slice(-5);
+        const prior20 = series.slice(-25, -5);
+        const value10 = mean(recent.map(d => d.value));
+        const valuePrior = mean(prior.map(d => d.value));
+        const valueSurge = valuePrior ? value10 / valuePrior : NaN;
+        const value5 = mean(recent5.map(d => d.value));
+        const valuePrior20 = mean(prior20.map(d => d.value));
+        const valueSurge5v20 = valuePrior20 ? value5 / valuePrior20 : NaN;
+        const turnover10 = mean(recent.map(d => Number.isFinite(d.value) && Number.isFinite(d.marketCap) && d.marketCap ? d.value / d.marketCap : NaN));
+        const turnover5 = mean(recent5.map(d => Number.isFinite(d.value) && Number.isFinite(d.marketCap) && d.marketCap ? d.value / d.marketCap : NaN));
+        const turnoverPrior20 = mean(prior20.map(d => Number.isFinite(d.value) && Number.isFinite(d.marketCap) && d.marketCap ? d.value / d.marketCap : NaN));
+        const turnoverSurge5v20 = turnoverPrior20 ? turnover5 / turnoverPrior20 : NaN;
+        const mom10 = pctChange(series, 10);
+        const mom20 = pctChange(series, 20);
+        const trendProximity = Number.isFinite(last20AdjustedHigh) && last20AdjustedHigh ? latest.adjustedLast / last20AdjustedHigh - 1 : NaN;
+        const accumulation = Number.isFinite(mom10) && Number.isFinite(valueSurge) ? mom10 * Math.log1p(valueSurge) : NaN;
+        return {
+          ticker,
+          sector: latest.sector,
+          last: latest.last,
+          marketCap: latest.marketCap,
+          value10,
+          valueSurge,
+          turnover10,
+          mom10,
+          mom20,
+          trendProximity,
+          accumulation,
+          sectorDelta: sectorDelta.get(latest.sector) || 0,
+          sectorMomentum: sectorMomentum.get(latest.sector) || 0,
+          valueSurge5v20,
+          turnoverSurge5v20,
+          series
+        };
+      });
+
+      return { rows, indexRows, dates, latestDate, requestedDate, effectiveDate, availableDates, sectorStats, stockStats };
+    }
+
+    function scoreStocks(stocks, horizon) {
+      const inputsByHorizon = {
+        5: ["sectorDelta", "sectorMomentum", "trendProximity", "turnoverSurge5v20", "valueSurge"],
+        10: ["sectorDelta", "sectorMomentum", "mom10", "trendProximity", "accumulation"],
+        20: ["trendProximity", "turnoverSurge5v20", "mom10", "valueSurge5v20", "sectorDelta"]
+      };
+      const inputs = inputsByHorizon[horizon] || inputsByHorizon[10];
+      const ranks = Object.fromEntries(inputs.map(key => [key, percentileRanks(stocks, key)]));
+      stocks.forEach(row => {
+        const parts = inputs.map(key => ranks[key].get(row.ticker)).filter(Number.isFinite);
+        row.score = parts.length ? mean(parts) : NaN;
+      });
+    }
+
+    function makeSvg(width, height) {
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+      svg.setAttribute("role", "img");
+      return svg;
+    }
+
+    function chartWidth(container, fallback) {
+      return Math.max(320, Math.min(fallback, Math.round(container.clientWidth || fallback)));
+    }
+
+    function showTooltip(html, event) {
+      const tip = document.getElementById("tooltip");
+      tip.innerHTML = html;
+      tip.style.left = `${event.clientX}px`;
+      tip.style.top = `${event.clientY}px`;
+      tip.style.opacity = 1;
+    }
+
+    function hideTooltip() {
+      document.getElementById("tooltip").style.opacity = 0;
+    }
+
+    function closeHelpPopovers(except = null) {
+      document.querySelectorAll(".title-with-help.help-visible").forEach(item => {
+        if (item !== except) item.classList.remove("help-visible");
+      });
+    }
+
+    function parsedSearchTickers(model) {
+      const available = new Set(model.stockStats.map(d => d.ticker));
+      return state.search
+        .toUpperCase()
+        .split(/[\s,;]+/)
+        .map(item => item.trim())
+        .filter(Boolean)
+        .filter((item, index, items) => items.indexOf(item) === index)
+        .filter(item => available.has(item));
+    }
+
+    function activeSelection(model) {
+      const tickers = parsedSearchTickers(model);
+      if (tickers.length) {
+        return {
+          type: "custom",
+          title: "Custom Basket",
+          tickers,
+          stocks: model.stockStats.filter(d => tickers.includes(d.ticker))
+        };
+      }
+      if (state.sector !== "All") {
+        return {
+          type: "sector",
+          title: state.sector,
+          tickers: [],
+          stocks: model.stockStats.filter(d => d.sector === state.sector)
+        };
+      }
+      return {
+        type: "market",
+        title: "All sectors",
+        tickers: [],
+        stocks: model.stockStats
+      };
+    }
+
+    function rotationChartData(model) {
+      const selection = activeSelection(model);
+      if (selection.type === "market") {
+        return {
+          title: "Sector Rotation",
+          hint: "Recent sector value-share change vs prior 40 trading days",
+          labelKey: "sector",
+          valueFormat: fmtPp,
+          rows: model.sectorStats.map(d => ({
+          label: d.sector,
+          value: d.delta,
+          share: d.share10,
+          ret20: d.ret20,
+          clickValue: d.sector,
+          tooltip: `<strong>${d.sector}</strong><br>10d share ${fmtPct(d.share10)}<br>Delta ${fmtPp(d.delta)}<br>20d sector return ${fmtPct(d.ret20)}`
+        }))
+        };
+      }
+
+      const selectedStocks = selection.stocks
+        .map(d => ({
+          label: d.ticker,
+          value: Number.isFinite(d.valueSurge) ? d.valueSurge - 1 : NaN,
+          share: d.value10,
+          ret20: d.mom20,
+          clickValue: d.ticker,
+          tooltip: `<strong>${d.ticker}</strong><br>${d.sector}<br>Value surge ${Number.isFinite(d.valueSurge) ? d.valueSurge.toFixed(1) + "x" : "-"}<br>20d return ${fmtPct(d.mom20)}`
+        }))
+        .filter(d => Number.isFinite(d.value))
+        .sort((a, b) => b.value - a.value);
+
+      return {
+        title: `${selection.title} Rotation`,
+        hint: selection.type === "custom"
+          ? "Custom basket value surge: 10d average traded value vs prior 40d average"
+          : "Stock value surge: 10d average traded value vs prior 40d average",
+        labelKey: "ticker",
+        valueFormat: value => `${value >= 0 ? "+" : ""}${(value * 100).toFixed(0)}%`,
+        rows: selectedStocks
+      };
+    }
+
+    function renderSectorChart(model) {
+      const container = document.getElementById("sectorChart");
+      const selection = activeSelection(model);
+      const chartData = rotationChartData(model);
+      document.getElementById("rotationTitle").textContent = chartData.title;
+      document.getElementById("rotationHint").textContent = chartData.hint;
+      document.getElementById("marketReset").hidden = selection.type === "market";
+      container.innerHTML = "";
+      const data = chartData.rows;
+      if (!data.length) {
+        container.innerHTML = `<div class="error">No matching tickers in the current selection.</div>`;
+        return;
+      }
+      const width = chartWidth(container, 820);
+      const compact = width < 520;
+      const height = Math.max(compact ? 190 : 320, data.length * (compact ? 20 : 28) + 32);
+      const margin = compact
+        ? { top: 6, right: 46, bottom: 16, left: 96 }
+        : { top: 10, right: 96, bottom: 26, left: 190 };
+      const innerW = width - margin.left - margin.right;
+      const maxAbs = Math.max(...data.map(d => Math.abs(d.value)), 0.001);
+      const x = value => margin.left + innerW / 2 + (value / maxAbs) * (innerW / 2 - 8);
+      const rowH = (height - margin.top - margin.bottom) / data.length;
+      const svg = makeSvg(width, height);
+      const zero = x(0);
+      const zeroLine = document.createElementNS(svg.namespaceURI, "line");
+      zeroLine.setAttribute("x1", zero); zeroLine.setAttribute("x2", zero);
+      zeroLine.setAttribute("y1", margin.top); zeroLine.setAttribute("y2", height - margin.bottom);
+      zeroLine.setAttribute("class", "gridline");
+      svg.appendChild(zeroLine);
+      data.forEach((d, i) => {
+        const y = margin.top + i * rowH + 5;
+        const text = document.createElementNS(svg.namespaceURI, "text");
+        text.setAttribute("x", margin.left - 10);
+        text.setAttribute("y", y + rowH * 0.62);
+        text.setAttribute("text-anchor", "end");
+        text.setAttribute("fill", "currentColor");
+        text.setAttribute("font-size", compact ? "10" : "12");
+        text.textContent = d.label;
+        svg.appendChild(text);
+
+        const bar = document.createElementNS(svg.namespaceURI, "rect");
+        bar.setAttribute("x", Math.min(zero, x(d.value)));
+        bar.setAttribute("y", y);
+        bar.setAttribute("width", Math.abs(x(d.value) - zero));
+        bar.setAttribute("height", Math.max(10, rowH - 10));
+        bar.setAttribute("rx", 4);
+        bar.setAttribute("class", d.value >= 0 ? "bar-pos" : "bar-neg");
+        bar.style.cursor = "pointer";
+        bar.addEventListener("click", () => {
+          const selection = activeSelection(model);
+          if (selection.type === "market") {
+            state.sector = d.clickValue;
+            state.search = "";
+            state.tableMode = "stocks";
+            document.getElementById("search").value = "";
+          }
+          renderAll(model);
+        });
+        bar.addEventListener("pointermove", event => {
+          if (event.pointerType === "mouse") showTooltip(d.tooltip, event);
+        });
+        bar.addEventListener("pointerleave", hideTooltip);
+        bar.addEventListener("pointerdown", event => {
+          if (event.pointerType !== "mouse") hideTooltip();
+        });
+        svg.appendChild(bar);
+
+        const label = document.createElementNS(svg.namespaceURI, "text");
+        const barEnd = x(d.value);
+        const labelWouldOverlapName = d.value < 0 && barEnd - (compact ? 28 : 38) < margin.left;
+        const labelX = d.value >= 0 ? Math.min(width - margin.right + 8, barEnd + 6) : (labelWouldOverlapName ? barEnd + 6 : barEnd - 6);
+        label.setAttribute("x", labelX);
+        label.setAttribute("y", y + rowH * 0.62);
+        label.setAttribute("text-anchor", d.value >= 0 || labelWouldOverlapName ? "start" : "end");
+        label.setAttribute("fill", "currentColor");
+        label.setAttribute("font-size", compact ? "10" : "11");
+        label.textContent = chartData.valueFormat(d.value);
+        svg.appendChild(label);
+      });
+      container.appendChild(svg);
+    }
+
+    function filteredStocks(model) {
+      scoreStocks(model.stockStats, state.horizon);
+      return activeSelection(model).stocks
+        .slice()
+        .sort((a, b) => b.score - a.score);
+    }
+
+    function renderCombinedTable(model) {
+      const selection = activeSelection(model);
+      const table = document.getElementById("combinedTable");
+      const head = document.getElementById("combinedTableHead");
+      const body = document.getElementById("combinedTableRows");
+      const title = document.getElementById("tableTitle");
+      const hint = document.getElementById("tableHint");
+      body.innerHTML = "";
+      if (state.tableMode === "sectors") {
+        table.className = "sector-table";
+        title.textContent = "Sector Table";
+        hint.textContent = "Click a sector row to view its stock ranking";
+        head.innerHTML = "<tr><th>Sector</th><th>Names</th><th>10d Share</th><th>Delta</th><th>20d Ret</th></tr>";
+        model.sectorStats.forEach(row => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${row.sector}</td>
+            <td>${row.names}</td>
+            <td>${fmtPct(row.share10)}</td>
+            <td class="${row.delta >= 0 ? "pos" : "neg"}">${fmtPp(row.delta)}</td>
+            <td class="${row.ret20 >= 0 ? "pos" : "neg"}">${fmtPct(row.ret20)}</td>
+          `;
+          tr.addEventListener("click", () => {
+            state.sector = row.sector;
+            state.search = "";
+            state.tableMode = "stocks";
+            document.getElementById("search").value = "";
+            renderAll(model);
+          });
+          body.appendChild(tr);
+        });
+        return;
+      }
+
+      const rows = filteredStocks(model).slice(0, 80);
+      table.className = "stock-table";
+      title.textContent = selection.type === "market" ? "Stock Ranking" : `${selection.title} Stock Ranking`;
+      hint.textContent = selection.type === "market"
+        ? "All coverage stocks, ranked by the selected 20-day Flow Rotation score"
+        : `${selection.stocks.length} stocks in the current selection, ranked against the full coverage universe`;
+      head.innerHTML = "<tr><th>Ticker</th><th>Score</th><th>10d Ret</th><th>20d Ret</th><th>Value Surge</th></tr>";
+      if (!rows.length) {
+        body.innerHTML = "<tr><td colspan=\"5\">No matching tickers.</td></tr>";
+        return;
+      }
+      rows.forEach(row => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><strong>${row.ticker}</strong></td>
+          <td>${fmtScore(row.score)}</td>
+          <td class="${row.mom10 >= 0 ? "pos" : "neg"}">${fmtPct(row.mom10)}</td>
+          <td class="${row.mom20 >= 0 ? "pos" : "neg"}">${fmtPct(row.mom20)}</td>
+          <td>${Number.isFinite(row.valueSurge) ? row.valueSurge.toFixed(1) + "x" : "-"}</td>
+        `;
+        body.appendChild(tr);
+      });
+    }
+
+    function renderStats(model) {
+      const best = model.sectorStats[0];
+      const worst = model.sectorStats[model.sectorStats.length - 1];
+      scoreStocks(model.stockStats, state.horizon);
+      const stocks = filteredStocks(model);
+      const top = stocks[0] || model.stockStats.sort((a, b) => b.score - a.score)[0];
+      const bottom = stocks.slice().reverse().find(row => Number.isFinite(row.score));
+      document.getElementById("bestSector").textContent = best?.sector || "-";
+      document.getElementById("bestSectorNote").textContent = best ? `${fmtPp(best.delta)} rotation delta, ${fmtPct(best.share10)} of coverage turnover` : "-";
+      document.getElementById("worstSector").textContent = worst?.sector || "-";
+      document.getElementById("worstSectorNote").textContent = worst ? `${fmtPp(worst.delta)} rotation delta, ${fmtPct(worst.share10)} of coverage turnover` : "-";
+      document.getElementById("topStock").textContent = top ? top.ticker : "-";
+      document.getElementById("topStockNote").textContent = top ? `${top.sector}, score ${fmtScore(top.score)}, 20d ${fmtPct(top.mom20)}` : "-";
+      document.getElementById("worstStock").textContent = bottom ? bottom.ticker : "-";
+      document.getElementById("worstStockNote").textContent = bottom ? `${bottom.sector}, score ${fmtScore(bottom.score)}, 20d ${fmtPct(bottom.mom20)}` : "-";
+    }
+
+    function renderAll(model) {
+      renderStats(model);
+      renderSectorChart(model);
+      renderCombinedTable(model);
+    }
+
+    async function boot() {
+      try {
+        const [csvText, coverageText] = await Promise.all([
+          fetchDashboardText(pricePath),
+          fetchDashboardText(coveragePath)
+        ]);
+        const rawRows = parseCsv(csvText);
+        const coverage = parseCoverage(coverageText);
+        const dateInput = document.getElementById("baseDate");
+        const fullModel = buildModel(rawRows, coverage);
+        state.baseDate = fullModel.latestDate;
+        dateInput.min = fullModel.availableDates[0] || "";
+        dateInput.max = fullModel.latestDate || "";
+        dateInput.value = state.baseDate;
+        let model = fullModel;
+
+        function rebuildAndRender() {
+          model = buildModel(rawRows, coverage, state.baseDate);
+          document.getElementById("asOf").textContent = `Data through ${model.latestDate}`;
+          document.getElementById("coverageInfo").textContent = `${model.stockStats.length} stocks across ${model.sectorStats.length} sectors`;
+          renderAll(model);
+        }
+
+        document.getElementById("methodology").addEventListener("change", event => {
+          state.methodology = event.target.value;
+          renderAll(model);
+        });
+        dateInput.addEventListener("change", event => {
+          state.baseDate = event.target.value || fullModel.latestDate;
+          rebuildAndRender();
+        });
+        document.getElementById("search").addEventListener("input", event => {
+          state.search = event.target.value;
+          if (state.search.trim()) {
+            state.sector = "All";
+            state.tableMode = "stocks";
+          }
+          renderAll(model);
+        });
+        document.getElementById("marketReset").addEventListener("click", () => {
+          state.sector = "All";
+          state.search = "";
+          state.tableMode = "sectors";
+          document.getElementById("search").value = "";
+          renderAll(model);
+        });
+        document.getElementById("tableOverview").addEventListener("click", () => {
+          state.sector = "All";
+          state.search = "";
+          state.tableMode = "sectors";
+          document.getElementById("search").value = "";
+          renderAll(model);
+        });
+        document.getElementById("allStockRanking").addEventListener("click", () => {
+          state.sector = "All";
+          state.search = "";
+          state.tableMode = "stocks";
+          document.getElementById("search").value = "";
+          renderAll(model);
+        });
+        document.querySelectorAll(".info-button").forEach(button => {
+          button.addEventListener("click", event => {
+            event.stopPropagation();
+            const wrapper = button.closest(".title-with-help");
+            const willOpen = !wrapper.classList.contains("help-visible");
+            closeHelpPopovers(wrapper);
+            wrapper.classList.toggle("help-visible", willOpen);
+          });
+        });
+        document.addEventListener("pointerdown", event => {
+          if (!event.target.closest(".title-with-help")) closeHelpPopovers();
+          if (!event.target.closest("#tooltip")) hideTooltip();
+        });
+        rebuildAndRender();
+      } catch (error) {
+        document.getElementById("app").innerHTML = `<div class="error">${error.message}. Serve this folder over HTTP so the dashboard can read the CSV.</div>`;
+        document.getElementById("asOf").textContent = "Data not loaded";
+      }
+    }
+
+    boot();
+  </script>
+</body>
+</html>
