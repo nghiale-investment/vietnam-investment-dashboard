@@ -914,6 +914,7 @@
 
       .fund-matrix-table th,
       .fund-matrix-table td {
+        width: 12.333%;
         padding: 4px 1px;
       }
 
@@ -924,8 +925,9 @@
 
       .fund-matrix-table th:first-child,
       .fund-matrix-table td:first-child {
-        width: 22%;
+        width: 26%;
         font-size: 8px;
+        white-space: nowrap;
       }
 
       .matrix-rank {
@@ -2028,8 +2030,14 @@
       return { data, latestDate: latestPeriod, stockStats, sectorStats, periods, periodLabels, annualView };
     }
 
+    function compactAnnualPeriodLabel(label) {
+      return String(label || "").startsWith("TTM") ? "TTM" : label;
+    }
+
     function fundamentalPeriodLabel(model, period) {
-      return model.annualView ? (model.periodLabels[period] || period) : quarterShortLabel(period);
+      return model.annualView
+        ? compactAnnualPeriodLabel(model.periodLabels[period] || period)
+        : quarterShortLabel(period);
     }
 
     function parsedFundamentalTickers(model) {
@@ -2396,7 +2404,9 @@
       document.getElementById("stockDetailsTable").classList.toggle("sector-detail-table", isSectorDetail);
       const detailPeriods = subject.detail_periods || [];
       const periodLabels = model.annualView
-        ? ((subject.detail_period_labels || []).length ? subject.detail_period_labels : detailPeriods.map(period => fundamentalPeriodLabel(model, period)))
+        ? ((subject.detail_period_labels || []).length
+          ? subject.detail_period_labels.map(compactAnnualPeriodLabel)
+          : detailPeriods.map(period => fundamentalPeriodLabel(model, period)))
         : detailPeriods.map(quarterShortLabel);
       const mobilePeriodLabels = periodLabels.slice(-4);
       const periodRange = periodLabels.length ? `${periodLabels[0]} to ${periodLabels[periodLabels.length - 1]}` : model.data.latest_period_label;
