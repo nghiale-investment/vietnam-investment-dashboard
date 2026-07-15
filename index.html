@@ -343,8 +343,13 @@
     .table-wrap {
       max-height: 520px;
       overflow: auto;
+      scrollbar-gutter: stable;
       border: 1px solid var(--line);
       border-radius: 8px;
+    }
+
+    .fundamentals-mode .table-wrap {
+      overflow-x: hidden;
     }
 
     .table-actions {
@@ -356,10 +361,13 @@
 
     .pos { color: var(--good); }
     .neg { color: var(--bad); }
-    .quadrant-leading { color: var(--good); }
+    .quadrant-leading, .quadrant-strong { color: #12804a; }
     .quadrant-weakening { color: var(--warn); }
     .quadrant-lagging { color: var(--bad); }
-    .quadrant-improving { color: var(--accent); }
+    .quadrant-improving, .quadrant-recover { color: #789414; }
+    .quadrant-fading { color: var(--warn); }
+    .quadrant-weak { color: var(--bad); }
+    .quadrant-mixed { color: var(--muted); }
     .badge {
       display: inline-flex;
       align-items: center;
@@ -374,6 +382,245 @@
     .detail {
       display: grid;
       gap: 12px;
+    }
+
+    .fund-table {
+      width: 100%;
+      min-width: 0;
+      table-layout: fixed;
+    }
+
+    .fund-table th,
+    .fund-table td {
+      width: auto;
+      padding: 7px 5px;
+      overflow-wrap: anywhere;
+      white-space: normal;
+      vertical-align: middle;
+    }
+
+    .fund-table .entity-col { width: 18%; text-align: left; }
+    .fund-table .fund-sector-col { width: 18%; text-align: left; }
+    .fund-table .score-col { width: 16.4%; text-align: right; }
+    .fund-table .phase-col { width: 16.4%; text-align: center; }
+    .fund-table .comment-col { width: 16.4%; text-align: left; }
+    .fund-table .growth-col { width: 16.4%; text-align: right; }
+
+    .fund-table th:not(.entity-col),
+    .fund-table td:not(.entity-col) {
+      text-align: center;
+    }
+
+    .fund-table tbody tr[data-fund-sector],
+    .fund-matrix-table tr[data-fund-history] {
+      touch-action: manipulation;
+    }
+
+    @media (min-width: 981px) {
+      .sector-table .entity-col { width: 18%; }
+      .sector-table .score-col,
+      .sector-table .phase-col,
+      .sector-table .comment-col,
+      .sector-table .growth-col { width: 16.4%; }
+
+      .stock-table.show-sector .fund-sector-col,
+      .stock-table.show-sector .entity-col { width: 18%; }
+      .stock-table.show-sector .score-col,
+      .stock-table.show-sector .phase-col,
+      .stock-table.show-sector .comment-col,
+      .stock-table.show-sector .growth-col { width: 12.8%; }
+
+      .stock-table.sector-drill .entity-col { width: 18%; }
+      .stock-table.sector-drill .score-col,
+      .stock-table.sector-drill .phase-col,
+      .stock-table.sector-drill .comment-col,
+      .stock-table.sector-drill .growth-col { width: 16.4%; }
+    }
+
+    .fund-table .status-cell {
+      white-space: normal;
+      line-height: 1.15;
+    }
+
+    .status-line {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+    }
+
+    .signal-badge {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid color-mix(in srgb, currentColor 28%, var(--line));
+      border-radius: 999px;
+      padding: 3px 7px;
+      color: var(--warn);
+      background: var(--surface-2);
+      font-size: 10px;
+      font-weight: 650;
+      line-height: 1;
+    }
+
+    .fund-matrix-wrap {
+      max-height: 520px;
+      min-height: 320px;
+      overflow-x: hidden;
+      overflow-y: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    .fund-matrix-table {
+      width: 100%;
+      min-width: 0;
+      table-layout: fixed;
+    }
+
+    .fund-matrix-table th,
+    .fund-matrix-table td {
+      width: 13%;
+      padding: 6px 3px;
+      text-align: center;
+      white-space: normal;
+    }
+
+    .fund-matrix-table th:first-child,
+    .fund-matrix-table td:first-child {
+      position: sticky;
+      left: 0;
+      z-index: 2;
+      width: 22%;
+      min-width: 0;
+      text-align: left;
+      background: var(--surface);
+      overflow-wrap: anywhere;
+    }
+
+    .fund-matrix-table th:first-child {
+      z-index: 3;
+    }
+
+    .fund-matrix-table tbody tr:hover td:first-child {
+      background: var(--surface-2);
+    }
+
+    .phase-chip {
+      display: inline-flex;
+      width: 100%;
+      align-items: center;
+      justify-content: space-between;
+      gap: 3px;
+      padding: 4px 5px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 650;
+      border: 1px solid transparent;
+    }
+
+    .phase-chip b {
+      font-size: 11px;
+    }
+
+    .phase-short {
+      display: none;
+    }
+
+    .phase-strong { color: #0f7442; background: #e2f4e9; border-color: #9fd3b5; }
+    .phase-improving, .phase-recover { color: #6f8912; background: #f0f6d8; border-color: #cadb86; }
+    .phase-fading { color: #9a5c14; background: #fbf1df; border-color: #ead0a1; }
+    .phase-weak { color: #a23d38; background: #f9eaea; border-color: #e7b9b6; }
+    .phase-limited { color: var(--muted); background: var(--surface-2); border-color: var(--line); }
+
+    .matrix-rank {
+      display: inline-block;
+      min-width: 24px;
+      color: var(--muted);
+      font-size: 10px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .mobile-sector {
+      color: var(--muted);
+      font-size: 10px;
+      margin-top: 2px;
+    }
+
+    .mobile-sector {
+      display: none;
+    }
+
+    #stockDetailsSection[hidden] {
+      display: none;
+    }
+
+    .fund-detail-table {
+      width: 100%;
+      min-width: 0;
+      table-layout: fixed;
+    }
+
+    .fund-detail-table th:first-child,
+    .fund-detail-table td:first-child {
+      width: 23%;
+      min-width: 0;
+      text-align: left;
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+
+    .fund-detail-table th:not(:first-child),
+    .fund-detail-table td:not(:first-child) {
+      width: 11%;
+      min-width: 0;
+      text-align: right;
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+
+    .fund-detail-table th:last-child,
+    .fund-detail-table td:last-child {
+      width: 11%;
+      min-width: 0;
+      text-align: right;
+    }
+
+    .fund-detail-table.sector-detail-table th:not(:first-child),
+    .fund-detail-table.sector-detail-table td:not(:first-child) {
+      width: 9.625%;
+    }
+
+    .sector-breadth-signal {
+      display: inline-flex;
+      width: 100%;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 3px;
+      white-space: nowrap;
+      font-size: 9px;
+    }
+
+    .sector-breadth-signal small {
+      color: var(--muted);
+      font-size: 0.9em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .detail-range-mobile {
+      display: none;
+    }
+
+    .detail-section-row td {
+      position: static !important;
+      padding: 9px 8px;
+      color: var(--accent);
+      background: var(--surface-2);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      text-align: left !important;
     }
 
     .detail-title {
@@ -496,6 +743,33 @@
 
       .grid-2 { grid-template-columns: 1fr; }
 
+      .detail-older,
+      .detail-range-desktop {
+        display: none;
+      }
+
+      .detail-range-mobile {
+        display: inline;
+      }
+
+      .fund-detail-table th:not(:first-child),
+      .fund-detail-table td:not(:first-child),
+      .fund-detail-table th:last-child,
+      .fund-detail-table td:last-child {
+        width: 15.4%;
+      }
+
+      .fund-detail-table.sector-detail-table th:not(:first-child),
+      .fund-detail-table.sector-detail-table td:not(:first-child) {
+        width: 12.833%;
+      }
+
+      .sector-breadth-signal {
+        gap: 2px;
+        font-size: 6.5px;
+        letter-spacing: -0.01em;
+      }
+
       section {
         padding: 12px;
         overflow: hidden;
@@ -567,11 +841,129 @@
 
       .chart { min-height: 190px; }
 
+      .fundamentals-mode section {
+        padding: 8px;
+      }
+
+      .fundamentals-mode h2 {
+        font-size: 14px;
+      }
+
+      .fundamentals-mode .hint {
+        font-size: 9px;
+      }
+
       .table-actions { width: 100%; }
       .table-actions .reset-view { flex: 1 1 auto; }
 
       .table-wrap {
         font-size: 12px;
+      }
+
+      .fund-table {
+        font-size: 8.5px;
+      }
+
+      .fund-table th,
+      .fund-table td {
+        padding: 5px 2px;
+        line-height: 1.15;
+      }
+
+      .fund-table th { font-size: 7.5px; letter-spacing: 0; }
+
+      .fund-table .entity-col,
+      .sector-table .entity-col,
+      .stock-table.sector-drill .entity-col { width: 18%; }
+      .fund-table .score-col,
+      .fund-table .phase-col,
+      .fund-table .comment-col,
+      .fund-table .growth-col,
+      .sector-table .score-col,
+      .sector-table .phase-col,
+      .sector-table .comment-col,
+      .sector-table .growth-col,
+      .stock-table.sector-drill .score-col,
+      .stock-table.sector-drill .phase-col,
+      .stock-table.sector-drill .comment-col,
+      .stock-table.sector-drill .growth-col { width: 16.4%; }
+
+      .fund-table .fund-sector-col {
+        display: none;
+      }
+
+      .mobile-sector {
+        display: block;
+        font-size: 7px;
+      }
+
+      .phase-full { display: none; }
+      .phase-short { display: inline; }
+
+      .fund-matrix-wrap {
+        min-height: 280px;
+      }
+
+      .fund-matrix-table {
+        font-size: 8px;
+      }
+
+      .fund-matrix-table th,
+      .fund-matrix-table td {
+        padding: 4px 1px;
+      }
+
+      .fund-matrix-table th {
+        font-size: 7.5px;
+        letter-spacing: 0;
+      }
+
+      .fund-matrix-table th:first-child,
+      .fund-matrix-table td:first-child {
+        width: 22%;
+        font-size: 8px;
+      }
+
+      .matrix-rank {
+        min-width: 12px;
+        font-size: 7px;
+      }
+
+      .phase-chip {
+        justify-content: center;
+        flex-direction: column;
+        gap: 0;
+        padding: 3px 1px;
+        font-size: 8px;
+        line-height: 1;
+      }
+
+      .phase-chip b {
+        font-size: 8px;
+      }
+
+      #stockDetailsSection .table-wrap {
+        overflow-x: hidden;
+      }
+
+      .fund-detail-table {
+        font-size: 8px;
+      }
+
+      .fund-detail-table th,
+      .fund-detail-table td {
+        padding: 5px 2px;
+        line-height: 1.15;
+      }
+
+      .fund-detail-table th {
+        font-size: 7.5px;
+        letter-spacing: 0;
+      }
+
+      .detail-section-row td {
+        padding: 6px 4px;
+        font-size: 8px;
       }
 
       th, td {
@@ -586,7 +978,7 @@
     <div class="subhead">
       <span id="asOf">Loading data...</span>
       <span id="coverageInfo"></span>
-      <span>Signals use adjusted prices and traded value.</span>
+      <span id="signalInfo">Signals use adjusted prices and traded value.</span>
     </div>
   </header>
 
@@ -597,9 +989,10 @@
         <select id="methodology">
           <option value="flow-rotation" selected>Flow Rotation</option>
           <option value="relative-rotation">Relative Rotation</option>
+          <option value="fundamentals">Fundamentals</option>
         </select>
       </label>
-      <label>
+      <label id="periodControl">
         <span id="periodLabel">Period</span>
         <select id="period">
           <option value="5-20">5/20</option>
@@ -618,26 +1011,45 @@
         Search ticker
         <input id="search" type="search" placeholder="e.g. HDB, VND, HVN">
       </label>
+      <label id="tagControl" hidden>
+        Search tag
+        <select id="tagFilter">
+          <option value="">All comments</option>
+          <option value="growth_fading">Cooling</option>
+          <option value="contraction">Contraction</option>
+          <option value="interest_burden">Int. burden</option>
+          <option value="margin_pressure">Margin ↓</option>
+          <option value="cash_quality_stress">Cash-gap</option>
+          <option value="asset_quality_stress">Credit risk</option>
+          <option value="balance_sheet_stress">B/Sheet</option>
+          <option value="regulatory_headroom">Reg. limit</option>
+          <option value="quality_stress">Earn.Quality</option>
+          <option value="loss_to_profit_turnaround">Turnaround</option>
+          <option value="low_base_recovery">Low-base</option>
+          <option value="high_base_normalization">High-base</option>
+          <option value="one_off_earnings">One-off</option>
+        </select>
+      </label>
     </div>
 
     <div class="stats" aria-label="Summary metrics">
       <div class="stat">
-        <div class="label">Best current sector</div>
+        <div class="label" id="bestSectorLabel">Best current sector</div>
         <div class="value" id="bestSector">-</div>
         <div class="note" id="bestSectorNote">-</div>
       </div>
       <div class="stat">
-        <div class="label">Worst current sector</div>
+        <div class="label" id="worstSectorLabel">Worst current sector</div>
         <div class="value" id="worstSector">-</div>
         <div class="note" id="worstSectorNote">-</div>
       </div>
       <div class="stat">
-        <div class="label">Top stock score</div>
+        <div class="label" id="topStockLabel">Top stock score</div>
         <div class="value" id="topStock">-</div>
         <div class="note" id="topStockNote">-</div>
       </div>
       <div class="stat">
-        <div class="label">Worst stock score</div>
+        <div class="label" id="worstStockLabel">Worst stock score</div>
         <div class="value" id="worstStock">-</div>
         <div class="note" id="worstStockNote">-</div>
       </div>
@@ -686,6 +1098,21 @@
         </div>
       </section>
     </div>
+
+    <section id="stockDetailsSection" hidden>
+      <div class="section-head">
+        <div class="title-with-help">
+          <h2 id="stockDetailsTitle">Stock Details</h2>
+        </div>
+        <div class="hint" id="stockDetailsHint">Reported figures and business-model-specific quality indicators</div>
+      </div>
+      <div class="table-wrap">
+        <table class="fund-detail-table" id="stockDetailsTable">
+          <thead id="stockDetailsHead"></thead>
+          <tbody id="stockDetailsRows"></tbody>
+        </table>
+      </div>
+    </section>
   </main>
 
   <div id="tooltip" class="tooltip"></div>
@@ -694,6 +1121,9 @@
   <script>
     const pricePath = "0.pricedata.csv";
     const coveragePath = "0.coverage_universe.csv";
+    const dashboardVersion = new URLSearchParams(window.location.search).get("v");
+    const fundamentalsPath = "fundamentals_data.json"
+      + (dashboardVersion ? `?v=${encodeURIComponent(dashboardVersion)}` : "");
     const PERIODS = {
       "5-20": { short: 5, long: 20, label: "5/20" },
       "10-50": { short: 10, long: 50, label: "10/50" }
@@ -720,17 +1150,23 @@
     };
     const state = {
       methodology: "flow-rotation",
+      fundamentalPeriod: "quarter",
       flowPeriod: "10-50",
       rrgMode: "10-50",
       tailPoints: 15,
       sector: "All",
       search: "",
+      tagFilter: "",
       tableMode: "sectors",
-      baseDate: ""
+      baseDate: "",
+      selectedFundamentalSector: "",
+      selectedFundamentalTicker: ""
     };
     let pinnedRrgEntity = "";
     let lastRrgTouch = { entityId: "", at: 0 };
     const RRG_DOUBLE_TAP_MS = 500;
+    let lastFundamentalSectorTap = { sector: "", at: 0 };
+    const FUNDAMENTAL_DOUBLE_TAP_MS = 550;
     const displaySector = sector => SECTOR_LABELS[sector] || sector;
     const fmtPct = value => Number.isFinite(value) ? `${(value * 100).toFixed(1)}%` : "-";
     const fmtSignedPct = value => Number.isFinite(value) ? `${value >= 0 ? "+" : ""}${(value * 100).toFixed(1)}%` : "-";
@@ -739,6 +1175,10 @@
     const fmtScore = value => Number.isFinite(value) ? value.toFixed(2) : "-";
     const fmtRrg = value => Number.isFinite(value) ? value.toFixed(1) : "-";
     const fmtSignedRrg = value => Number.isFinite(value) ? `${value >= 0 ? "+" : ""}${value.toFixed(1)}` : "-";
+    const fmtFundScore = value => Number.isFinite(value) ? value.toFixed(1) : "-";
+    const fmtGrowth = value => Number.isFinite(value) ? fmtSignedPct(value) : "N/M";
+    const fmtVndBn = value => Number.isFinite(value) ? `${value.toLocaleString("en-US", { maximumFractionDigits: 0 })} bn` : "-";
+    const quarterShortLabel = period => `Q${Math.ceil(Number(String(period).slice(5, 7)) / 3)}-${String(period).slice(2, 4)}`;
     const quadrantClass = quadrant => `quadrant-${String(quadrant || "").toLowerCase()}`;
 
     function parseCsv(text) {
@@ -1160,6 +1600,7 @@
     }
 
     function renderStats(model) {
+      setStatLabels(false);
       const best = model.sectorStats[0];
       const worst = model.sectorStats[model.sectorStats.length - 1];
       scoreStocks(model.stockStats);
@@ -1503,6 +1944,7 @@
     }
 
     function renderRrgStats(model) {
+      setStatLabels(false);
       const sectors = sortRrgRows(rrgRowsWithMovement(model.sectorCalc, model.latestDate));
       const stocks = sortRrgRows(selectedRrgStockRows(model));
       const bestSector = sectors[0];
@@ -1528,7 +1970,503 @@
       document.getElementById("scoreMethodHelp").innerHTML = `<strong>Stable ranking:</strong> all coordinates are calculated before display filters are applied, so sector clicks and ticker searches never change an entity's score.`;
     }
 
+    function buildFundamentalModel(data) {
+      const annualView = state.fundamentalPeriod === "year";
+      const latestPeriod = annualView ? data.annual_latest_period : data.latest_period;
+      const stockStats = data.stocks.map(stock => {
+        const source = annualView ? (stock.annual || {}) : stock;
+        const history = annualView ? (source.periods || []) : stock.quarters;
+        const current = history.find(row => row.period === latestPeriod) || history[history.length - 1];
+        return { ...stock, ...source, quarters: history, ...current, id: stock.ticker, label: stock.ticker };
+      }).filter(row => row.period);
+      const sectorStats = data.sectors.map(sector => {
+        const source = annualView ? (sector.annual || {}) : sector;
+        const history = annualView ? (source.periods || []) : sector.quarters;
+        const current = history.find(row => row.period === latestPeriod) || history[history.length - 1];
+        return { ...sector, ...source, quarters: history, ...current, id: sector.sector, label: sector.sector };
+      }).filter(row => row.period);
+      const periods = annualView ? (data.annual_periods || []) : data.periods;
+      const periodLabels = {};
+      [...stockStats, ...sectorStats].forEach(row => row.quarters.forEach(point => {
+        if (point.period_label) periodLabels[point.period] = point.period_label;
+      }));
+      return { data, latestDate: latestPeriod, stockStats, sectorStats, periods, periodLabels, annualView };
+    }
+
+    function fundamentalPeriodLabel(model, period) {
+      return model.annualView ? (model.periodLabels[period] || period) : quarterShortLabel(period);
+    }
+
+    function parsedFundamentalTickers(model) {
+      const available = new Set(model.stockStats.map(row => row.ticker));
+      return state.search
+        .toUpperCase()
+        .split(/[\s,;]+/)
+        .map(item => item.trim())
+        .filter(Boolean)
+        .filter((item, index, items) => items.indexOf(item) === index)
+        .filter(item => available.has(item));
+    }
+
+    function selectedFundamentalStocks(model) {
+      const tickers = parsedFundamentalTickers(model);
+      let rows = tickers.length
+        ? model.stockStats.filter(row => tickers.includes(row.ticker))
+        : state.sector !== "All"
+          ? model.stockStats.filter(row => row.sector === state.sector)
+          : model.stockStats.slice();
+      if (state.tagFilter) {
+        rows = rows.filter(row => Array.isArray(row.warnings)
+          ? row.warnings.includes(state.tagFilter)
+          : row.warning === state.tagFilter);
+      }
+      return rows;
+    }
+
+    function fundamentalPhase(point) {
+      if (!Number.isFinite(point.score) || !Number.isFinite(point.health) || !Number.isFinite(point.impulse)) return "Limited";
+      if (point.health >= 50 && point.impulse >= 50) return "Strong";
+      if (point.health < 50 && point.impulse >= 50) return "Recover";
+      if (point.health >= 50 && point.impulse < 50) return "Fading";
+      return "Weak";
+    }
+
+    const COMPACT_FUND_COMMENTS = {
+      growth_fading: "Cooling",
+      contraction: "Contraction",
+      interest_burden: "Int. burden",
+      margin_pressure: "Margin ↓",
+      cash_quality_stress: "Cash-gap",
+      asset_quality_stress: "Credit risk",
+      balance_sheet_stress: "B/Sheet",
+      regulatory_headroom: "Reg. limit",
+      quality_stress: "Earn.Quality",
+      loss_to_profit_turnaround: "Turnaround",
+      low_base_recovery: "Low-base",
+      high_base_normalization: "High-base",
+      one_off_earnings: "One-off"
+    };
+
+    function fundamentalWarning(row) {
+      return COMPACT_FUND_COMMENTS[row.warning] || "";
+    }
+
+    function fundamentalStatusText(row) {
+      const phase = fundamentalPhase(row);
+      const warning = fundamentalWarning(row);
+      return phase + (warning ? ` · ${warning}` : "");
+    }
+
+    function fundamentalPhaseHtml(row) {
+      const phase = fundamentalPhase(row);
+      const short = { Strong: "S", Recover: "R", Fading: "F", Weak: "W", Limited: "–" }[phase] || "–";
+      return `<strong class="${quadrantClass(phase)}"><span class="phase-full">${phase}</span><span class="phase-short" title="${phase}">${short}</span></strong>`;
+    }
+
+    function fundamentalStatusHtml(row, sector = false) {
+      return `<span class="status-line">${fundamentalPhaseHtml(row)}</span>`;
+    }
+
+    function selectFundamentalStock(ticker, model) {
+      state.selectedFundamentalTicker = ticker;
+      document.querySelectorAll("#combinedTableRows tr[data-fund-ticker]").forEach(row => {
+        row.classList.toggle("selected", row.dataset.fundTicker === ticker);
+      });
+      renderFundamentalDetails(model);
+    }
+
+    function selectFundamentalSector(sector, model) {
+      state.selectedFundamentalSector = sector;
+      state.selectedFundamentalTicker = "";
+      document.querySelectorAll("[data-fund-sector], tr[data-fund-history]").forEach(row => {
+        const rowSector = row.dataset.fundSector || row.dataset.fundHistory;
+        row.classList.toggle("selected", rowSector === sector);
+      });
+      renderFundamentalDetails(model);
+    }
+
+    function drillFundamentalSector(sector, model) {
+      state.sector = sector;
+      state.search = "";
+      state.tagFilter = "";
+      state.tableMode = "stocks";
+      state.selectedFundamentalSector = sector;
+      state.selectedFundamentalTicker = "";
+      document.getElementById("search").value = "";
+      document.getElementById("tagFilter").value = "";
+      lastFundamentalSectorTap = { sector: "", at: 0 };
+      renderAll(model);
+    }
+
+    function handleFundamentalSectorActivation(sector, model, event) {
+      const now = Date.now();
+      const repeatedTap = lastFundamentalSectorTap.sector === sector
+        && now - lastFundamentalSectorTap.at <= FUNDAMENTAL_DOUBLE_TAP_MS;
+      if ((event?.detail || 0) >= 2 || repeatedTap) {
+        drillFundamentalSector(sector, model);
+        return;
+      }
+      lastFundamentalSectorTap = { sector, at: now };
+      selectFundamentalSector(sector, model);
+    }
+
+    function fundamentalTooltip(row, point, isSector) {
+      const name = isSector ? displaySector(row.sector) : row.ticker;
+      return `<strong>${name}</strong> — ${point.period_label || point.period}<br>${point.status}<br>Fundamental score ${fmtFundScore(point.score)}<br>Health ${fmtFundScore(point.health)} · Impulse ${fmtFundScore(point.impulse)}<br>Top-line growth ${fmtGrowth(point.top_line_growth)}<br>Bottom-line growth ${fmtGrowth(point.npat_growth)}`;
+    }
+
+    function renderFundamentalChart(model) {
+      const container = document.getElementById("sectorChart");
+      const isSectorView = state.tableMode === "sectors";
+      let rows = isSectorView ? model.sectorStats.slice() : selectedFundamentalStocks(model);
+      rows = rows
+        .filter(row => Number.isFinite(row.score))
+        .sort((a, b) => b.score - a.score || String(a.label).localeCompare(String(b.label)));
+      const title = isSectorView
+        ? model.annualView ? "Sector Structural History" : "Sector Fundamental History"
+        : state.sector !== "All"
+          ? `${displaySector(state.sector)} ${model.annualView ? "Structural" : "Fundamental"} History`
+          : parsedFundamentalTickers(model).length ? `Custom ${model.annualView ? "Structural" : "Fundamental"} History` : `Stock ${model.annualView ? "Structural" : "Fundamental"} History`;
+      document.getElementById("rotationTitle").textContent = title;
+      document.getElementById("rotationHint").textContent = `${model.annualView ? "Latest TTM structural" : "Latest-quarter"} score ranking · S Strong · R Recover · F Fading · W Weak`;
+      document.getElementById("marketReset").hidden = isSectorView;
+      container.className = "fund-matrix-wrap";
+      container.setAttribute("role", "region");
+      container.setAttribute("aria-label", `${title}, ranked by latest ${model.annualView ? "TTM period" : "quarter"}`);
+      if (!rows.length) {
+        container.innerHTML = `<div class="error">No fundamental history is available for this selection.</div>`;
+        return;
+      }
+      const periods = model.periods.slice(-Math.min(model.data.tail_quarters || 6, 6));
+      const head = `<thead><tr><th>${isSectorView ? "Sector" : "Stock"}</th>${periods.map(period => `<th>${fundamentalPeriodLabel(model, period)}</th>`).join("")}</tr></thead>`;
+      const body = rows.map((row, rank) => {
+        const history = new Map(row.quarters.map(point => [point.period, point]));
+        const cells = periods.map(period => {
+          const point = history.get(period);
+          if (!point || !Number.isFinite(point.score)) return `<td><span class="phase-chip phase-limited"><span class="phase-full">Limited</span><span class="phase-short">–</span><b>–</b></span></td>`;
+          const phase = fundamentalPhase(point);
+          const short = { Strong: "S", Recover: "R", Fading: "F", Weak: "W" }[phase];
+          return `<td title="${fundamentalStatusText(point)}"><span class="phase-chip phase-${phase.toLowerCase()}"><span class="phase-full">${phase}</span><span class="phase-short">${short}</span><b>${Math.round(point.score)}</b></span></td>`;
+        }).join("");
+        const name = isSectorView ? displaySector(row.sector) : row.ticker;
+        const selected = isSectorView
+          ? state.selectedFundamentalSector === row.sector
+          : state.selectedFundamentalTicker === row.ticker;
+        return `<tr class="${selected ? "selected" : ""}" data-fund-history="${isSectorView ? row.sector : row.ticker}"><td><span class="matrix-rank">${rank + 1}</span><strong>${name}</strong></td>${cells}</tr>`;
+      }).join("");
+      container.innerHTML = `<table class="fund-matrix-table">${head}<tbody>${body}</tbody></table>`;
+      container.querySelectorAll("tr[data-fund-history]").forEach(tableRow => {
+        tableRow.addEventListener("click", event => {
+          const entity = tableRow.dataset.fundHistory;
+          if (isSectorView) {
+            handleFundamentalSectorActivation(entity, model, event);
+          } else {
+            selectFundamentalStock(entity, model);
+          }
+        });
+      });
+    }
+
+    function renderFundamentalQuadrantChart(model) {
+      const container = document.getElementById("sectorChart");
+      container.className = "chart fund-chart";
+      container.setAttribute("aria-label", "Fundamental Health and Impulse quadrant chart with six-quarter tails");
+      container.innerHTML = "";
+      const isSectorView = state.tableMode === "sectors";
+      let rows = isSectorView ? model.sectorStats.slice() : selectedFundamentalStocks(model);
+      rows = rows.filter(row => Number.isFinite(row.score));
+      if (!isSectorView && state.sector === "All" && !parsedFundamentalTickers(model).length) {
+        rows = rows.sort((a, b) => (b.market_cap_vnd_bn || 0) - (a.market_cap_vnd_bn || 0)).slice(0, 15);
+      }
+      const title = isSectorView
+        ? "Sector Fundamental Rotation"
+        : state.sector !== "All"
+          ? `${displaySector(state.sector)} Fundamental Rotation`
+          : parsedFundamentalTickers(model).length ? "Custom Fundamental Basket" : "Stock Fundamental Rotation";
+      document.getElementById("rotationTitle").textContent = title;
+      document.getElementById("rotationHint").textContent = isSectorView
+        ? "Six quarterly tails · sector Health and Impulse relative to the coverage-universe average"
+        : "Six quarterly tails · Health versus company-relative Fundamental Impulse";
+      document.getElementById("marketReset").hidden = isSectorView;
+      const series = rows.map(row => ({
+        row,
+        points: row.quarters.slice(-Math.min(model.data.tail_quarters || 6, 6))
+      })).filter(item => item.points.length);
+      if (!series.length) {
+        container.innerHTML = `<div class="error">No fundamental history is available for this selection.</div>`;
+        return;
+      }
+
+      const width = chartWidth(container, 820);
+      const compact = width < 520;
+      const height = compact ? 360 : 480;
+      const margin = compact ? { top: 28, right: 24, bottom: 44, left: 46 } : { top: 34, right: 42, bottom: 52, left: 58 };
+      const innerW = width - margin.left - margin.right;
+      const innerH = height - margin.top - margin.bottom;
+      const x = value => margin.left + clipNumber(value, 0, 100) / 100 * innerW;
+      const y = value => margin.top + (100 - clipNumber(value, 0, 100)) / 100 * innerH;
+      const centerX = x(50);
+      const centerY = y(50);
+      const svg = makeSvg(width, height);
+
+      addSvgNode(svg, "rect", { x: margin.left, y: margin.top, width: innerW / 2, height: innerH / 2, fill: "#edf5f7" });
+      addSvgNode(svg, "rect", { x: centerX, y: margin.top, width: innerW / 2, height: innerH / 2, fill: "#edf6f1" });
+      addSvgNode(svg, "rect", { x: margin.left, y: centerY, width: innerW / 2, height: innerH / 2, fill: "#f8eeee" });
+      addSvgNode(svg, "rect", { x: centerX, y: centerY, width: innerW / 2, height: innerH / 2, fill: "#fbf4e9" });
+      addSvgNode(svg, "line", { x1: centerX, x2: centerX, y1: margin.top, y2: height - margin.bottom, class: "gridline" });
+      addSvgNode(svg, "line", { x1: margin.left, x2: width - margin.right, y1: centerY, y2: centerY, class: "gridline" });
+      addSvgNode(svg, "text", { x: margin.left + 8, y: margin.top + 16, fill: "#256f63", "font-size": compact ? 9 : 11 }, "Improving");
+      addSvgNode(svg, "text", { x: width - margin.right - 8, y: margin.top + 16, fill: "#1c7c54", "font-size": compact ? 9 : 11, "text-anchor": "end" }, "Leading");
+      addSvgNode(svg, "text", { x: margin.left + 8, y: height - margin.bottom - 8, fill: "#b0443e", "font-size": compact ? 9 : 11 }, "Weak");
+      addSvgNode(svg, "text", { x: width - margin.right - 8, y: height - margin.bottom - 8, fill: "#b7791f", "font-size": compact ? 9 : 11, "text-anchor": "end" }, "Fading");
+      addSvgNode(svg, "text", { x: width / 2, y: height - 12, fill: "#626b60", "font-size": 11, "text-anchor": "middle" }, "Fundamental Health");
+      const yLabel = addSvgNode(svg, "text", { x: 14, y: height / 2, fill: "#626b60", "font-size": 11, "text-anchor": "middle" }, "Fundamental Impulse");
+      yLabel.setAttribute("transform", `rotate(-90 14 ${height / 2})`);
+      [0, 50, 100].forEach(value => {
+        addSvgNode(svg, "text", { x: x(value), y: height - margin.bottom + 15, fill: "#626b60", "font-size": 10, "text-anchor": "middle" }, String(value));
+        addSvgNode(svg, "text", { x: margin.left - 7, y: y(value) + 3, fill: "#626b60", "font-size": 10, "text-anchor": "end" }, String(value));
+      });
+
+      series.forEach(item => {
+        const entity = isSectorView ? item.row.sector : item.row.ticker;
+        const color = SECTOR_COLORS[item.row.sector] || "#256f63";
+        const group = addSvgNode(svg, "g", { class: "fund-series", "data-fund-entity": entity });
+        group.style.cursor = "pointer";
+        const pathData = item.points.map((point, index) => `${index ? "L" : "M"}${x(point.health).toFixed(1)},${y(point.impulse).toFixed(1)}`).join(" ");
+        addSvgNode(group, "path", { d: pathData, fill: "none", stroke: "transparent", "stroke-width": 12, "pointer-events": "stroke" });
+        for (let index = 1; index < item.points.length; index++) {
+          const previous = item.points[index - 1];
+          const point = item.points[index];
+          const progress = index / Math.max(1, item.points.length - 1);
+          addSvgNode(group, "line", {
+            x1: x(previous.health), y1: y(previous.impulse), x2: x(point.health), y2: y(point.impulse),
+            stroke: color, "stroke-width": 2, opacity: (0.14 + 0.66 * progress).toFixed(2), "pointer-events": "none"
+          });
+        }
+        item.points.forEach((point, index) => {
+          const isHead = index === item.points.length - 1;
+          const progress = index / Math.max(1, item.points.length - 1);
+          const circle = addSvgNode(group, "circle", {
+            cx: x(point.health), cy: y(point.impulse), r: isHead ? 5.5 : 2.4,
+            fill: color, opacity: isHead ? 1 : (0.16 + 0.54 * progress).toFixed(2),
+            stroke: isHead ? "#ffffff" : "none", "stroke-width": isHead ? 1.5 : 0
+          });
+          circle.addEventListener("pointermove", event => {
+            if (event.pointerType === "mouse") showTooltip(fundamentalTooltip(item.row, point, isSectorView), event);
+          });
+          circle.addEventListener("pointerleave", hideTooltip);
+          if (isHead) {
+            addSvgNode(group, "text", {
+              x: x(point.health) + 7, y: y(point.impulse) - 7, fill: color,
+              "font-size": compact ? 9 : 11, "font-weight": 650
+            }, isSectorView ? displaySector(item.row.sector) : item.row.ticker);
+          }
+        });
+        group.addEventListener("click", event => {
+          if (isSectorView) {
+            handleFundamentalSectorActivation(item.row.sector, model, event);
+          } else {
+            selectFundamentalStock(item.row.ticker, model);
+          }
+        });
+        group.addEventListener("pointerenter", event => {
+          if (event.pointerType !== "mouse") return;
+          document.querySelectorAll(".fund-series").forEach(node => {
+            node.style.opacity = node === group ? "1" : "0.16";
+          });
+        });
+        group.addEventListener("pointerleave", event => {
+          if (event.pointerType !== "mouse") return;
+          document.querySelectorAll(".fund-series").forEach(node => { node.style.opacity = "1"; });
+        });
+      });
+      container.appendChild(svg);
+    }
+
+    function clipNumber(value, low, high) {
+      return Math.max(low, Math.min(high, Number(value) || 0));
+    }
+
+    function renderFundamentalTable(model) {
+      const table = document.getElementById("combinedTable");
+      const head = document.getElementById("combinedTableHead");
+      const body = document.getElementById("combinedTableRows");
+      const title = document.getElementById("tableTitle");
+      const hint = document.getElementById("tableHint");
+      body.innerHTML = "";
+      if (state.tableMode === "sectors") {
+        table.className = "sector-table fund-table";
+        title.textContent = "Sector Table";
+        hint.textContent = `Default sort: Fundamental Score. Growth is latest-${model.annualView ? "TTM" : "quarter"} YoY. Click/tap for sector details; double-click/two-tap for stocks.`;
+        head.innerHTML = `<tr><th class="entity-col">Sector</th><th class="score-col">Score</th><th class="phase-col">Status</th><th class="comment-col">Signal</th><th class="growth-col">Top-line</th><th class="growth-col">Bottom-line</th></tr>`;
+        model.sectorStats.slice().sort((a, b) => b.score - a.score).forEach(row => {
+          const tr = document.createElement("tr");
+          tr.dataset.fundSector = row.sector;
+          tr.classList.toggle("selected", state.selectedFundamentalSector === row.sector);
+          const comment = fundamentalWarning(row);
+          tr.innerHTML = `<td class="entity-col"><strong>${displaySector(row.sector)}</strong></td><td class="score-col">${fmtFundScore(row.score)}</td><td class="phase-col status-cell">${fundamentalStatusHtml(row, true)}</td><td class="comment-col">${comment}</td><td class="growth-col ${row.top_line_q_growth >= 0 ? "pos" : "neg"}">${fmtGrowth(row.top_line_q_growth)}</td><td class="growth-col ${row.npat_q_growth >= 0 ? "pos" : "neg"}">${fmtGrowth(row.npat_q_growth)}</td>`;
+          tr.addEventListener("click", event => handleFundamentalSectorActivation(row.sector, model, event));
+          body.appendChild(tr);
+        });
+        return;
+      }
+
+      const rows = selectedFundamentalStocks(model).sort((a, b) =>
+        Number.isFinite(b.score) - Number.isFinite(a.score) || (b.score || 0) - (a.score || 0) || a.ticker.localeCompare(b.ticker)
+      );
+      const showSector = false;
+      table.className = `stock-table fund-table ${showSector ? "show-sector" : "sector-drill"}`;
+      title.textContent = state.sector !== "All" ? `${displaySector(state.sector)} Stock Table` : "Stock Table";
+      hint.textContent = `Default sort: Fundamental Score. Growth columns are latest-${model.annualView ? "TTM" : "quarter"} YoY. Click a stock for details.`;
+      head.innerHTML = `<tr><th class="entity-col">Ticker</th>${showSector ? '<th class="fund-sector-col">Sector</th>' : ""}<th class="score-col">Score</th><th class="phase-col">Status</th><th class="comment-col">Comment</th><th class="growth-col">Top-line</th><th class="growth-col">Bottom-line</th></tr>`;
+      if (!rows.length) {
+        body.innerHTML = `<tr><td colspan="${showSector ? 7 : 6}">No matching tickers.</td></tr>`;
+        return;
+      }
+      rows.forEach(row => {
+        const tr = document.createElement("tr");
+        tr.dataset.fundTicker = row.ticker;
+        tr.classList.toggle("selected", state.selectedFundamentalTicker === row.ticker);
+        const comment = fundamentalWarning(row);
+        tr.innerHTML = `<td class="entity-col"><strong>${row.ticker}</strong>${showSector ? `<span class="mobile-sector">${displaySector(row.sector)}</span>` : ""}</td>${showSector ? `<td class="fund-sector-col">${displaySector(row.sector)}</td>` : ""}<td class="score-col">${fmtFundScore(row.score)}</td><td class="phase-col status-cell">${fundamentalStatusHtml(row)}</td><td class="comment-col">${comment}</td><td class="growth-col ${row.top_line_q_growth >= 0 ? "pos" : "neg"}">${fmtGrowth(row.top_line_q_growth)}</td><td class="growth-col ${row.npat_q_growth >= 0 ? "pos" : "neg"}">${fmtGrowth(row.npat_q_growth)}</td>`;
+        tr.addEventListener("click", () => selectFundamentalStock(row.ticker, model));
+        body.appendChild(tr);
+      });
+    }
+
+    function formatFundamentalDetail(value, format) {
+      if (!Number.isFinite(value)) return "-";
+      if (format === "vnd_bn") {
+        return value.toLocaleString("en-US", { maximumFractionDigits: 0 });
+      }
+      if (format === "pct") return fmtPct(value);
+      if (format === "pp") return `${value >= 0 ? "+" : ""}${(value * 100).toFixed(2)}pp`;
+      if (format === "multiple") return `${value.toFixed(2)}x`;
+      if (format === "score") return fmtFundScore(value);
+      return value.toLocaleString("en-US", { maximumFractionDigits: 2 });
+    }
+
+    function renderFundamentalDetails(model) {
+      const section = document.getElementById("stockDetailsSection");
+      const isSectorDetail = state.tableMode === "sectors";
+      const entity = isSectorDetail ? state.selectedFundamentalSector : state.selectedFundamentalTicker;
+      const subject = isSectorDetail
+        ? model.sectorStats.find(row => row.sector === entity)
+        : model.stockStats.find(row => row.ticker === entity);
+      if (!entity || !subject) {
+        section.hidden = true;
+        return;
+      }
+      section.hidden = false;
+      document.getElementById("stockDetailsTable").classList.toggle("sector-detail-table", isSectorDetail);
+      const detailPeriods = subject.detail_periods || [];
+      const periodLabels = model.annualView
+        ? ((subject.detail_period_labels || []).length ? subject.detail_period_labels : detailPeriods.map(period => fundamentalPeriodLabel(model, period)))
+        : detailPeriods.map(quarterShortLabel);
+      const mobilePeriodLabels = periodLabels.slice(-4);
+      const periodRange = periodLabels.length ? `${periodLabels[0]} to ${periodLabels[periodLabels.length - 1]}` : model.data.latest_period_label;
+      const mobilePeriodRange = mobilePeriodLabels.length ? `${mobilePeriodLabels[0]} to ${mobilePeriodLabels[mobilePeriodLabels.length - 1]}` : periodRange;
+      const detailName = isSectorDetail ? displaySector(subject.sector) : subject.ticker;
+      document.getElementById("stockDetailsTitle").innerHTML = `${isSectorDetail ? "Sector" : "Stock"} Details — ${detailName} · <span class="detail-range-desktop">${periodRange}</span><span class="detail-range-mobile">${mobilePeriodRange}</span>`;
+      document.getElementById("stockDetailsHint").textContent = isSectorDetail
+        ? `Consolidated from ${subject.detail_coverage || subject.total || subject.coverage || 0} stocks · relative ${fundamentalStatusText(subject)} · sector score ${fmtFundScore(subject.score)}`
+        : `${displaySector(subject.sector)} · ${fundamentalStatusText(subject)} · score ${fmtFundScore(subject.score)}`;
+      const olderCutoff = Math.max(0, periodLabels.length - 4);
+      document.getElementById("stockDetailsHead").innerHTML = `<tr><th>Metric</th>${periodLabels.map((label, index) => `<th class="${index < olderCutoff ? "detail-older" : ""}">${label}</th>`).join("")}${isSectorDetail ? "<th>Signal</th><th>Agg. Signal</th>" : "<th>Signal</th>"}</tr>`;
+      const body = document.getElementById("stockDetailsRows");
+      body.innerHTML = "";
+      let currentSection = "";
+      (subject.detail_rows || []).forEach(item => {
+        if (item.section !== currentSection) {
+          currentSection = item.section;
+          const sectionRow = document.createElement("tr");
+          sectionRow.className = "detail-section-row";
+          const sectionLabel = currentSection === "Fundamental Health"
+            ? `${isSectorDetail ? "Aggregate " : ""}Fundamental Health inputs · ${isSectorDetail ? "absolute " : ""}score ${fmtFundScore(subject.health_score)}`
+            : `${isSectorDetail ? "Aggregate " : ""}Momentum inputs · ${isSectorDetail ? "absolute " : ""}score ${fmtFundScore(subject.momentum_score ?? subject.impulse)}`;
+          sectionRow.innerHTML = `<td colspan="${periodLabels.length + (isSectorDetail ? 3 : 2)}">${sectionLabel}</td>`;
+          body.appendChild(sectionRow);
+        }
+        const tr = document.createElement("tr");
+        const cells = (item.values || []).map((value, index) => {
+          const directional = item.section === "Momentum" && Number.isFinite(value);
+          const className = [directional ? (value >= 0 ? "pos" : "neg") : "", index < olderCutoff ? "detail-older" : ""].filter(Boolean).join(" ");
+          return `<td class="${className}">${formatFundamentalDetail(value, item.format)}</td>`;
+        }).join("");
+        const breadthSignal = item.breadth_signal
+          ? `<span class="sector-breadth-signal"><span>${item.breadth_signal}</span><small>${item.breadth_count}/${item.breadth_total}</small></span>`
+          : "–";
+        tr.innerHTML = `<td><strong>${item.metric}</strong></td>${cells}${isSectorDetail ? `<td>${breadthSignal}</td>` : ""}<td>${item.signal || "–"}</td>`;
+        body.appendChild(tr);
+      });
+    }
+
+    function setStatLabels(fundamentals = false) {
+      document.getElementById("bestSectorLabel").textContent = "Best current sector";
+      document.getElementById("worstSectorLabel").textContent = "Worst current sector";
+      document.getElementById("topStockLabel").textContent = fundamentals ? "Best stock ticker" : "Top stock score";
+      document.getElementById("worstStockLabel").textContent = fundamentals ? "Worst stock ticker" : "Worst stock score";
+    }
+
+    function renderFundamentalStats(model) {
+      setStatLabels(true);
+      const sectors = model.sectorStats.slice().sort((a, b) => b.score - a.score);
+      const stocks = selectedFundamentalStocks(model).filter(row => Number.isFinite(row.score)).sort((a, b) => b.score - a.score);
+      const best = sectors[0];
+      const worst = sectors[sectors.length - 1];
+      const scoredUniverse = model.stockStats.filter(row => Number.isFinite(row.score));
+      const top = stocks[0] || scoredUniverse.slice().sort((a, b) => b.score - a.score)[0];
+      const bottom = stocks[stocks.length - 1] || scoredUniverse.slice().sort((a, b) => a.score - b.score)[0];
+      document.getElementById("bestSector").textContent = best ? displaySector(best.sector) : "-";
+      document.getElementById("bestSectorNote").textContent = best ? `Score ${fmtFundScore(best.score)} · ${fundamentalStatusText(best)}` : "-";
+      document.getElementById("worstSector").textContent = worst ? displaySector(worst.sector) : "-";
+      document.getElementById("worstSectorNote").textContent = worst ? `Score ${fmtFundScore(worst.score)} · ${fundamentalStatusText(worst)}` : "-";
+      document.getElementById("topStock").textContent = top ? top.ticker : "-";
+      document.getElementById("topStockNote").textContent = top ? `${displaySector(top.sector)} · score ${fmtFundScore(top.score)} · ${fundamentalStatusText(top)}` : "-";
+      document.getElementById("worstStock").textContent = bottom ? bottom.ticker : "-";
+      document.getElementById("worstStockNote").textContent = bottom ? `${displaySector(bottom.sector)} · score ${fmtFundScore(bottom.score)} · ${fundamentalStatusText(bottom)}` : "-";
+    }
+
+    function renderFundamentalHelp() {
+      const annualView = state.fundamentalPeriod === "year";
+      document.getElementById("sectorViewHelp").innerHTML = annualView
+        ? `<strong>Annual structural history:</strong> five completed fiscal years plus latest TTM. Click or tap a sector once for consolidated Sector Details; double-click or tap it twice to drill into stocks.`
+        : `<strong>Quarter history:</strong> each cell shows the phase and score for that quarter. Click or tap a sector once for consolidated Sector Details; double-click or tap it twice to drill into stocks.`;
+      document.getElementById("rotationDeltaHelp").innerHTML = `<strong>Four phases:</strong> Strong means both Health and Momentum are above 50; Recover has stronger Momentum but weaker Health; Fading has solid Health but weaker Momentum; Weak has both below 50. Sector inputs are relative to the coverage-universe average.`;
+      document.getElementById("selectedViewHelp").innerHTML = annualView
+        ? `<strong>Displayed growth:</strong> latest TTM versus the prior comparable 12 months. Structural trend uses the rolling five-year median and three-year CAGR to reduce abnormal-period distortion.`
+        : `<strong>Displayed growth:</strong> top-line and bottom-line figures are the latest reported quarter versus the same quarter a year earlier. Historical normalization is used only inside ranking signals to control abnormal bases.`;
+      document.getElementById("rankingIntroHelp").innerHTML = `<strong>Fundamental Score:</strong> 50% quarterly Fundamental Health plus 50% quarterly Momentum, less confirmed deterioration modifiers. Quarterly ROE and ROA are annualized to a 12-month run rate. Corporate interest burden uses net interest expense divided by core EBIT. Bank quality includes Group-2 loans; broker resilience includes funding and regulatory headroom.`;
+      document.getElementById("scoreMethodHelp").innerHTML = `<strong>Comments:</strong> compact labels identify the main warning: Contraction, Cooling, Margin ↓, Int. burden, Cash-gap, Credit risk, B/Sheet, Reg. limit, Earn.Quality, Turnaround, Low-base, High-base, or One-off. An empty cell means no active warning.`;
+    }
+
     function renderAll(model) {
+      if (state.methodology === "fundamentals") {
+        if (state.tableMode === "sectors") {
+          const sectorExists = model.sectorStats.some(row => row.sector === state.selectedFundamentalSector);
+          if (!sectorExists) {
+            const bestSector = model.sectorStats.filter(row => Number.isFinite(row.score)).sort((a, b) => b.score - a.score)[0];
+            state.selectedFundamentalSector = bestSector?.sector || "";
+          }
+          state.selectedFundamentalTicker = "";
+        } else {
+          const selectedPool = selectedFundamentalStocks(model).filter(row => Number.isFinite(row.score));
+          const currentIsVisible = selectedPool.some(row => row.ticker === state.selectedFundamentalTicker);
+          if (!currentIsVisible) {
+            const bestAvailable = selectedPool.slice().sort((a, b) => b.score - a.score)[0]
+              || model.stockStats.filter(row => Number.isFinite(row.score)).sort((a, b) => b.score - a.score)[0];
+            state.selectedFundamentalTicker = bestAvailable?.ticker || "";
+          }
+        }
+        document.getElementById("stockDetailsSection").hidden = false;
+        renderFundamentalHelp();
+        renderFundamentalStats(model);
+        renderFundamentalChart(model);
+        renderFundamentalTable(model);
+        renderFundamentalDetails(model);
+        return;
+      }
+      document.getElementById("stockDetailsSection").hidden = true;
       if (state.methodology === "relative-rotation") {
         renderRrgHelp(model);
         renderRrgStats(model);
@@ -1545,10 +2483,18 @@
     function updateMethodologyControls() {
       const period = document.getElementById("period");
       const isRrg = state.methodology === "relative-rotation";
+      const isFundamentals = state.methodology === "fundamentals";
+      document.querySelector(".grid-2").classList.toggle("fundamentals-grid", isFundamentals);
+      document.getElementById("app").classList.toggle("fundamentals-mode", isFundamentals);
       document.getElementById("periodLabel").textContent = "Period";
       document.getElementById("tailControl").hidden = !isRrg;
-      document.getElementById("dateControl").hidden = isRrg;
-      if (isRrg) {
+      document.getElementById("periodControl").hidden = false;
+      document.getElementById("dateControl").hidden = isRrg || isFundamentals;
+      document.getElementById("tagControl").hidden = !isFundamentals;
+      if (isFundamentals) {
+        period.innerHTML = `<option value="quarter">Quarter</option><option value="year">Year</option>`;
+        period.value = state.fundamentalPeriod;
+      } else if (isRrg) {
         period.innerHTML = `<option value="10-50">10/50</option>`;
         period.value = state.rrgMode;
         document.getElementById("tailPoints").value = state.tailPoints;
@@ -1561,12 +2507,14 @@
     async function boot() {
       try {
         if (typeof RelativeRotation === "undefined") throw new Error("Relative Rotation engine did not load");
-        const [csvText, coverageText] = await Promise.all([
+        const [csvText, coverageText, fundamentalsText] = await Promise.all([
           fetchDashboardText(pricePath),
-          fetchDashboardText(coveragePath)
+          fetchDashboardText(coveragePath),
+          fetchDashboardText(fundamentalsPath)
         ]);
         const rawRows = parseCsv(csvText);
         const coverage = parseCoverage(coverageText);
+        const fundamentalsData = JSON.parse(fundamentalsText);
         const rrgData = RelativeRotation.prepare(rawRows, coverage);
         const dateInput = document.getElementById("baseDate");
         const fullModel = buildModel(rawRows, coverage, "", state.flowPeriod);
@@ -1579,9 +2527,23 @@
         function rebuildAndRender() {
           model = state.methodology === "relative-rotation"
             ? buildRrgModel(rrgData)
-            : buildModel(rawRows, coverage, state.baseDate, state.flowPeriod);
-          document.getElementById("asOf").textContent = `Data through ${model.latestDate}`;
-          document.getElementById("coverageInfo").textContent = `${rrgData.tickers.length} stocks across ${rrgData.sectors.length} sectors`;
+            : state.methodology === "fundamentals"
+              ? buildFundamentalModel(fundamentalsData)
+              : buildModel(rawRows, coverage, state.baseDate, state.flowPeriod);
+          if (state.methodology === "fundamentals") {
+            const annualView = state.fundamentalPeriod === "year";
+            document.getElementById("asOf").textContent = annualView
+              ? `Structural view through ${fundamentalsData.annual_latest_period_label}`
+              : `Financials through ${fundamentalsData.latest_period_label}`;
+            document.getElementById("coverageInfo").textContent = `${fundamentalsData.scored_coverage} scored / ${fundamentalsData.coverage} stocks across ${fundamentalsData.sectors.length} sectors`;
+            document.getElementById("signalInfo").textContent = annualView
+              ? "TTM structural score uses 60% Health and 40% five-year-normalized Trend."
+              : "Displayed growth and scoring inputs use the latest quarter; normalization is ranking-only.";
+          } else {
+            document.getElementById("asOf").textContent = `Data through ${model.latestDate}`;
+            document.getElementById("coverageInfo").textContent = `${rrgData.tickers.length} stocks across ${rrgData.sectors.length} sectors`;
+            document.getElementById("signalInfo").textContent = "Signals use adjusted prices and traded value.";
+          }
           renderAll(model);
         }
 
@@ -1589,13 +2551,22 @@
           state.methodology = event.target.value;
           state.sector = "All";
           state.search = "";
+          state.tagFilter = "";
           state.tableMode = "sectors";
+          state.selectedFundamentalSector = "";
+          state.selectedFundamentalTicker = "";
+          if (state.methodology === "fundamentals") state.fundamentalPeriod = "quarter";
           document.getElementById("search").value = "";
+          document.getElementById("tagFilter").value = "";
           updateMethodologyControls();
           rebuildAndRender();
         });
         document.getElementById("period").addEventListener("change", event => {
-          if (state.methodology === "relative-rotation") {
+          if (state.methodology === "fundamentals") {
+            state.fundamentalPeriod = event.target.value;
+            state.selectedFundamentalSector = "";
+            state.selectedFundamentalTicker = "";
+          } else if (state.methodology === "relative-rotation") {
             state.rrgMode = event.target.value;
             state.tailPoints = RelativeRotation.MODE_CONFIG[state.rrgMode].defaultTailPoints;
             document.getElementById("tailPoints").value = state.tailPoints;
@@ -1619,27 +2590,51 @@
             state.sector = "All";
             state.tableMode = "stocks";
           }
+          if (state.methodology === "fundamentals") {
+            state.selectedFundamentalSector = "";
+            state.selectedFundamentalTicker = "";
+          }
+          renderAll(model);
+        });
+        document.getElementById("tagFilter").addEventListener("change", event => {
+          state.tagFilter = event.target.value;
+          state.sector = "All";
+          state.tableMode = "stocks";
+          state.selectedFundamentalSector = "";
+          state.selectedFundamentalTicker = "";
           renderAll(model);
         });
         document.getElementById("marketReset").addEventListener("click", () => {
           state.sector = "All";
           state.search = "";
+          state.tagFilter = "";
           state.tableMode = "sectors";
+          state.selectedFundamentalSector = "";
+          state.selectedFundamentalTicker = "";
           document.getElementById("search").value = "";
+          document.getElementById("tagFilter").value = "";
           renderAll(model);
         });
         document.getElementById("tableOverview").addEventListener("click", () => {
           state.sector = "All";
           state.search = "";
+          state.tagFilter = "";
           state.tableMode = "sectors";
+          state.selectedFundamentalSector = "";
+          state.selectedFundamentalTicker = "";
           document.getElementById("search").value = "";
+          document.getElementById("tagFilter").value = "";
           renderAll(model);
         });
         document.getElementById("allStockRanking").addEventListener("click", () => {
           state.sector = "All";
           state.search = "";
+          state.tagFilter = "";
           state.tableMode = "stocks";
+          state.selectedFundamentalSector = "";
+          state.selectedFundamentalTicker = "";
           document.getElementById("search").value = "";
+          document.getElementById("tagFilter").value = "";
           renderAll(model);
         });
         document.querySelectorAll(".info-button").forEach(button => {
