@@ -2425,6 +2425,13 @@
         "Elevated": "Elev.",
         "Reg. limit": "Limit"
       };
+      const compactMetricLabels = {
+        "NPAT-MI (VND bn)": "NPAT-MI (bn)",
+        "Unrealized profit %": "Unreal. profit %",
+        "Accrual ratio": "Acc. ratio",
+        "12M accrual ratio": "12M Acc. ratio",
+        "Net interest / EBIT": "Net int. / EBIT"
+      };
       const detailSignalMarkup = signal => {
         const full = signal || "–";
         const compact = compactSignalLabels[full] || full;
@@ -2451,7 +2458,7 @@
         const breadthSignal = item.breadth_signal
           ? `<span class="sector-breadth-signal"><span>${item.breadth_signal}</span><small>${item.breadth_count}/${item.breadth_total}</small></span>`
           : "–";
-        tr.innerHTML = `<td><strong>${item.metric}</strong></td>${cells}${isSectorDetail ? `<td>${breadthSignal}</td>` : ""}<td>${detailSignalMarkup(item.signal)}</td>`;
+        tr.innerHTML = `<td><strong>${compactMetricLabels[item.metric] || item.metric}</strong></td>${cells}${isSectorDetail ? `<td>${breadthSignal}</td>` : ""}<td>${detailSignalMarkup(item.signal)}</td>`;
         body.appendChild(tr);
       });
     }
