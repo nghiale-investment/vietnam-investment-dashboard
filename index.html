@@ -555,6 +555,38 @@
       display: none;
     }
 
+    .sector-detail-drill > td {
+      cursor: zoom-in;
+      user-select: none;
+    }
+
+    .sector-detail-drill:hover > td {
+      background: var(--surface-2);
+    }
+
+    .sector-stock-metric-row td {
+      background: color-mix(in srgb, var(--surface-2) 70%, var(--surface));
+      font-size: 0.92em;
+    }
+
+    .sector-stock-metric-row td:first-child {
+      padding-left: 18px;
+      color: var(--accent);
+    }
+
+    .sector-stock-rank {
+      display: inline-block;
+      min-width: 20px;
+      margin-right: 3px;
+      color: var(--muted);
+      font-size: 0.85em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .sector-stock-metric-row:last-of-type td {
+      border-bottom-color: var(--accent);
+    }
+
     .fund-detail-table {
       width: 100%;
       min-width: 0;
@@ -1003,6 +1035,15 @@
         font-size: 8px;
       }
 
+      .sector-stock-metric-row td:first-child {
+        padding-left: 7px;
+      }
+
+      .sector-stock-rank {
+        min-width: 12px;
+        margin-right: 1px;
+      }
+
       th, td {
         padding: 6px 5px;
       }
@@ -1204,6 +1245,8 @@
     let lastRrgTouch = { entityId: "", at: 0 };
     const RRG_DOUBLE_TAP_MS = 500;
     let lastFundamentalSectorTap = { sector: "", at: 0 };
+    let lastSectorDetailTap = { key: "", at: 0 };
+    const expandedSectorMetrics = new Set();
     const FUNDAMENTAL_DOUBLE_TAP_MS = 550;
     const displaySector = sector => SECTOR_LABELS[sector] || sector;
     const fmtPct = value => Number.isFinite(value) ? `${(value * 100).toFixed(1)}%` : "-";
@@ -2390,6 +2433,116 @@
       return value.toLocaleString("en-US", { maximumFractionDigits: 2 });
     }
 
+    function resetSectorMetricBreakdown() {
+      expandedSectorMetrics.clear();
+      lastSectorDetailTap = { key: "", at: 0 };
+    }
+
+    function lowerIsBetterFundamentalMetric(metric) {
+      return new Set([
+        "12M accrual ratio",
+        "Accrual ratio",
+        "Cost-to-income ratio",
+        "Credit cost",
+        "FVTPL / E",
+        "Funding gap / E",
+        "Group-2 ratio",
+        "Investment income / PBT",
+        "Loan-to-deposit ratio",
+        "Margin loans / E",
+        "Net D/E",
+        "Net interest / EBIT",
+        "NPL ratio",
+        "Unrealized profit %"
+      ]).has(metric);
+    }
+
+    function sectorMetricStockRows(model, sectorSubject, item, olderCutoff, detailSignalMarkup, parentKey) {
+      const sectorPeriods = sectorSubject.detail_periods || [];
+      const latestSectorPeriod = sectorPeriods[sectorPeriods.length - 1];
+      const ascending = lowerIsBetterFundamentalMetric(item.metric);
+      return model.stockStats
+        .filter(stock => stock.sector === sectorSubject.sector)
+        .map(stock => {
+          const stockItem = (stock.detail_rows || []).find(row => row.section === item.section && row.metric === item.metric);
+          const latestStockIndex = (stock.detail_periods || []).indexOf(latestSectorPeriod);
+          const latestValue = stockItem && latestStockIndex >= 0 ? (stockItem.values || [])[latestStockIndex] : null;
+          return { stock, stockItem, latestValue };
+        })
+        .sort((a, b) => {
+          const aValid = Number.isFinite(a.latestValue);
+          const bValid = Number.isFinite(b.latestValue);
+          if (aValid !== bValid) return bValid - aValid;
+          if (aValid && a.latestValue !== b.latestValue) {
+            return ascending ? a.latestValue - b.latestValue : b.latestValue - a.latestValue;
+          }
+          return a.stock.ticker.localeCompare(b.stock.ticker);
+        })
+        .map(({ stock, stockItem }, rankIndex) => {
+          const row = document.createElement("tr");
+          row.className = "sector-stock-metric-row";
+          row.dataset.sectorMetricParent = parentKey;
+          const stockPeriods = stock.detail_periods || [];
+          const values = sectorPeriods.map((period, index) => {
+            const stockPeriodIndex = stockPeriods.indexOf(period);
+            const value = stockItem && stockPeriodIndex >= 0 ? (stockItem.values || [])[stockPeriodIndex] : null;
+            const directional = item.section === "Momentum" && Number.isFinite(value);
+            const className = [directional ? (value >= 0 ? "pos" : "neg") : "", index < olderCutoff ? "detail-older" : ""].filter(Boolean).join(" ");
+            return `<td class="${className}">${formatFundamentalDetail(value, stockItem?.format || item.format)}</td>`;
+          }).join("");
+          row.innerHTML = `<td><span class="sector-stock-rank">${rankIndex + 1}.</span><strong>${stock.ticker}</strong></td>${values}<td>${detailSignalMarkup(stockItem?.signal || "–")}</td><td></td>`;
+          return row;
+        });
+    }
+
+    function toggleSectorMetricRows(model, sectorSubject, item, aggregateRow, olderCutoff, detailSignalMarkup, key) {
+      const body = aggregateRow.parentElement;
+      const existing = Array.from(body.querySelectorAll(".sector-stock-metric-row"))
+        .filter(row => row.dataset.sectorMetricParent === key);
+      if (existing.length) {
+        existing.forEach(row => row.remove());
+        expandedSectorMetrics.delete(key);
+        aggregateRow.setAttribute("aria-expanded", "false");
+        return;
+      }
+      const stockRows = sectorMetricStockRows(model, sectorSubject, item, olderCutoff, detailSignalMarkup, key);
+      let anchor = aggregateRow;
+      stockRows.forEach(row => {
+        anchor.insertAdjacentElement("afterend", row);
+        anchor = row;
+      });
+      expandedSectorMetrics.add(key);
+      aggregateRow.setAttribute("aria-expanded", "true");
+    }
+
+    function enableSectorDetailDrill(row, model, sectorSubject, item, olderCutoff, detailSignalMarkup, key) {
+      row.classList.add("sector-detail-drill");
+      row.title = "Double-click or two-tap to show or hide stocks ranked best to worst by the latest period";
+      row.tabIndex = 0;
+      row.setAttribute("aria-expanded", expandedSectorMetrics.has(key) ? "true" : "false");
+      const toggle = () => toggleSectorMetricRows(model, sectorSubject, item, row, olderCutoff, detailSignalMarkup, key);
+      row.addEventListener("dblclick", event => {
+        event.preventDefault();
+        toggle();
+      });
+      row.addEventListener("pointerup", event => {
+        if (event.pointerType !== "touch" && event.pointerType !== "pen") return;
+        const now = Date.now();
+        if (lastSectorDetailTap.key === key && now - lastSectorDetailTap.at <= FUNDAMENTAL_DOUBLE_TAP_MS) {
+          event.preventDefault();
+          lastSectorDetailTap = { key: "", at: 0 };
+          toggle();
+          return;
+        }
+        lastSectorDetailTap = { key, at: now };
+      });
+      row.addEventListener("keydown", event => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        event.preventDefault();
+        toggle();
+      });
+    }
+
     function renderFundamentalDetails(model) {
       const section = document.getElementById("stockDetailsSection");
       const isSectorDetail = state.tableMode === "sectors";
@@ -2399,6 +2552,7 @@
         : model.stockStats.find(row => row.ticker === entity);
       if (!entity || !subject) {
         section.hidden = true;
+        resetSectorMetricBreakdown();
         return;
       }
       section.hidden = false;
@@ -2415,7 +2569,7 @@
       const detailName = isSectorDetail ? displaySector(subject.sector) : subject.ticker;
       document.getElementById("stockDetailsTitle").innerHTML = `${isSectorDetail ? "Sector" : "Stock"} Details — ${detailName} · <span class="detail-range-desktop">${periodRange}</span><span class="detail-range-mobile">${mobilePeriodRange}</span>`;
       document.getElementById("stockDetailsHint").textContent = isSectorDetail
-        ? `Consolidated from ${subject.detail_coverage || subject.total || subject.coverage || 0} stocks · relative ${fundamentalStatusText(subject)} · sector score ${fmtFundScore(subject.score)}`
+        ? `Consolidated from ${subject.detail_coverage || subject.total || subject.coverage || 0} stocks · relative ${fundamentalStatusText(subject)} · sector score ${fmtFundScore(subject.score)} · double-click/two-tap a field for best-to-worst stocks`
         : `${displaySector(subject.sector)} · ${fundamentalStatusText(subject)} · score ${fmtFundScore(subject.score)}`;
       const olderCutoff = Math.max(0, periodLabels.length - 4);
       document.getElementById("stockDetailsHead").innerHTML = `<tr><th>Metric</th>${periodLabels.map((label, index) => `<th class="${index < olderCutoff ? "detail-older" : ""}">${label}</th>`).join("")}${isSectorDetail ? "<th>Signal</th><th>Agg. Signal</th>" : "<th>Signal</th>"}</tr>`;
@@ -2480,6 +2634,17 @@
           : "–";
         tr.innerHTML = `<td><strong>${compactMetricLabels[item.metric] || item.metric}</strong></td>${cells}${isSectorDetail ? `<td>${breadthSignal}</td>` : ""}<td>${detailSignalMarkup(item.signal)}</td>`;
         body.appendChild(tr);
+        if (isSectorDetail) {
+          const key = `${subject.sector}|${model.annualView ? "year" : "quarter"}|${item.section}|${item.metric}`;
+          enableSectorDetailDrill(tr, model, subject, item, olderCutoff, detailSignalMarkup, key);
+          if (expandedSectorMetrics.has(key)) {
+            let anchor = tr;
+            sectorMetricStockRows(model, subject, item, olderCutoff, detailSignalMarkup, key).forEach(stockRow => {
+              anchor.insertAdjacentElement("afterend", stockRow);
+              anchor = stockRow;
+            });
+          }
+        }
       });
     }
 
