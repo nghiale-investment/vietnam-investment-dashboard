@@ -560,6 +560,11 @@
       user-select: none;
     }
 
+    .sector-detail-drill {
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
     .sector-detail-drill:hover > td {
       background: var(--surface-2);
     }
@@ -2044,10 +2049,10 @@
     }
 
     function renderRrgHelp(model) {
-      document.getElementById("sectorViewHelp").innerHTML = `<strong>Sector view:</strong> each sector is a synthetic market-cap-weighted index using previous-session market-cap weights, measured against the VN-Index.`;
-      document.getElementById("rotationDeltaHelp").innerHTML = `<strong>MSWerkzeug 10/50 coordinates:</strong> normalize entity and benchmark prices, form their relative-price series, then calculate RS-Ratio from its ${model.mode.normalizationWindow}-session rolling mean and standard deviation. RS-Momentum compares RS-Ratio with ${model.mode.momentumLookback} sessions earlier and normalizes that series over ${model.mode.normalizationWindow} sessions.`;
-      document.getElementById("selectedViewHelp").innerHTML = `<strong>Final stabilization:</strong> both coordinates use a ${model.mode.smoothingWindow}-session simple moving average. Tails show consecutive daily coordinates. On touch screens, tap once to focus and double-tap the same sector to open its stocks.`;
-      document.getElementById("rankingIntroHelp").innerHTML = `<strong>RRG score:</strong> the equal-weight average of Relative Strength and Relative Momentum: (X + Y) / 2. The 100 axes represent each entity's rolling baseline.`;
+      document.getElementById("sectorViewHelp").innerHTML = `<strong>How to read the axes:</strong> Relative Strength (horizontal) shows performance versus the VN-Index over the rolling ${model.mode.normalizationWindow}-session comparison: above 100 is outperforming, below 100 is underperforming. Relative Momentum (vertical) asks whether that relative performance has improved or weakened versus ${model.mode.momentumLookback} sessions earlier: above 100 is improving, below 100 is slowing.`;
+      document.getElementById("rotationDeltaHelp").innerHTML = `<strong>Four quadrants:</strong> Leading = outperforming and the lead is widening. Weakening = still outperforming, but the lead is narrowing versus ${model.mode.momentumLookback} sessions earlier. Lagging = underperforming and the gap is widening. Improving = still underperforming, but the gap is narrowing versus ${model.mode.momentumLookback} sessions earlier.`;
+      document.getElementById("selectedViewHelp").innerHTML = `<strong>Reading the tail:</strong> each point is one trading day; the latest point is the sector's current position. Moving right or up is positive, while moving left or down is negative. On touch screens, tap once to focus and double-tap the same sector to open its stocks.`;
+      document.getElementById("rankingIntroHelp").innerHTML = `<strong>RRG score:</strong> the average of Relative Strength and Relative Momentum. A higher score means stronger relative performance and momentum combined.`;
       document.getElementById("scoreMethodHelp").innerHTML = `<strong>Stable ranking:</strong> all coordinates are calculated before display filters are applied, so sector clicks and ticker searches never change an entity's score.`;
     }
 
@@ -2521,20 +2526,56 @@
       row.tabIndex = 0;
       row.setAttribute("aria-expanded", expandedSectorMetrics.has(key) ? "true" : "false");
       const toggle = () => toggleSectorMetricRows(model, sectorSubject, item, row, olderCutoff, detailSignalMarkup, key);
+      let touchStart = null;
+      let lastTouchInteractionAt = 0;
+      let lastTouchToggleAt = 0;
       row.addEventListener("dblclick", event => {
+        const touchGenerated = event.sourceCapabilities?.firesTouchEvents === true
+          || Date.now() - lastTouchToggleAt < 1200;
+        if (touchGenerated) {
+          event.preventDefault();
+          event.stopPropagation();
+          event.stopImmediatePropagation?.();
+          return;
+        }
         event.preventDefault();
         toggle();
       });
+      row.addEventListener("pointerdown", event => {
+        if (event.pointerType !== "touch" && event.pointerType !== "pen") return;
+        touchStart = { pointerId: event.pointerId, x: event.clientX, y: event.clientY };
+      });
       row.addEventListener("pointerup", event => {
         if (event.pointerType !== "touch" && event.pointerType !== "pen") return;
+        if (!touchStart || event.pointerId !== touchStart.pointerId) return;
+        const movement = Math.hypot(event.clientX - touchStart.x, event.clientY - touchStart.y);
+        touchStart = null;
+        if (movement > 12) {
+          if (lastSectorDetailTap.key === key) lastSectorDetailTap = { key: "", at: 0 };
+          return;
+        }
         const now = Date.now();
+        lastTouchInteractionAt = now;
         if (lastSectorDetailTap.key === key && now - lastSectorDetailTap.at <= FUNDAMENTAL_DOUBLE_TAP_MS) {
           event.preventDefault();
+          event.stopPropagation();
           lastSectorDetailTap = { key: "", at: 0 };
+          lastTouchToggleAt = now;
           toggle();
           return;
         }
         lastSectorDetailTap = { key, at: now };
+      });
+      row.addEventListener("pointercancel", () => {
+        touchStart = null;
+      });
+      row.addEventListener("click", event => {
+        const touchGenerated = event.sourceCapabilities?.firesTouchEvents === true
+          || Date.now() - lastTouchInteractionAt < 1000;
+        if (!touchGenerated) return;
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation?.();
       });
       row.addEventListener("keydown", event => {
         if (event.key !== "Enter" && event.key !== " ") return;
