@@ -3556,14 +3556,18 @@
       });
     }
 
-    function formatFundamentalDetail(value, format) {
+    function formatFundamentalDetail(value, format, metric = "") {
       if (!Number.isFinite(value)) return "-";
       if (format === "vnd_bn") {
         return value.toLocaleString("en-US", { maximumFractionDigits: 0 });
       }
       if (format === "pct") return fmtPct(value);
       if (format === "pp") return `${value >= 0 ? "+" : ""}${(value * 100).toFixed(2)}pp`;
-      if (format === "multiple") return `${value.toFixed(2)}x`;
+      if (format === "multiple") {
+        return String(metric).includes("Δ")
+          ? `${value >= 0 ? "+" : ""}${(value * 100).toFixed(2)}pp`
+          : fmtPct(value);
+      }
       if (format === "days") return `${Math.round(value)}d`;
       if (format === "days_delta") return `${value >= 0 ? "+" : ""}${Math.round(value)}d`;
       if (format === "score") return fmtFundScore(value);
@@ -3642,6 +3646,26 @@
       return Math.max(60, 100 - ((value - 0.90) / 0.10) * 40);
     }
 
+    function distanceToHealthyBand(value, lower, upper) {
+      if (!Number.isFinite(value)) return null;
+      if (value < lower) return lower - value;
+      if (value > upper) return value - upper;
+      return 0;
+    }
+
+    function healthyBandMomentumGoodness(current, prior, lower, upper) {
+      const currentDistance = distanceToHealthyBand(current, lower, upper);
+      const priorDistance = distanceToHealthyBand(prior, lower, upper);
+      return Number.isFinite(currentDistance) && Number.isFinite(priorDistance)
+        ? priorDistance - currentDistance
+        : null;
+    }
+
+    function linearMetricGoodness(value, bad, good) {
+      if (!Number.isFinite(value) || bad === good) return null;
+      return Math.max(0, Math.min(100, ((value - bad) / (good - bad)) * 100));
+    }
+
     function fundamentalMetricGoodness(metric, value, subject, periodIndex) {
       if (!Number.isFinite(value)) return null;
       if (metric === "LDR" || metric === "Loan-to-deposit ratio") {
@@ -3652,11 +3676,8 @@
         const retentionRow = (subject?.detail_rows || []).find(row => row.metric === "Retention ratio");
         const currentRetention = retentionRow && periodIndex >= 0 ? (retentionRow.values || [])[periodIndex] : null;
         const priorRetention = Number.isFinite(currentRetention) ? currentRetention - value : null;
-        const currentScore = insuranceRetentionGoodness(currentRetention);
-        const priorScore = insuranceRetentionGoodness(priorRetention);
-        return Number.isFinite(currentScore) && Number.isFinite(priorScore)
-          ? currentScore - priorScore
-          : 0;
+        const improvement = healthyBandMomentumGoodness(currentRetention, priorRetention, 0.45, 0.90);
+        return Number.isFinite(improvement) ? improvement : 0;
       }
       if (metric === "LDR YoY Δ") {
         const ldrRow = (subject?.detail_rows || []).find(row =>
@@ -3664,11 +3685,13 @@
         );
         const currentLdr = ldrRow && periodIndex >= 0 ? (ldrRow.values || [])[periodIndex] : null;
         const priorLdr = Number.isFinite(currentLdr) ? currentLdr - value : null;
-        const currentScore = bankLdrGoodness(currentLdr);
-        const priorScore = bankLdrGoodness(priorLdr);
-        return Number.isFinite(currentScore) && Number.isFinite(priorScore)
-          ? currentScore - priorScore
-          : -value;
+        const improvement = healthyBandMomentumGoodness(currentLdr, priorLdr, 0.75, 1.00);
+        return Number.isFinite(improvement) ? improvement : -value;
+      }
+      if (metric === "Invest. inc. / PBT" || metric === "Investment income / PBT") {
+        return subject?.business_model === "life_insurance"
+          ? linearMetricGoodness(value, 0.50, 2.00)
+          : linearMetricGoodness(value, 1.20, 0.20);
       }
       if (absoluteLowerIsBetterFundamentalMetric(metric)) return -Math.abs(value);
       return lowerIsBetterFundamentalMetric(metric) ? -value : value;
@@ -3712,7 +3735,7 @@
               fundamentalMetricValueClass(item, value, stock, stockPeriodIndex),
               index < olderCutoff ? "detail-older" : ""
             ].filter(Boolean).join(" ");
-            return `<td class="${className}">${formatFundamentalDetail(value, stockItem?.format || item.format)}</td>`;
+            return `<td class="${className}">${formatFundamentalDetail(value, stockItem?.format || item.format, stockItem?.metric || item.metric)}</td>`;
           }).join("");
           row.innerHTML = `<td><span class="sector-stock-rank">${rankIndex + 1}.</span><strong>${stock.ticker}</strong></td>${values}`;
           return row;
@@ -3841,7 +3864,7 @@
         "Profitability & Efficiency": `<p><strong>NIM · 25%:</strong> net interest income ÷ average earning assets.</p><p><strong>ROA · 25%:</strong> annualized NPAT ÷ average assets.</p><p><strong>PPOP / average assets · 20%:</strong> annualized pre-provision operating profit ÷ average assets.</p><p><strong>ROE · 15%:</strong> annualized NPAT ÷ average equity.</p><p><strong>CIR · 15%:</strong> operating expenses ÷ operating income; lower is better.</p>`,
         "Earnings Durability": companyType === "CK"
           ? `<p><strong>Recurring revenue % · 30%:</strong> brokerage, margin-lending, advisory, custody and underwriting revenue ÷ operating revenue.</p><p><strong>Recurring cost cover · 25%:</strong> recurring revenue ÷ absolute operating expense; higher cover means the recurring franchise funds more of the cost base.</p><p><strong>Unrealized / PBT · 20%:</strong> absolute unrealized trading result ÷ absolute PBT; lower dependence scores better.</p><p><strong>Earnings variability · 25%:</strong> robust MAD ÷ median absolute NPAT over recent history; lower is better.</p>`
-          : `<p><strong>Core Earn. % · 40%:</strong> (EBIT + shared profit) ÷ PBT, where EBIT is gross profit − SG&amp;A.</p><p><strong>Non-core Earn. % · 30%:</strong> (non-interest financial income/losses + other income/losses) ÷ PBT. The absolute magnitude is scored, so smaller is better.</p><p><strong>Earnings variability · 30%:</strong> robust MAD ÷ median absolute NPAT over recent history; quarterly scoring uses the latest eight rolling-12M observations. Lower, more stable earnings score better; 75% is relative to own history and 25% uses an absolute range.</p>`,
+          : `<p><strong>Core Earn. % · 40%:</strong> (EBIT + shared profit + signed net interest income/losses) ÷ PBT, where EBIT is gross profit − SG&amp;A. Net interest expense reduces core earnings; net interest income increases it.</p><p><strong>Non-core Earn. % · 30%:</strong> (PBT − core earnings) ÷ PBT, representing non-interest financial and other income/losses. The absolute magnitude is scored, so smaller is better.</p><p><strong>Earnings variability · 30%:</strong> robust MAD ÷ median absolute NPAT over recent history; quarterly scoring uses the latest eight rolling-12M observations. Lower, more stable earnings score better; 75% is relative to own history and 25% uses an absolute range.</p>`,
         "Profitability & Carry": `<p><strong>EBIT margin · 25%:</strong> EBIT ÷ operating revenue.</p><p><strong>ROA · 20%:</strong> annualized NPAT ÷ average assets.</p><p><strong>ROE · 15%:</strong> annualized NPAT ÷ average equity.</p><p><strong>Investment yield · context:</strong> (FVTPL interest/dividends + AFS income + HTM income) ÷ average FVTPL, AFS and HTM assets. Margin lending is excluded.</p><p><strong>Margin lending yield · 20%:</strong> annualized lending income ÷ average margin loans.</p><p><strong>Funding cost · context:</strong> annualized interest expense ÷ average borrowings. It is shown separately but enters the score through net carry.</p><p><strong>Net carry spread · 20%:</strong> asset yield minus funding cost.</p>`,
         "Profitability & Carry Momentum": `<p><strong>EBIT margin · 30%:</strong> operating profit ÷ operating revenue.</p><p><strong>ROA · 20%:</strong> annualized NPAT ÷ average assets.</p><p><strong>ROE · 15%:</strong> annualized NPAT ÷ average equity.</p><p><strong>Margin lending yield · 15%:</strong> annualized lending income ÷ average margin loans.</p><p><strong>Net carry spread · 20%:</strong> asset yield minus borrowing cost.</p>`,
         "Earnings-durability Momentum": `<p><strong>Recurring revenue % · 30%:</strong> (brokerage + margin lending + advisory + custody + underwriting revenue) ÷ operating revenue.</p><p><strong>Recurring cost cover · 25%:</strong> recurring revenue ÷ absolute operating expense.</p><p><strong>Unrealized / PBT · 25%:</strong> absolute unrealized trading result ÷ absolute PBT.</p><p><strong>Earnings variability · 20%:</strong> robust MAD ÷ median absolute quarterly NPAT over the latest eight quarters.</p>`,
@@ -4188,7 +4211,7 @@
             fundamentalMetricValueClass(item, value, subject, index),
             index < olderCutoff ? "detail-older" : ""
           ].filter(Boolean).join(" ");
-          return `<td class="${className}">${formatFundamentalDetail(value, item.format)}</td>`;
+          return `<td class="${className}">${formatFundamentalDetail(value, item.format, item.metric)}</td>`;
         }).join("");
         tr.innerHTML = `<td><strong>${compactMetricLabels[item.metric] || item.metric}</strong></td>${cells}`;
         body.appendChild(tr);
