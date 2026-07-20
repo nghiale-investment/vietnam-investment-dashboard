@@ -37,6 +37,54 @@
       z-index: 2;
     }
 
+    .dashboard-brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 6px;
+    }
+
+    .dashboard-brand-row h1 {
+      margin-bottom: 0;
+    }
+
+    .dashboard-nav,
+    .detail-page-actions {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+
+    .dashboard-nav button,
+    .page-action-button,
+    .home-method-link {
+      appearance: none;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--surface-2);
+      color: var(--text);
+      padding: 7px 11px;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 650;
+      cursor: pointer;
+    }
+
+    .dashboard-nav button:hover,
+    .page-action-button:hover,
+    .home-method-link:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .dashboard-nav button[aria-current="page"] {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: white;
+    }
+
     h1 {
       font-size: 22px;
       line-height: 1.2;
@@ -59,6 +107,130 @@
       gap: 18px;
       max-width: 1440px;
       margin: 0 auto;
+    }
+
+    .page-shell {
+      display: grid;
+      gap: 18px;
+      min-width: 0;
+    }
+
+    .page-shell[hidden] {
+      display: none;
+    }
+
+    .home-hero {
+      padding: 22px;
+      background: linear-gradient(135deg, #eff6f2, #ffffff 58%, #f8f2eb);
+    }
+
+    .home-eyebrow {
+      margin: 0 0 7px;
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 750;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .home-hero h2 {
+      font-size: 24px;
+      margin-bottom: 7px;
+    }
+
+    .home-hero p:last-child {
+      max-width: 760px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .home-method-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .home-method-card {
+      display: grid;
+      gap: 13px;
+      min-width: 0;
+    }
+
+    .home-method-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .home-method-head h3 {
+      margin: 0 0 4px;
+      font-size: 17px;
+    }
+
+    .home-method-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.35;
+    }
+
+    .home-rank-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .home-rank-block {
+      min-width: 0;
+      padding: 9px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fafbf9;
+    }
+
+    .home-rank-block h4 {
+      margin: 0 0 6px;
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .home-rank-list {
+      display: grid;
+      gap: 5px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .home-rank-list li {
+      display: grid;
+      grid-template-columns: 16px minmax(0, 1fr) auto;
+      align-items: baseline;
+      gap: 4px;
+      min-width: 0;
+      font-size: 11px;
+    }
+
+    .home-rank-list .rank-number {
+      color: var(--muted);
+    }
+
+    .home-rank-list strong {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .home-rank-list .rank-value {
+      color: var(--accent);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
     }
 
     .toolbar {
@@ -401,10 +573,52 @@
 
     .fund-table .entity-col { width: 18%; text-align: left; }
     .fund-table .fund-sector-col { width: 18%; text-align: left; }
-    .fund-table .score-col { width: 16.4%; text-align: right; }
-    .fund-table .phase-col { width: 16.4%; text-align: center; }
+    .fund-table .score-col { width: 20.5%; text-align: right; }
+    .fund-table .phase-col { width: 20.5%; text-align: center; }
     .fund-table .comment-col { width: 16.4%; text-align: left; }
-    .fund-table .growth-col { width: 16.4%; text-align: right; }
+    .fund-table .growth-col { width: 20.5%; text-align: right; }
+
+    /* The colgroup owns this six-column layout so Overview and Stock Ranking
+       retain identical geometry even when other table-mode rules are active. */
+    .fund-table.fund-tag-table .entity-col,
+    .fund-table.fund-tag-table .score-col,
+    .fund-table.fund-tag-table .rank-tag-col { width: auto !important; }
+    .fund-table.fund-tag-table .rank-tag-col { text-align: center; }
+
+    .fund-tag-group {
+      text-align: center !important;
+      border-bottom-color: transparent;
+    }
+
+    .fund-tag-cell {
+      height: 38px;
+      padding: 4px 3px !important;
+    }
+
+    .fund-tag-cell .dimension-tags.rank-tag-list {
+      width: 100%;
+      margin-left: 0;
+      justify-content: center;
+    }
+
+    .fund-tag-cell .dimension-tag.rank-tag-pill {
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 100%;
+      height: 30px;
+      min-height: 30px;
+      max-height: 30px;
+      padding: 2px 3px;
+      justify-content: center;
+      overflow-wrap: anywhere;
+      font-size: 9px;
+      line-height: 1.05;
+      text-align: center;
+      white-space: normal;
+    }
+
+    .fund-tag-cell .dimension-tag.rank-tag-long { font-size: 8px; }
+    .fund-tag-cell .dimension-tag.rank-tag-xlong { font-size: 7.25px; }
 
     .fund-table th:not(.entity-col),
     .fund-table td:not(.entity-col) {
@@ -417,11 +631,19 @@
     }
 
     @media (min-width: 981px) {
+      .fund-table.fund-tag-table .entity-col,
+      .fund-table.fund-tag-table .score-col {
+        font-size: 11px;
+        line-height: 1.1;
+      }
+
       .sector-table .entity-col { width: 18%; }
       .sector-table .score-col,
       .sector-table .phase-col,
-      .sector-table .comment-col,
-      .sector-table .growth-col { width: 16.4%; }
+      .sector-table .comment-col { width: 16.4%; }
+      .sector-table .score-col,
+      .sector-table .phase-col,
+      .sector-table .growth-col { width: 20.5%; }
 
       .stock-table.show-sector .fund-sector-col,
       .stock-table.show-sector .entity-col { width: 18%; }
@@ -433,8 +655,10 @@
       .stock-table.sector-drill .entity-col { width: 18%; }
       .stock-table.sector-drill .score-col,
       .stock-table.sector-drill .phase-col,
-      .stock-table.sector-drill .comment-col,
-      .stock-table.sector-drill .growth-col { width: 16.4%; }
+      .stock-table.sector-drill .comment-col { width: 16.4%; }
+      .stock-table.sector-drill .score-col,
+      .stock-table.sector-drill .phase-col,
+      .stock-table.sector-drill .growth-col { width: 20.5%; }
     }
 
     .fund-table .status-cell {
@@ -600,7 +824,7 @@
 
     .fund-detail-table th:first-child,
     .fund-detail-table td:first-child {
-      width: 23%;
+      width: 22%;
       min-width: 0;
       text-align: left;
       white-space: normal;
@@ -609,23 +833,16 @@
 
     .fund-detail-table th:not(:first-child),
     .fund-detail-table td:not(:first-child) {
-      width: 11%;
+      width: 13%;
       min-width: 0;
       text-align: right;
       white-space: normal;
       overflow-wrap: anywhere;
     }
 
-    .fund-detail-table th:last-child,
-    .fund-detail-table td:last-child {
-      width: 11%;
-      min-width: 0;
-      text-align: right;
-    }
-
     .fund-detail-table.sector-detail-table th:not(:first-child),
     .fund-detail-table.sector-detail-table td:not(:first-child) {
-      width: 9.625%;
+      width: 13%;
     }
 
     .sector-breadth-signal {
@@ -657,11 +874,128 @@
       padding: 9px 8px;
       color: var(--accent);
       background: var(--surface-2);
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 700;
       letter-spacing: 0.03em;
       text-transform: uppercase;
       text-align: left !important;
+    }
+
+    .detail-dimension-row td {
+      position: static !important;
+      padding: 6px 8px;
+      color: #445046;
+      background: #f5f7f2;
+      border-top: 1px solid var(--line);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      text-align: left !important;
+    }
+
+    .dimension-title-with-help {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      position: relative;
+      max-width: 100%;
+    }
+
+    .dimension-tags {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 4px;
+      margin-left: 7px;
+      vertical-align: middle;
+    }
+
+    .dimension-tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 18px;
+      padding: 2px 7px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      font-size: 9px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: 0;
+      text-transform: none;
+      white-space: nowrap;
+    }
+
+    .dimension-tag[data-tag-tooltip] {
+      cursor: help;
+    }
+
+    .tag-tooltip-popover {
+      position: fixed;
+      z-index: 220;
+      width: max-content;
+      max-width: min(230px, calc(100vw - 24px));
+      padding: 7px 9px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 7px;
+      color: #fff;
+      background: #26332a;
+      box-shadow: 0 5px 16px rgba(24, 38, 28, 0.24);
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 1.3;
+      letter-spacing: 0;
+      text-align: left;
+      text-transform: none;
+      white-space: normal;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(2px);
+      transition: opacity 90ms ease, transform 90ms ease;
+    }
+
+    .tag-tooltip-popover.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .dimension-tag.tag-positive {
+      color: #0d633e;
+      background: #dff2e7;
+      border-color: #b9ddc8;
+    }
+
+    .dimension-tag.tag-negative {
+      color: #9d302b;
+      background: #f8e4e2;
+      border-color: #ecc3bf;
+    }
+
+    .dimension-title-with-help .info-button {
+      width: 16px;
+      height: 16px;
+      flex: 0 0 16px;
+      font-size: 10px;
+      text-transform: none;
+    }
+
+    .dimension-title-with-help .help-popover {
+      top: 20px;
+      width: min(450px, calc(100vw - 56px));
+      max-height: min(62vh, 520px);
+      overflow-y: auto;
+      text-transform: none;
+      letter-spacing: normal;
+      font-weight: 400;
+      text-align: left;
+      cursor: default;
+    }
+
+    .dimension-title-with-help:hover .help-popover,
+    .dimension-title-with-help:focus-within .help-popover {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
     }
 
     .detail-title {
@@ -674,6 +1008,33 @@
 
     .detail-title strong {
       font-size: 18px;
+    }
+
+    .stock-details-title-row {
+      flex: 1 1 auto;
+    }
+
+    .detail-switchers {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(100px, 160px));
+      gap: 6px;
+      align-items: end;
+      margin-left: 6px;
+    }
+
+    .detail-switchers label {
+      min-width: 0;
+      gap: 2px;
+      font-size: 10px;
+    }
+
+    .detail-switchers select,
+    .detail-switchers input {
+      width: 100%;
+      min-width: 0;
+      min-height: 30px;
+      padding: 5px 8px;
+      font-size: 12px;
     }
 
     .mini-stats {
@@ -742,6 +1103,11 @@
       main {
         padding: 12px 12px 24px;
         gap: 12px;
+      }
+
+      .home-method-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
       }
 
       .toolbar {
@@ -847,8 +1213,50 @@
     }
 
     @media (max-width: 560px) {
+      .dashboard-brand-row {
+        align-items: flex-start;
+        gap: 8px;
+        flex-direction: column;
+      }
+
+      .dashboard-nav {
+        width: 100%;
+      }
+
+      .dashboard-nav button {
+        flex: 1 1 0;
+        min-width: 0;
+        padding: 6px 4px;
+        font-size: 10px;
+      }
+
       .subhead span:nth-child(3) {
         display: none;
+      }
+
+      .home-hero {
+        padding: 15px;
+      }
+
+      .home-hero h2 {
+        font-size: 20px;
+      }
+
+      .home-rank-grid {
+        gap: 6px;
+      }
+
+      .home-rank-block {
+        padding: 7px 6px;
+      }
+
+      .home-method-head {
+        align-items: center;
+      }
+
+      .home-method-link {
+        padding: 6px 8px;
+        font-size: 10px;
       }
 
       .toolbar {
@@ -918,16 +1326,13 @@
       .stock-table.sector-drill .entity-col { width: 18%; }
       .fund-table .score-col,
       .fund-table .phase-col,
-      .fund-table .comment-col,
       .fund-table .growth-col,
       .sector-table .score-col,
       .sector-table .phase-col,
-      .sector-table .comment-col,
       .sector-table .growth-col,
       .stock-table.sector-drill .score-col,
       .stock-table.sector-drill .phase-col,
-      .stock-table.sector-drill .comment-col,
-      .stock-table.sector-drill .growth-col { width: 16.4%; }
+      .stock-table.sector-drill .growth-col { width: 20.5%; }
 
       .fund-table .fund-sector-col {
         display: none;
@@ -985,8 +1390,20 @@
         font-size: 8px;
       }
 
-      #stockDetailsSection .table-wrap {
-        overflow-x: hidden;
+      #stockDetailsSection .stock-details-title-row {
+        width: 100%;
+      }
+
+      #stockDetailsSection .detail-switchers {
+        width: 100%;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        margin-left: 0;
+      }
+
+      #stockDetailsSection .detail-switchers select,
+      #stockDetailsSection .detail-switchers input {
+        padding-inline: 5px;
+        font-size: 10px;
       }
 
       .fund-detail-table {
@@ -1004,26 +1421,14 @@
         letter-spacing: 0;
       }
 
-      .fund-detail-table.sector-detail-table th:first-child,
-      .fund-detail-table.sector-detail-table td:first-child {
+      .fund-detail-table th:first-child,
+      .fund-detail-table td:first-child {
         width: 21%;
       }
 
-      .fund-detail-table.sector-detail-table th:not(:first-child),
-      .fund-detail-table.sector-detail-table td:not(:first-child) {
-        width: 12.25%;
-      }
-
-      .fund-detail-table.sector-detail-table th:nth-last-child(2),
-      .fund-detail-table.sector-detail-table td:nth-last-child(2) {
-        width: 13%;
-      }
-
-      .fund-detail-table.sector-detail-table th:last-child,
-      .fund-detail-table.sector-detail-table td:last-child {
-        width: 17%;
-        overflow-wrap: normal;
-        word-break: normal;
+      .fund-detail-table th:not(:first-child),
+      .fund-detail-table td:not(:first-child) {
+        width: 19.75%;
       }
 
       .detail-signal-full {
@@ -1037,7 +1442,22 @@
 
       .detail-section-row td {
         padding: 6px 4px;
+        font-size: 10px;
+      }
+
+      .detail-dimension-row td {
         font-size: 8px;
+      }
+
+      .dimension-tags {
+        gap: 3px;
+        margin-left: 4px;
+      }
+
+      .dimension-tag {
+        min-height: 16px;
+        padding: 2px 5px;
+        font-size: 7.5px;
       }
 
       .sector-stock-metric-row td:first-child {
@@ -1057,7 +1477,14 @@
 </head>
 <body>
   <header>
-    <h1>Investment Dashboard</h1>
+    <div class="dashboard-brand-row">
+      <h1>Investment Dashboard</h1>
+      <nav class="dashboard-nav" aria-label="Investment Dashboard pages">
+        <button id="homeNav" type="button">Home</button>
+        <button id="methodologyNav" type="button">Sector Rotation</button>
+        <button id="detailsNav" type="button">Detailed View</button>
+      </nav>
+    </div>
     <div class="subhead">
       <span id="asOf">Loading data...</span>
       <span id="coverageInfo"></span>
@@ -1066,6 +1493,16 @@
   </header>
 
   <main id="app">
+    <div class="page-shell" id="homePage">
+      <section class="home-hero">
+        <p class="home-eyebrow">Cross-methodology snapshot</p>
+        <h2>Market Overview</h2>
+        <p>Top and bottom sectors and stocks across Flow Rotation, Relative Rotation, and Fundamentals. Open a methodology for its full sector view, or use Detailed View for the consolidated sector and company financial tables.</p>
+      </section>
+      <div class="home-method-grid" id="homeMethodGrid" aria-label="Methodology rankings"></div>
+    </div>
+
+    <div class="page-shell" id="methodologyPage" hidden>
     <div class="toolbar" aria-label="Dashboard controls">
       <label>
         Methodology
@@ -1096,22 +1533,8 @@
       </label>
       <label id="tagControl" hidden>
         Search tag
-        <select id="tagFilter">
-          <option value="">All comments</option>
-          <option value="growth_fading">Cooling</option>
-          <option value="contraction">Contraction</option>
-          <option value="interest_burden">Int. burden</option>
-          <option value="margin_pressure">Margin ↓</option>
-          <option value="cash_quality_stress">Cash-gap</option>
-          <option value="asset_quality_stress">Credit risk</option>
-          <option value="balance_sheet_stress">B/Sheet</option>
-          <option value="regulatory_headroom">Reg. limit</option>
-          <option value="quality_stress">Earn.Quality</option>
-          <option value="loss_to_profit_turnaround">Turnaround</option>
-          <option value="low_base_recovery">Low-base</option>
-          <option value="high_base_normalization">High-base</option>
-          <option value="one_off_earnings">One-off</option>
-        </select>
+        <input id="tagFilter" type="search" list="fundamentalTagOptions" autocomplete="off" spellcheck="false" placeholder="All tags">
+        <datalist id="fundamentalTagOptions"></datalist>
       </label>
     </div>
 
@@ -1181,21 +1604,39 @@
         </div>
       </section>
     </div>
+    </div>
 
+    <div class="page-shell" id="detailPage" hidden>
     <section id="stockDetailsSection" hidden>
       <div class="section-head">
-        <div class="title-with-help">
+        <div class="title-with-help stock-details-title-row">
           <h2 id="stockDetailsTitle">Stock Details</h2>
+          <div class="detail-switchers" aria-label="Detail navigation">
+            <label>
+              Sector
+              <select id="detailSectorSelect" aria-label="View sector details"></select>
+            </label>
+            <label>
+              Ticker
+              <input id="detailTickerSearch" type="search" maxlength="12" autocomplete="off" spellcheck="false" placeholder="Search ticker" aria-label="View ticker details">
+            </label>
+            <label>
+              Period
+              <select id="detailPeriod" aria-label="Detailed view period">
+                <option value="quarter">Quarter</option>
+                <option value="year">Year</option>
+              </select>
+            </label>
+          </div>
         </div>
         <div class="hint" id="stockDetailsHint">Reported figures and business-model-specific quality indicators</div>
       </div>
-      <div class="table-wrap">
-        <table class="fund-detail-table" id="stockDetailsTable">
-          <thead id="stockDetailsHead"></thead>
-          <tbody id="stockDetailsRows"></tbody>
-        </table>
-      </div>
+      <table class="fund-detail-table" id="stockDetailsTable">
+        <thead id="stockDetailsHead"></thead>
+        <tbody id="stockDetailsRows"></tbody>
+      </table>
     </section>
+    </div>
   </main>
 
   <div id="tooltip" class="tooltip"></div>
@@ -1204,7 +1645,8 @@
   <script>
     const pricePath = "0.pricedata.csv";
     const coveragePath = "0.coverage_universe.csv";
-    const dashboardVersion = new URLSearchParams(window.location.search).get("v");
+    const initialParams = new URLSearchParams(window.location.search);
+    const dashboardVersion = initialParams.get("v");
     const fundamentalsPath = "fundamentals_data.json"
       + (dashboardVersion ? `?v=${encodeURIComponent(dashboardVersion)}` : "");
     const PERIODS = {
@@ -1232,8 +1674,11 @@
       "Transportation": "#397c91",
       "Utilities": "#64748b"
     };
+    const VALID_PAGES = new Set(["home", "methodology", "details"]);
+    const VALID_METHODOLOGIES = new Set(["flow-rotation", "relative-rotation", "fundamentals"]);
     const state = {
-      methodology: "flow-rotation",
+      page: VALID_PAGES.has(initialParams.get("page")) ? initialParams.get("page") : "home",
+      methodology: VALID_METHODOLOGIES.has(initialParams.get("method")) ? initialParams.get("method") : "flow-rotation",
       fundamentalPeriod: "quarter",
       flowPeriod: "10-50",
       rrgMode: "10-50",
@@ -1247,6 +1692,7 @@
       selectedFundamentalTicker: ""
     };
     let pinnedRrgEntity = "";
+    let fundamentalTagTooltipAnchor = null;
     let lastRrgTouch = { entityId: "", at: 0 };
     const RRG_DOUBLE_TAP_MS = 500;
     let lastFundamentalSectorTap = { sector: "", at: 0 };
@@ -1448,6 +1894,46 @@
       document.getElementById("tooltip").style.opacity = 0;
     }
 
+    function fundamentalTagTooltipElement() {
+      let tip = document.getElementById("fundamentalTagTooltip");
+      if (!tip) {
+        tip = document.createElement("div");
+        tip.id = "fundamentalTagTooltip";
+        tip.className = "tag-tooltip-popover";
+        tip.setAttribute("role", "tooltip");
+        document.body.appendChild(tip);
+      }
+      return tip;
+    }
+
+    function showFundamentalTagTooltip(tag) {
+      const meaning = tag?.dataset.tagTooltip;
+      if (!meaning) return;
+      const tip = fundamentalTagTooltipElement();
+      fundamentalTagTooltipAnchor = tag;
+      tip.textContent = meaning;
+      tip.style.visibility = "hidden";
+      tip.classList.add("visible");
+      const anchorRect = tag.getBoundingClientRect();
+      const tipRect = tip.getBoundingClientRect();
+      const margin = 8;
+      const left = Math.min(
+        window.innerWidth - tipRect.width - margin,
+        Math.max(margin, anchorRect.left + anchorRect.width / 2 - tipRect.width / 2)
+      );
+      const above = anchorRect.top - tipRect.height - margin;
+      const top = above >= margin ? above : anchorRect.bottom + margin;
+      tip.style.left = `${left}px`;
+      tip.style.top = `${Math.min(top, window.innerHeight - tipRect.height - margin)}px`;
+      tip.style.visibility = "visible";
+    }
+
+    function hideFundamentalTagTooltip() {
+      fundamentalTagTooltipAnchor = null;
+      const tip = document.getElementById("fundamentalTagTooltip");
+      if (tip) tip.classList.remove("visible");
+    }
+
     function closeHelpPopovers(except = null) {
       document.querySelectorAll(".title-with-help.help-visible").forEach(item => {
         if (item !== except) item.classList.remove("help-visible");
@@ -1626,6 +2112,21 @@
         .sort((a, b) => b.score - a.score);
     }
 
+    function setCombinedTableColumns(widths = []) {
+      const table = document.getElementById("combinedTable");
+      let group = table.querySelector("colgroup[data-layout]");
+      if (!widths.length) {
+        group?.remove();
+        return;
+      }
+      if (!group) {
+        group = document.createElement("colgroup");
+        group.dataset.layout = "dynamic";
+        table.insertBefore(group, table.firstChild);
+      }
+      group.innerHTML = widths.map(width => `<col style="width:${width}%">`).join("");
+    }
+
     function renderCombinedTable(model) {
       const selection = activeSelection(model);
       const table = document.getElementById("combinedTable");
@@ -1633,6 +2134,7 @@
       const body = document.getElementById("combinedTableRows");
       const title = document.getElementById("tableTitle");
       const hint = document.getElementById("tableHint");
+      setCombinedTableColumns();
       body.innerHTML = "";
       if (state.tableMode === "sectors") {
         const { short, long } = model.period;
@@ -1992,6 +2494,7 @@
       const title = document.getElementById("tableTitle");
       const hint = document.getElementById("tableHint");
       const isSectorView = state.tableMode === "sectors";
+      setCombinedTableColumns();
       body.innerHTML = "";
       table.className = `${isSectorView ? "sector-table" : "stock-table"} rrg-table`;
       head.innerHTML = `<tr><th>${isSectorView ? "Sector" : "Ticker"}</th><th>Score</th><th>Quadrant</th><th>Strength</th><th>Momentum</th><th>ΔX / ΔY</th></tr>`;
@@ -2056,8 +2559,8 @@
       document.getElementById("scoreMethodHelp").innerHTML = `<strong>Stable ranking:</strong> all coordinates are calculated before display filters are applied, so sector clicks and ticker searches never change an entity's score.`;
     }
 
-    function buildFundamentalModel(data) {
-      const annualView = state.fundamentalPeriod === "year";
+    function buildFundamentalModel(data, period = state.fundamentalPeriod) {
+      const annualView = period === "year";
       const latestPeriod = annualView ? data.annual_latest_period : data.latest_period;
       const stockStats = data.stocks.map(stock => {
         const source = annualView ? (stock.annual || {}) : stock;
@@ -2077,6 +2580,88 @@
         if (point.period_label) periodLabels[point.period] = point.period_label;
       }));
       return { data, latestDate: latestPeriod, stockStats, sectorStats, periods, periodLabels, annualView };
+    }
+
+    function homeRankList(rows, labelKey, valueFormatter) {
+      return `<ol class="home-rank-list">${rows.map((row, index) => `<li><span class="rank-number">${index + 1}</span><strong title="${row[labelKey]}">${row[labelKey]}</strong><span class="rank-value">${valueFormatter(row)}</span></li>`).join("")}</ol>`;
+    }
+
+    function homeRankBlock(title, rows, labelKey, valueFormatter) {
+      return `<div class="home-rank-block"><h4>${title}</h4>${homeRankList(rows, labelKey, valueFormatter)}</div>`;
+    }
+
+    function renderHomeRankings(flowModel, rrgModel, fundamentalModel) {
+      scoreStocks(flowModel.stockStats);
+      const flowSectors = flowModel.sectorStats.slice().sort((a, b) => b.delta - a.delta);
+      const flowStocks = flowModel.stockStats.filter(row => Number.isFinite(row.score)).slice().sort((a, b) => b.score - a.score);
+      const rrgSectors = sortRrgRows(rrgRowsWithMovement(rrgModel.sectorCalc, rrgModel.latestDate));
+      const rrgStocks = sortRrgRows(rrgRowsWithMovement(rrgModel.stockCalc, rrgModel.latestDate));
+      const fundamentalSectors = fundamentalModel.sectorStats.filter(row => Number.isFinite(row.score)).slice().sort((a, b) => b.score - a.score);
+      const fundamentalStocks = fundamentalModel.stockStats.filter(row => Number.isFinite(row.score)).slice().sort((a, b) => b.score - a.score);
+      const cards = [
+        {
+          method: "flow-rotation",
+          title: "Flow Rotation",
+          note: `${flowModel.period.label} traded-value rotation and stock participation`,
+          sectors: flowSectors,
+          stocks: flowStocks,
+          sectorLabel: row => displaySector(row.sector),
+          sectorValue: row => fmtPp(row.delta),
+          stockLabel: row => row.ticker,
+          stockValue: row => fmtScore(row.score)
+        },
+        {
+          method: "relative-rotation",
+          title: "Relative Rotation",
+          note: `${rrgModel.mode.label || "10/50"} relative strength and momentum versus VN-Index`,
+          sectors: rrgSectors,
+          stocks: rrgStocks,
+          sectorLabel: row => displaySector(row.label),
+          sectorValue: row => fmtRrg(row.score),
+          stockLabel: row => row.label,
+          stockValue: row => fmtRrg(row.score)
+        },
+        {
+          method: "fundamentals",
+          title: "Fundamentals",
+          note: "Latest-quarter Quality and Momentum score",
+          sectors: fundamentalSectors,
+          stocks: fundamentalStocks,
+          sectorLabel: row => displaySector(row.sector),
+          sectorValue: row => fmtFundScore(row.score),
+          stockLabel: row => row.ticker,
+          stockValue: row => fmtFundScore(row.score)
+        }
+      ];
+      document.getElementById("homeMethodGrid").innerHTML = cards.map(card => {
+        const topSectors = card.sectors.slice(0, 3).map(row => ({ ...row, homeLabel: card.sectorLabel(row) }));
+        const bottomSectors = card.sectors.slice().reverse().slice(0, 3).map(row => ({ ...row, homeLabel: card.sectorLabel(row) }));
+        const topStocks = card.stocks.slice(0, 3).map(row => ({ ...row, homeLabel: card.stockLabel(row) }));
+        const bottomStocks = card.stocks.slice().reverse().slice(0, 3).map(row => ({ ...row, homeLabel: card.stockLabel(row) }));
+        return `<section class="home-method-card">
+          <div class="home-method-head"><div><h3>${card.title}</h3><p>${card.note}</p></div><button class="home-method-link" type="button" data-open-methodology="${card.method}">Open</button></div>
+          <div class="home-rank-grid">
+            ${homeRankBlock("Top 3 sectors", topSectors, "homeLabel", card.sectorValue)}
+            ${homeRankBlock("Bottom 3 sectors", bottomSectors, "homeLabel", card.sectorValue)}
+            ${homeRankBlock("Top 3 stocks", topStocks, "homeLabel", card.stockValue)}
+            ${homeRankBlock("Bottom 3 stocks", bottomStocks, "homeLabel", card.stockValue)}
+          </div>
+        </section>`;
+      }).join("");
+    }
+
+    function applyPageVisibility() {
+      document.getElementById("homePage").hidden = state.page !== "home";
+      document.getElementById("methodologyPage").hidden = state.page !== "methodology";
+      document.getElementById("detailPage").hidden = state.page !== "details";
+      [["homeNav", "home"], ["methodologyNav", "methodology"], ["detailsNav", "details"]].forEach(([id, page]) => {
+        const button = document.getElementById(id);
+        if (state.page === page) button.setAttribute("aria-current", "page");
+        else button.removeAttribute("aria-current");
+      });
+      document.getElementById("methodology").value = state.methodology;
+      document.getElementById("detailPeriod").value = state.fundamentalPeriod;
+      document.getElementById("app").classList.toggle("fundamentals-mode", state.page === "methodology" && state.methodology === "fundamentals" || state.page === "details");
     }
 
     function compactAnnualPeriodLabel(label) {
@@ -2108,11 +2693,26 @@
           ? model.stockStats.filter(row => row.sector === state.sector)
           : model.stockStats.slice();
       if (state.tagFilter) {
-        rows = rows.filter(row => Array.isArray(row.warnings)
-          ? row.warnings.includes(state.tagFilter)
-          : row.warning === state.tagFilter);
+        rows = rows.filter(row => (row.tags || []).some(tag => tag.name === state.tagFilter));
       }
       return rows;
+    }
+
+    function updateFundamentalTagOptions(model) {
+      const input = document.getElementById("tagFilter");
+      const list = document.getElementById("fundamentalTagOptions");
+      const names = [...new Set(model.stockStats.flatMap(row => (row.tags || []).map(tag => tag.name)).filter(Boolean))]
+        .sort((a, b) => a.localeCompare(b));
+      const selected = names.includes(state.tagFilter) ? state.tagFilter : "";
+      if (!selected) state.tagFilter = "";
+      list.replaceChildren();
+      names.forEach(name => {
+        const option = document.createElement("option");
+        option.value = name;
+        list.appendChild(option);
+      });
+      input.value = selected;
+      input.dataset.tags = JSON.stringify(names);
     }
 
     function fundamentalPhase(point) {
@@ -2144,9 +2744,7 @@
     }
 
     function fundamentalStatusText(row) {
-      const phase = fundamentalPhase(row);
-      const warning = fundamentalWarning(row);
-      return phase + (warning ? ` · ${warning}` : "");
+      return fundamentalPhase(row);
     }
 
     function fundamentalPhaseHtml(row) {
@@ -2204,7 +2802,7 @@
 
     function fundamentalTooltip(row, point, isSector) {
       const name = isSector ? displaySector(row.sector) : row.ticker;
-      return `<strong>${name}</strong> — ${point.period_label || point.period}<br>${point.status}<br>Fundamental score ${fmtFundScore(point.score)}<br>Health ${fmtFundScore(point.health)} · Impulse ${fmtFundScore(point.impulse)}<br>Top-line growth ${fmtGrowth(point.top_line_growth)}<br>Bottom-line growth ${fmtGrowth(point.npat_growth)}`;
+      return `<strong>${name}</strong> — ${point.period_label || point.period}<br>${fundamentalStatusText(point)}<br>Fundamental score ${fmtFundScore(point.score)}<br>Health ${fmtFundScore(point.health)} · Impulse ${fmtFundScore(point.impulse)}<br>Top-line growth ${fmtGrowth(point.top_line_growth)}<br>Bottom-line growth ${fmtGrowth(point.npat_growth)}`;
     }
 
     function renderFundamentalChart(model) {
@@ -2262,7 +2860,7 @@
     function renderFundamentalQuadrantChart(model) {
       const container = document.getElementById("sectorChart");
       container.className = "chart fund-chart";
-      container.setAttribute("aria-label", "Fundamental Health and Impulse quadrant chart with six-quarter tails");
+      container.setAttribute("aria-label", "Quality and Momentum quadrant chart with six-quarter tails");
       container.innerHTML = "";
       const isSectorView = state.tableMode === "sectors";
       let rows = isSectorView ? model.sectorStats.slice() : selectedFundamentalStocks(model);
@@ -2311,7 +2909,7 @@
       addSvgNode(svg, "text", { x: width - margin.right - 8, y: margin.top + 16, fill: "#1c7c54", "font-size": compact ? 9 : 11, "text-anchor": "end" }, "Leading");
       addSvgNode(svg, "text", { x: margin.left + 8, y: height - margin.bottom - 8, fill: "#b0443e", "font-size": compact ? 9 : 11 }, "Weak");
       addSvgNode(svg, "text", { x: width - margin.right - 8, y: height - margin.bottom - 8, fill: "#b7791f", "font-size": compact ? 9 : 11, "text-anchor": "end" }, "Fading");
-      addSvgNode(svg, "text", { x: width / 2, y: height - 12, fill: "#626b60", "font-size": 11, "text-anchor": "middle" }, "Fundamental Health");
+      addSvgNode(svg, "text", { x: width / 2, y: height - 12, fill: "#626b60", "font-size": 11, "text-anchor": "middle" }, "Quality");
       const yLabel = addSvgNode(svg, "text", { x: 14, y: height / 2, fill: "#626b60", "font-size": 11, "text-anchor": "middle" }, "Fundamental Impulse");
       yLabel.setAttribute("transform", `rotate(-90 14 ${height / 2})`);
       [0, 50, 100].forEach(value => {
@@ -2379,24 +2977,62 @@
       return Math.max(low, Math.min(high, Number(value) || 0));
     }
 
+    function topFundamentalRankingTags(row, group) {
+      const weights = group === "momentum"
+        ? (row.momentum_dimension_weights || {})
+        : (row.quality_dimension_weights || {});
+      const dimensionTags = row.dimension_tags || {};
+      const byName = new Map();
+      Object.keys(weights).forEach(dimension => {
+        const weight = Number(weights[dimension]) || 0;
+        (dimensionTags[dimension] || []).forEach(tag => {
+          const importance = Math.abs(Number(tag.adjustment) || 0) * weight;
+          const candidate = { ...tag, dimension, importance };
+          const existing = byName.get(tag.name);
+          if (!existing || candidate.importance > existing.importance) byName.set(tag.name, candidate);
+        });
+      });
+      const ranked = [...byName.values()].sort((a, b) =>
+        b.importance - a.importance
+        || Math.abs(Number(b.adjustment) || 0) - Math.abs(Number(a.adjustment) || 0)
+        || a.name.localeCompare(b.name)
+      );
+      const positive = ranked.filter(tag => tag.polarity === "positive");
+      const negative = ranked.filter(tag => tag.polarity !== "positive");
+      if (positive.length && negative.length) {
+        return [positive[0], negative[0]].sort((a, b) => b.importance - a.importance);
+      }
+      return ranked.slice(0, 2);
+    }
+
+    function fundamentalRankingTagCells(row) {
+      const tags = [
+        ...topFundamentalRankingTags(row, "momentum"),
+        ...Array(Math.max(0, 2 - topFundamentalRankingTags(row, "momentum").length)).fill(null),
+        ...topFundamentalRankingTags(row, "quality"),
+        ...Array(Math.max(0, 2 - topFundamentalRankingTags(row, "quality").length)).fill(null),
+      ];
+      return tags.map(tag => `<td class="rank-tag-col fund-tag-cell">${tag ? dimensionTagMarkup([tag], true) : ""}</td>`).join("");
+    }
+
     function renderFundamentalTable(model) {
       const table = document.getElementById("combinedTable");
       const head = document.getElementById("combinedTableHead");
       const body = document.getElementById("combinedTableRows");
       const title = document.getElementById("tableTitle");
       const hint = document.getElementById("tableHint");
+      setCombinedTableColumns([14, 10, 19, 19, 19, 19]);
       body.innerHTML = "";
       if (state.tableMode === "sectors") {
-        table.className = "sector-table fund-table";
+        table.className = "sector-table fund-table fund-tag-table";
         title.textContent = "Sector Table";
-        hint.textContent = `Default sort: Fundamental Score. Growth is latest-${model.annualView ? "TTM" : "quarter"} YoY. Click/tap for sector details; double-click/two-tap for stocks.`;
-        head.innerHTML = `<tr><th class="entity-col">Sector</th><th class="score-col">Score</th><th class="phase-col">Status</th><th class="comment-col">Signal</th><th class="growth-col">Top-line</th><th class="growth-col">Bottom-line</th></tr>`;
+        hint.textContent = `Default sort: Fundamental Score. Two most material Momentum and Quality tags are shown. Click/tap for sector details; double-click/two-tap for stocks.`;
+        head.innerHTML = `<tr><th class="entity-col">Sector</th><th class="score-col">Score</th><th class="fund-tag-group" colspan="2">Momentum</th><th class="fund-tag-group" colspan="2">Quality</th></tr>`;
         model.sectorStats.slice().sort((a, b) => b.score - a.score).forEach(row => {
           const tr = document.createElement("tr");
           tr.dataset.fundSector = row.sector;
           tr.classList.toggle("selected", state.selectedFundamentalSector === row.sector);
-          const comment = fundamentalWarning(row);
-          tr.innerHTML = `<td class="entity-col"><strong>${displaySector(row.sector)}</strong></td><td class="score-col">${fmtFundScore(row.score)}</td><td class="phase-col status-cell">${fundamentalStatusHtml(row, true)}</td><td class="comment-col">${comment}</td><td class="growth-col ${row.top_line_q_growth >= 0 ? "pos" : "neg"}">${fmtGrowth(row.top_line_q_growth)}</td><td class="growth-col ${row.npat_q_growth >= 0 ? "pos" : "neg"}">${fmtGrowth(row.npat_q_growth)}</td>`;
+          tr.innerHTML = `<td class="entity-col"><strong>${displaySector(row.sector)}</strong></td><td class="score-col">${fmtFundScore(row.score)}</td>${fundamentalRankingTagCells(row)}`;
           tr.addEventListener("click", event => handleFundamentalSectorActivation(row.sector, model, event));
           body.appendChild(tr);
         });
@@ -2407,10 +3043,10 @@
         Number.isFinite(b.score) - Number.isFinite(a.score) || (b.score || 0) - (a.score || 0) || a.ticker.localeCompare(b.ticker)
       );
       const showSector = false;
-      table.className = `stock-table fund-table ${showSector ? "show-sector" : "sector-drill"}`;
+      table.className = `stock-table fund-table fund-tag-table ${showSector ? "show-sector" : "sector-drill"}`;
       title.textContent = state.sector !== "All" ? `${displaySector(state.sector)} Stock Table` : "Stock Table";
-      hint.textContent = `Default sort: Fundamental Score. Growth columns are latest-${model.annualView ? "TTM" : "quarter"} YoY. Click a stock for details.`;
-      head.innerHTML = `<tr><th class="entity-col">Ticker</th>${showSector ? '<th class="fund-sector-col">Sector</th>' : ""}<th class="score-col">Score</th><th class="phase-col">Status</th><th class="comment-col">Comment</th><th class="growth-col">Top-line</th><th class="growth-col">Bottom-line</th></tr>`;
+      hint.textContent = `Default sort: Fundamental Score. Two most material Momentum and Quality tags are shown. Click a stock for details.`;
+      head.innerHTML = `<tr><th class="entity-col">Ticker</th>${showSector ? '<th class="fund-sector-col">Sector</th>' : ""}<th class="score-col">Score</th><th class="fund-tag-group" colspan="2">Momentum</th><th class="fund-tag-group" colspan="2">Quality</th></tr>`;
       if (!rows.length) {
         body.innerHTML = `<tr><td colspan="${showSector ? 7 : 6}">No matching tickers.</td></tr>`;
         return;
@@ -2419,8 +3055,7 @@
         const tr = document.createElement("tr");
         tr.dataset.fundTicker = row.ticker;
         tr.classList.toggle("selected", state.selectedFundamentalTicker === row.ticker);
-        const comment = fundamentalWarning(row);
-        tr.innerHTML = `<td class="entity-col"><strong>${row.ticker}</strong>${showSector ? `<span class="mobile-sector">${displaySector(row.sector)}</span>` : ""}</td>${showSector ? `<td class="fund-sector-col">${displaySector(row.sector)}</td>` : ""}<td class="score-col">${fmtFundScore(row.score)}</td><td class="phase-col status-cell">${fundamentalStatusHtml(row)}</td><td class="comment-col">${comment}</td><td class="growth-col ${row.top_line_q_growth >= 0 ? "pos" : "neg"}">${fmtGrowth(row.top_line_q_growth)}</td><td class="growth-col ${row.npat_q_growth >= 0 ? "pos" : "neg"}">${fmtGrowth(row.npat_q_growth)}</td>`;
+        tr.innerHTML = `<td class="entity-col"><strong>${row.ticker}</strong>${showSector ? `<span class="mobile-sector">${displaySector(row.sector)}</span>` : ""}</td>${showSector ? `<td class="fund-sector-col">${displaySector(row.sector)}</td>` : ""}<td class="score-col">${fmtFundScore(row.score)}</td>${fundamentalRankingTagCells(row)}`;
         tr.addEventListener("click", () => selectFundamentalStock(row.ticker, model));
         body.appendChild(tr);
       });
@@ -2434,6 +3069,8 @@
       if (format === "pct") return fmtPct(value);
       if (format === "pp") return `${value >= 0 ? "+" : ""}${(value * 100).toFixed(2)}pp`;
       if (format === "multiple") return `${value.toFixed(2)}x`;
+      if (format === "days") return `${Math.round(value)}d`;
+      if (format === "days_delta") return `${value >= 0 ? "+" : ""}${Math.round(value)}d`;
       if (format === "score") return fmtFundScore(value);
       return value.toLocaleString("en-US", { maximumFractionDigits: 2 });
     }
@@ -2445,42 +3082,127 @@
 
     function lowerIsBetterFundamentalMetric(metric) {
       return new Set([
-        "12M accrual ratio",
-        "Accrual ratio",
+        "CCC",
+        "CCC YoY Δ",
+        "CIR",
+        "CIR YoY Δ",
         "Cost-to-income ratio",
+        "Cost of debt",
+        "Cost of debt YoY Δ",
+        "Claims ratio",
+        "Claims ratio YoY Δ",
         "Credit cost",
+        "Credit cost YoY Δ",
+        "Debt / E YoY Δ",
+        "Debt / Equity",
+        "Direct cost ratio",
+        "Direct cost YoY Δ",
+        "Earnings variability YoY Δ",
         "FVTPL / E",
+        "Fixed assets / assets",
+        "Funding cost",
         "Funding gap / E",
+        "Funding gap / E YoY Δ",
         "Group-2 ratio",
+        "Group-2 YoY Δ",
         "Investment income / PBT",
-        "Loan-to-deposit ratio",
+        "Invest.-yield variability",
         "Margin loans / E",
+        "Margin loans / E YoY Δ",
         "Net D/E",
+        "Net D/E YoY Δ",
+        "Net debt / CFO",
+        "Net debt/CFO YoY Δ",
         "Net interest / EBIT",
+        "Net int./EBIT YoY Δ",
+        "NWC drag",
+        "NWC drag YoY Δ",
         "NPL ratio",
-        "Unrealized profit %"
+        "NPL YoY Δ",
+        "Earnings variability",
+        "Unrealized profit %",
+        "Unrealized / PBT",
+        "Unrealized / PBT YoY Δ",
+        "Short debt / current assets",
+        "Short debt / current assets YoY Δ",
+        "Wholesale funding %"
       ]).has(metric);
     }
 
-    function sectorMetricStockRows(model, sectorSubject, item, olderCutoff, detailSignalMarkup, parentKey) {
+    function absoluteLowerIsBetterFundamentalMetric(metric) {
+      return metric === "One-off %";
+    }
+
+    function bankLdrGoodness(value) {
+      if (!Number.isFinite(value)) return null;
+      if (value >= 0.75 && value <= 1.00) return 100;
+      if (value < 0.75) return Math.max(35, 100 - ((0.75 - value) / 0.35) * 55);
+      return Math.max(0, 100 - ((value - 1.00) / 0.30) * 100);
+    }
+
+    function insuranceRetentionGoodness(value) {
+      if (!Number.isFinite(value)) return null;
+      if (value >= 0.45 && value <= 0.90) return 100;
+      if (value < 0.45) return Math.max(30, 100 - ((0.45 - value) / 0.30) * 70);
+      return Math.max(60, 100 - ((value - 0.90) / 0.10) * 40);
+    }
+
+    function fundamentalMetricGoodness(metric, value, subject, periodIndex) {
+      if (!Number.isFinite(value)) return null;
+      if (metric === "LDR" || metric === "Loan-to-deposit ratio") {
+        return bankLdrGoodness(value);
+      }
+      if (metric === "Retention ratio") return insuranceRetentionGoodness(value);
+      if (metric === "Retention YoY Δ") {
+        const retentionRow = (subject?.detail_rows || []).find(row => row.metric === "Retention ratio");
+        const currentRetention = retentionRow && periodIndex >= 0 ? (retentionRow.values || [])[periodIndex] : null;
+        const priorRetention = Number.isFinite(currentRetention) ? currentRetention - value : null;
+        const currentScore = insuranceRetentionGoodness(currentRetention);
+        const priorScore = insuranceRetentionGoodness(priorRetention);
+        return Number.isFinite(currentScore) && Number.isFinite(priorScore)
+          ? currentScore - priorScore
+          : 0;
+      }
+      if (metric === "LDR YoY Δ") {
+        const ldrRow = (subject?.detail_rows || []).find(row =>
+          row.metric === "LDR" || row.metric === "Loan-to-deposit ratio"
+        );
+        const currentLdr = ldrRow && periodIndex >= 0 ? (ldrRow.values || [])[periodIndex] : null;
+        const priorLdr = Number.isFinite(currentLdr) ? currentLdr - value : null;
+        const currentScore = bankLdrGoodness(currentLdr);
+        const priorScore = bankLdrGoodness(priorLdr);
+        return Number.isFinite(currentScore) && Number.isFinite(priorScore)
+          ? currentScore - priorScore
+          : -value;
+      }
+      if (absoluteLowerIsBetterFundamentalMetric(metric)) return -Math.abs(value);
+      return lowerIsBetterFundamentalMetric(metric) ? -value : value;
+    }
+
+    function fundamentalMetricValueClass(item, value, subject, periodIndex) {
+      if (item.section !== "Momentum" || !Number.isFinite(value)) return "";
+      const goodness = fundamentalMetricGoodness(item.metric, value, subject, periodIndex);
+      if (!Number.isFinite(goodness) || Math.abs(goodness) < 1e-12) return "";
+      return goodness > 0 ? "pos" : "neg";
+    }
+
+    function sectorMetricStockRows(model, sectorSubject, item, olderCutoff, parentKey) {
       const sectorPeriods = sectorSubject.detail_periods || [];
       const latestSectorPeriod = sectorPeriods[sectorPeriods.length - 1];
-      const ascending = lowerIsBetterFundamentalMetric(item.metric);
       return model.stockStats
         .filter(stock => stock.sector === sectorSubject.sector)
         .map(stock => {
           const stockItem = (stock.detail_rows || []).find(row => row.section === item.section && row.metric === item.metric);
           const latestStockIndex = (stock.detail_periods || []).indexOf(latestSectorPeriod);
           const latestValue = stockItem && latestStockIndex >= 0 ? (stockItem.values || [])[latestStockIndex] : null;
-          return { stock, stockItem, latestValue };
+          const rankValue = fundamentalMetricGoodness(item.metric, latestValue, stock, latestStockIndex);
+          return { stock, stockItem, latestValue, latestStockIndex, rankValue };
         })
         .sort((a, b) => {
-          const aValid = Number.isFinite(a.latestValue);
-          const bValid = Number.isFinite(b.latestValue);
+          const aValid = Number.isFinite(a.rankValue);
+          const bValid = Number.isFinite(b.rankValue);
           if (aValid !== bValid) return bValid - aValid;
-          if (aValid && a.latestValue !== b.latestValue) {
-            return ascending ? a.latestValue - b.latestValue : b.latestValue - a.latestValue;
-          }
+          if (aValid && a.rankValue !== b.rankValue) return b.rankValue - a.rankValue;
           return a.stock.ticker.localeCompare(b.stock.ticker);
         })
         .map(({ stock, stockItem }, rankIndex) => {
@@ -2491,16 +3213,15 @@
           const values = sectorPeriods.map((period, index) => {
             const stockPeriodIndex = stockPeriods.indexOf(period);
             const value = stockItem && stockPeriodIndex >= 0 ? (stockItem.values || [])[stockPeriodIndex] : null;
-            const directional = item.section === "Momentum" && Number.isFinite(value);
-            const className = [directional ? (value >= 0 ? "pos" : "neg") : "", index < olderCutoff ? "detail-older" : ""].filter(Boolean).join(" ");
+            const className = [fundamentalMetricValueClass(item, value, stock, stockPeriodIndex), index < olderCutoff ? "detail-older" : ""].filter(Boolean).join(" ");
             return `<td class="${className}">${formatFundamentalDetail(value, stockItem?.format || item.format)}</td>`;
           }).join("");
-          row.innerHTML = `<td><span class="sector-stock-rank">${rankIndex + 1}.</span><strong>${stock.ticker}</strong></td>${values}<td>${detailSignalMarkup(stockItem?.signal || "–")}</td><td></td>`;
+          row.innerHTML = `<td><span class="sector-stock-rank">${rankIndex + 1}.</span><strong>${stock.ticker}</strong></td>${values}`;
           return row;
         });
     }
 
-    function toggleSectorMetricRows(model, sectorSubject, item, aggregateRow, olderCutoff, detailSignalMarkup, key) {
+    function toggleSectorMetricRows(model, sectorSubject, item, aggregateRow, olderCutoff, key) {
       const body = aggregateRow.parentElement;
       const existing = Array.from(body.querySelectorAll(".sector-stock-metric-row"))
         .filter(row => row.dataset.sectorMetricParent === key);
@@ -2510,7 +3231,7 @@
         aggregateRow.setAttribute("aria-expanded", "false");
         return;
       }
-      const stockRows = sectorMetricStockRows(model, sectorSubject, item, olderCutoff, detailSignalMarkup, key);
+      const stockRows = sectorMetricStockRows(model, sectorSubject, item, olderCutoff, key);
       let anchor = aggregateRow;
       stockRows.forEach(row => {
         anchor.insertAdjacentElement("afterend", row);
@@ -2520,12 +3241,12 @@
       aggregateRow.setAttribute("aria-expanded", "true");
     }
 
-    function enableSectorDetailDrill(row, model, sectorSubject, item, olderCutoff, detailSignalMarkup, key) {
+    function enableSectorDetailDrill(row, model, sectorSubject, item, olderCutoff, key) {
       row.classList.add("sector-detail-drill");
       row.title = "Double-click or two-tap to show or hide stocks ranked best to worst by the latest period";
       row.tabIndex = 0;
       row.setAttribute("aria-expanded", expandedSectorMetrics.has(key) ? "true" : "false");
-      const toggle = () => toggleSectorMetricRows(model, sectorSubject, item, row, olderCutoff, detailSignalMarkup, key);
+      const toggle = () => toggleSectorMetricRows(model, sectorSubject, item, row, olderCutoff, key);
       let touchStart = null;
       let lastTouchInteractionAt = 0;
       let lastTouchToggleAt = 0;
@@ -2584,6 +3305,213 @@
       });
     }
 
+    function renderFundamentalDetailNavigation(model, subject, isSectorDetail) {
+      const sectorSelect = document.getElementById("detailSectorSelect");
+      const tickerSearch = document.getElementById("detailTickerSearch");
+      const sectors = model.sectorStats.slice().sort((a, b) => displaySector(a.sector).localeCompare(displaySector(b.sector)));
+      sectorSelect.innerHTML = sectors.map(row => `<option value="${row.sector}">${displaySector(row.sector)}</option>`).join("");
+      sectorSelect.value = subject.sector || sectors[0]?.sector || "";
+      tickerSearch.value = isSectorDetail ? "" : subject.ticker;
+    }
+
+    function dimensionHelpMarkup(dimension, isSectorDetail, companyType) {
+      const helpId = `dimensionHelp-${dimension.replace(/[^a-z0-9]+/gi, "-").toLowerCase()}`;
+      const scope = isSectorDetail
+        ? `<p><strong>Sector view:</strong> Inputs are recalculated from consolidated totals across covered stocks, not averaged company ratios.</p>`
+        : `<p><strong>Company view:</strong> Inputs use the company’s statements.</p>`;
+      const common = {
+        "Growth": companyType === "CT"
+          ? `<p><strong>Revenue · 30%:</strong> reported operating revenue.</p><p><strong>Gross profit · 15%:</strong> revenue minus cost of goods sold.</p><p><strong>EBIT · 30%:</strong> gross profit minus SG&amp;A.</p><p><strong>NPAT-MI · 25%:</strong> net profit attributable to the parent company.</p>`
+          : companyType === "NH"
+            ? `<p><strong>Operating income · 25%:</strong> total operating income before operating expenses and provisions.</p><p><strong>PPOP · 25%:</strong> operating income minus operating expenses, before credit provisions.</p><p><strong>NPAT-MI · 20%:</strong> net profit attributable to the parent bank.</p><p><strong>Gross loans · 15%:</strong> loans and advances to customers before provisions.</p><p><strong>Customer deposits · 15%:</strong> deposits received from customers.</p>`
+            : companyType === "CK"
+              ? `<p><strong>Operating revenue · 25%:</strong> total reported securities operating revenue.</p><p><strong>Recurring revenue · 25%:</strong> brokerage + margin lending + advisory + custody + underwriting revenue.</p><p><strong>NPAT-MI · 20%:</strong> net profit attributable to the parent company.</p><p><strong>Margin loans · 15%:</strong> loans and receivables extended to securities clients.</p><p><strong>Fee revenue · 15%:</strong> brokerage + advisory + custody + underwriting revenue, excluding lending income.</p>`
+              : `<p><strong>Net premium · 30%:</strong> insurance premium earned after ceded reinsurance.</p><p><strong>Gross premium · 20%:</strong> gross written premium before reinsurance ceded.</p><p><strong>Insurance result · 20%:</strong> underwriting profit for non-life insurers and PBT for life insurers.</p><p><strong>NPAT-MI · 30%:</strong> net profit attributable to the parent insurer.</p>`,
+        "Profitability Momentum": companyType === "CT"
+          ? `<p><strong>Gross margin · 20%:</strong> gross profit ÷ revenue.</p><p><strong>EBIT margin · 35%:</strong> (gross profit − SG&amp;A) ÷ revenue.</p><p><strong>ROE · 15%:</strong> annualized NPAT ÷ average equity.</p><p><strong>ROA · 30%:</strong> annualized NPAT ÷ average assets.</p>`
+          : companyType === "BH"
+            ? `<p><strong>Insurance margin · 35%:</strong> underwriting profit ÷ net premium for non-life insurers, or PBT ÷ net premium for life insurers.</p><p><strong>ROE · 25%:</strong> NPAT ÷ average equity.</p><p><strong>ROA · 20%:</strong> NPAT ÷ average assets.</p><p><strong>Investment yield · 20%:</strong> financial-activity profit ÷ average short- and long-term investments.</p>`
+            : `<p><strong>Operating margin · 50%:</strong> operating profit ÷ operating revenue.</p><p><strong>ROE · 30%:</strong> annualized NPAT ÷ average equity.</p><p><strong>ROA · 20%:</strong> annualized NPAT ÷ average assets.</p>`,
+        "Cash-flow Momentum": `<p><strong>CFO/NPAT · 35%:</strong> rolling-12M operating cash flow ÷ rolling-12M NPAT.</p><p><strong>CFO margin · 25%:</strong> rolling-12M operating cash flow ÷ rolling-12M revenue.</p><p><strong>NWC drag · 20%:</strong> (ΔReceivables + ΔInventory − ΔPayables) ÷ revenue.</p><p><strong>CCC · 20%:</strong> inventory days + receivable days − payable days.</p>`,
+        "Profitability & Efficiency Momentum": `<p><strong>NIM · 30%:</strong> net interest income ÷ average earning assets.</p><p><strong>ROA · 25%:</strong> annualized NPAT ÷ average assets.</p><p><strong>CIR · 30%:</strong> operating expenses ÷ operating income.</p><p><strong>ROE · 15%:</strong> annualized NPAT ÷ average equity.</p>`,
+        "Profitability": companyType === "CT"
+          ? `<p><strong>Gross margin · 20%:</strong> gross profit ÷ revenue; 70% own-history position and 30% absolute level.</p><p><strong>EBIT margin · 35%:</strong> EBIT (gross profit − SG&amp;A) ÷ revenue; 70% own history and 30% sector-specific level.</p><p><strong>ROE · 15%:</strong> NPAT ÷ average equity.</p><p><strong>ROA · 30%:</strong> NPAT ÷ average assets. Quarterly returns are annualized; annual returns use FY/TTM profit.</p>`
+          : companyType === "BH"
+            ? `<p><strong>Insurance margin · 30%:</strong> underwriting profit ÷ net premium for non-life insurers, or PBT ÷ net premium for life insurers.</p><p><strong>ROE · 25%:</strong> NPAT ÷ average equity.</p><p><strong>ROA · 20%:</strong> NPAT ÷ average assets.</p><p><strong>Investment yield · 25%:</strong> financial-activity profit ÷ average short- and long-term investments; 60% own history and 40% absolute level.</p>`
+            : `<p><strong>Positive NPAT · 15%:</strong> profitable companies score above loss-makers.</p><p><strong>ROE · 35%:</strong> NPAT ÷ average equity.</p><p><strong>ROA · 15%:</strong> NPAT ÷ average assets, using business-specific thresholds. Quarterly returns are annualized; annual returns use FY/TTM profit.</p><p><strong>${companyType === "NH" ? "NIM" : "OPM"} · 35%:</strong> ${companyType === "NH" ? "net interest income ÷ average earning assets" : "operating profit ÷ operating revenue"}; 70% own-history position and 30% sector-specific level.</p>`,
+        "Cash Generation": `<p><strong>CFO/NPAT · 35%:</strong> rolling-12M operating cash flow ÷ rolling-12M NPAT; around or above 1× indicates good cash conversion.</p><p><strong>CFO margin · 25%:</strong> rolling-12M CFO ÷ rolling-12M revenue.</p><p><strong>NWC drag · 20%:</strong> (ΔReceivables + ΔInventory − ΔPayables) ÷ revenue; lower is better.</p><p><strong>CCC · 20%:</strong> inventory days + receivable days − payable days; 80% own history and 20% absolute level, with fewer days preferred.</p>`,
+        "Profitability & Efficiency": `<p><strong>NIM · 25%:</strong> net interest income ÷ average earning assets.</p><p><strong>ROA · 25%:</strong> annualized NPAT ÷ average assets.</p><p><strong>PPOP / average assets · 20%:</strong> annualized pre-provision operating profit ÷ average assets.</p><p><strong>ROE · 15%:</strong> annualized NPAT ÷ average equity.</p><p><strong>CIR · 15%:</strong> operating expenses ÷ operating income; lower is better.</p>`,
+        "Earnings Durability": companyType === "CK"
+          ? `<p><strong>Recurring revenue % · 30%:</strong> brokerage, margin-lending, advisory, custody and underwriting revenue ÷ operating revenue.</p><p><strong>Recurring cost cover · 25%:</strong> recurring revenue ÷ absolute operating expense; higher cover means the recurring franchise funds more of the cost base.</p><p><strong>Unrealized / PBT · 20%:</strong> absolute unrealized trading result ÷ absolute PBT; lower dependence scores better.</p><p><strong>Earnings variability · 25%:</strong> robust MAD ÷ median absolute NPAT over recent history; lower is better.</p>`
+          : `<p><strong>Core Earn. % · 40%:</strong> (EBIT + shared profit) ÷ PBT, where EBIT is gross profit − SG&amp;A.</p><p><strong>Non-core Earn. % · 30%:</strong> (non-interest financial income/losses + other income/losses) ÷ PBT. The absolute magnitude is scored, so smaller is better.</p><p><strong>Earnings variability · 30%:</strong> robust MAD ÷ median absolute NPAT over recent history; quarterly scoring uses the latest eight rolling-12M observations. Lower, more stable earnings score better; 75% is relative to own history and 25% uses an absolute range.</p>`,
+        "Profitability & Carry": `<p><strong>EBIT margin · 25%:</strong> EBIT ÷ operating revenue.</p><p><strong>ROA · 20%:</strong> annualized NPAT ÷ average assets.</p><p><strong>ROE · 15%:</strong> annualized NPAT ÷ average equity.</p><p><strong>Investment yield · context:</strong> (FVTPL interest/dividends + AFS income + HTM income) ÷ average FVTPL, AFS and HTM assets. Margin lending is excluded.</p><p><strong>Margin lending yield · 20%:</strong> annualized lending income ÷ average margin loans.</p><p><strong>Funding cost · context:</strong> annualized interest expense ÷ average borrowings. It is shown separately but enters the score through net carry.</p><p><strong>Net carry spread · 20%:</strong> asset yield minus funding cost.</p>`,
+        "Profitability & Carry Momentum": `<p><strong>EBIT margin · 30%:</strong> operating profit ÷ operating revenue.</p><p><strong>ROA · 20%:</strong> annualized NPAT ÷ average assets.</p><p><strong>ROE · 15%:</strong> annualized NPAT ÷ average equity.</p><p><strong>Margin lending yield · 15%:</strong> annualized lending income ÷ average margin loans.</p><p><strong>Net carry spread · 20%:</strong> asset yield minus borrowing cost.</p>`,
+        "Earnings-durability Momentum": `<p><strong>Recurring revenue % · 30%:</strong> (brokerage + margin lending + advisory + custody + underwriting revenue) ÷ operating revenue.</p><p><strong>Recurring cost cover · 25%:</strong> recurring revenue ÷ absolute operating expense.</p><p><strong>Unrealized / PBT · 25%:</strong> absolute unrealized trading result ÷ absolute PBT.</p><p><strong>Earnings variability · 20%:</strong> robust MAD ÷ median absolute quarterly NPAT over the latest eight quarters.</p>`,
+        "Funding & Risk Momentum": `<p><strong>Debt/Equity · 25%:</strong> adjusted borrowings ÷ equity.</p><p><strong>Short debt/current assets · 20%:</strong> short-term debt ÷ current assets.</p><p><strong>Funding gap/Equity · 20%:</strong> (debt − cash − margin loans) ÷ equity.</p><p><strong>Margin loans/Equity · 20%:</strong> margin lending ÷ equity.</p><p><strong>Equity/assets · 15%:</strong> equity ÷ total assets.</p>`,
+        "Asset Quality": `<p><strong>NPL ratio · 30%:</strong> non-performing loans ÷ gross loans; lower is better.</p><p><strong>Group-2 ratio · 20%:</strong> special-mention loans ÷ gross loans; lower is better.</p><p><strong>LLR · 25%:</strong> loan-loss reserves ÷ NPLs; higher coverage is better.</p><p><strong>Credit cost · 25%:</strong> annualized provisions ÷ average loans; lower recurring cost is better.</p>`,
+        "Capital Efficiency": companyType === "NH"
+          ? `<p><strong>CIR · 100%:</strong> operating expenses ÷ operating income. A lower ratio means the bank converts more income into pre-provision profit.</p>`
+          : `<p><strong>Financial-asset yield · 100%:</strong> investment and lending income ÷ average financial assets. It is ranked against the broker’s own history; a sustainably higher yield scores better.</p>`,
+        "Earnings Quality": companyType === "CK"
+          ? `<p><strong>Core revenue % · 65%:</strong> (brokerage revenue + margin-lending revenue) ÷ operating revenue. Higher recurring revenue scores better.</p><p><strong>Unrealized profit % · 35%:</strong> absolute unrealized gains ÷ absolute NPAT. Lower dependence on mark-to-market gains scores better.</p>`
+          : `<p><strong>Investment-yield variability · 25%:</strong> robust variability of quarterly investment yield over the latest eight quarters; lower is better.</p><p><strong>PAT/PBT · 25%:</strong> NPAT-MI ÷ PBT; a larger conversion indicates less tax and minority-interest leakage.</p><p><strong>Earnings variability · 35%:</strong> robust variability of rolling NPAT; lower is better.</p><p><strong>Investment income/PBT · 15%:</strong> financial-activity profit ÷ PBT. Higher contribution is normal for life insurers; lower dependence is preferred for non-life insurers.</p>`,
+        "Underwriting Quality": `<p><strong>Claims ratio · 30%:</strong> insurance claim-settlement expense ÷ net premium; lower is better, with life and non-life thresholds assessed separately.</p><p><strong>Direct cost ratio · 30%:</strong> total direct insurance operating expense ÷ net premium; lower is better.</p><p><strong>Retention ratio · 20%:</strong> net premium ÷ gross written premium; the score favors a balanced 45–90% range.</p><p><strong>Insurance margin · 20%:</strong> underwriting profit ÷ net premium for non-life insurers, or PBT ÷ net premium for life insurers.</p>`,
+        "Underwriting Momentum": `<p><strong>Claims ratio · 35%:</strong> insurance claim-settlement expense ÷ net premium.</p><p><strong>Direct cost ratio · 35%:</strong> total direct insurance operating expense ÷ net premium.</p><p><strong>Retention ratio · 15%:</strong> net premium ÷ gross written premium, evaluated toward the balanced range.</p><p><strong>Insurance result · 15%:</strong> underwriting profit for non-life insurers and PBT for life insurers.</p>`,
+        "Capital & Liquidity": `<p><strong>Equity/assets · 30%:</strong> equity ÷ total assets.</p><p><strong>Current ratio · 25%:</strong> current assets ÷ current liabilities.</p><p><strong>Cash/assets · 20%:</strong> cash and cash equivalents ÷ total assets.</p><p><strong>Investment assets/assets · 25%:</strong> short- and long-term investments ÷ total assets.</p>`,
+        "Capital Momentum": `<p><strong>Equity/assets · 30%:</strong> equity ÷ total assets.</p><p><strong>Current ratio · 25%:</strong> current assets ÷ current liabilities.</p><p><strong>Cash/assets · 20%:</strong> cash and cash equivalents ÷ total assets.</p><p><strong>Investment assets/assets · 25%:</strong> short- and long-term investments ÷ total assets.</p>`,
+        "Asset-quality Momentum": `<p><strong>NPL ratio · 30%:</strong> non-performing loans ÷ gross loans.</p><p><strong>Group-2 ratio · 25%:</strong> special-mention loans ÷ gross loans.</p><p><strong>LLR · 20%:</strong> loan-loss reserves ÷ non-performing loans.</p><p><strong>Credit cost · 25%:</strong> annualized credit provisions ÷ average gross loans.</p>`,
+        "Funding & Liquidity": companyType === "CK"
+          ? `<p><strong>Debt/Equity · 30%:</strong> adjusted borrowings ÷ equity; lower is better and the observable regulatory ceiling is 5×.</p><p><strong>Short debt/current assets · 25%:</strong> short-term debt ÷ current assets; lower is better and 100% is the regulatory ceiling.</p><p><strong>Funding gap/Equity · 25%:</strong> (debt − cash − margin loans) ÷ equity; lower or covered is better.</p><p><strong>Liquid funding cover · 20%:</strong> (cash + held-to-maturity assets) ÷ short-term debt; higher is better.</p>`
+          : `<p><strong>CASA · 30%:</strong> current and savings deposits ÷ customer deposits; higher means cheaper, stickier funding.</p><p><strong>LDR · 30%:</strong> customer loans ÷ customer deposits. The healthy band is 75–100%; ratios above 100% receive a steeper penalty than low, under-deployed ratios.</p><p><strong>Liquid assets / funding · 25%:</strong> cash, SBV balances, interbank placements and investment securities ÷ customer plus wholesale funding.</p><p><strong>Wholesale funding % · 15%:</strong> interbank, SBV and issued-paper funding ÷ total funding; lower dependence is better.</p>`,
+        "Capital & Risk Capacity": `<p><strong>Margin loans/Equity · 30%:</strong> use of the 200% regulatory lending ceiling; lower means more expansion headroom.</p><p><strong>FVTPL/Equity · 25%:</strong> trading assets relative to equity; lower means less market-risk concentration.</p><p><strong>Equity/assets · 25%:</strong> capital buffer relative to total assets; higher is better.</p><p><strong>Fixed assets/assets · 20%:</strong> fixed-asset intensity; lower preserves more balance-sheet capacity and 50% is the observable regulatory ceiling.</p>`,
+        "Capital Strength": `<p><strong>Equity / assets · 50%:</strong> equity ÷ total assets.</p><p><strong>Equity / gross loans · 50%:</strong> equity ÷ gross customer loans. Higher ratios indicate a larger loss-absorption buffer.</p>`,
+        "Funding & Capital Momentum": `<p><strong>CASA · 20%:</strong> current and savings deposits ÷ customer deposits.</p><p><strong>LDR · 20%:</strong> gross customer loans ÷ customer deposits.</p><p><strong>Deposit − loan growth · 20%:</strong> customer-deposit growth minus gross-loan growth.</p><p><strong>Equity/assets · 20%:</strong> equity ÷ total assets.</p><p><strong>Equity − loan growth · 20%:</strong> equity growth minus gross-loan growth.</p>`,
+        "Earnings-quality Momentum": companyType === "CK"
+          ? `<p><strong>Core revenue % · 65%:</strong> (brokerage revenue + margin-lending revenue) ÷ operating revenue.</p><p><strong>Unrealized profit % · 35%:</strong> absolute unrealized gains ÷ absolute NPAT.</p>`
+          : `<p><strong>Insurance margin · 100%:</strong> underwriting profit ÷ net premium, or PBT ÷ premium for life insurers.</p>`
+      };
+      const balanceSheet = {
+        "CT": `<p><strong>Net D/E · 25%:</strong> (borrowings − cash) ÷ equity; lower or net cash is better.</p><p><strong>Liquid cover · 20%:</strong> (cash + short-term investments) ÷ short-term debt; higher is better.</p><p><strong>Net int./EBIT · 20%:</strong> (interest expense − interest income) ÷ EBIT, where EBIT is gross profit − SG&amp;A; lower is better and negative means net interest income.</p><p><strong>Cost of debt · 15%:</strong> rolling-12M cash interest paid ÷ average gross borrowings; reported gross interest expense is used when cash interest is unavailable. Lower is better.</p><p><strong>Net debt/CFO · 20%:</strong> (borrowings − cash) ÷ rolling-12M CFO; lower is better.</p>`,
+        "NH": `<p><strong>LDR · 40%:</strong> loans ÷ customer deposits; the score favors a balanced level around 90%.</p><p><strong>CASA · 25%:</strong> current and savings deposits ÷ customer deposits; higher means cheaper, stickier funding.</p><p><strong>Equity/assets · 35%:</strong> equity ÷ total assets; higher means a larger capital buffer.</p>`,
+        "CK": `<p><strong>Funding gap/E · 45%:</strong> (debt − cash − margin loans) ÷ equity; lower is better.</p><p><strong>Margin loans/E · 30%:</strong> margin lending ÷ equity; lower use of the 200% regulatory ceiling means more headroom.</p><p><strong>FVTPL/E · 25%:</strong> fair-value trading assets ÷ equity; lower means less balance-sheet market exposure.</p>`,
+        "BH": `<p><strong>Equity/assets · 70%:</strong> equity ÷ total assets; higher means a larger solvency buffer.</p><p><strong>Cash/assets · 30%:</strong> cash ÷ total assets; higher means more immediate liquidity.</p>`
+      };
+      const balanceMomentum = {
+        "CT": `<p><strong>Net D/E · 25%:</strong> (borrowings − cash) ÷ equity.</p><p><strong>Liquid cover · 20%:</strong> (cash + short-term investments) ÷ short-term debt.</p><p><strong>Net interest/EBIT · 20%:</strong> (interest expense − interest income) ÷ EBIT; its YoY change measures interest coverage, not the borrowing rate.</p><p><strong>Cost of debt · 15%:</strong> rolling-12M cash interest paid ÷ average gross borrowings; reported gross interest expense is the fallback.</p><p><strong>Net debt/CFO · 20%:</strong> (borrowings − cash) ÷ rolling-12M operating cash flow.</p>`,
+        "NH": `<p><strong>LDR · 45%:</strong> gross customer loans ÷ customer deposits.</p><p><strong>CASA · 30%:</strong> current and savings deposits ÷ customer deposits.</p><p><strong>Equity/assets · 25%:</strong> equity ÷ total assets.</p>`,
+        "CK": `<p><strong>Funding gap/Equity · 50%:</strong> (debt − cash − margin loans) ÷ equity.</p><p><strong>Margin loans/Equity · 50%:</strong> margin lending ÷ equity.</p>`,
+        "BH": `<p><strong>Equity/assets · 60%:</strong> equity ÷ total assets.</p><p><strong>Cash/assets · 40%:</strong> cash and cash equivalents ÷ total assets.</p>`
+      };
+      const detail = dimension === "Balance Sheet"
+        ? balanceSheet[companyType]
+        : dimension === "Balance-sheet Momentum"
+          ? balanceMomentum[companyType]
+          : common[dimension];
+      if (!detail) return dimension;
+      return `<span class="title-with-help dimension-title-with-help"><span>${dimension}</span><button class="info-button" type="button" aria-label="Explain ${dimension}" aria-describedby="${helpId}">?</button><span class="help-popover" id="${helpId}" role="tooltip">${scope}${detail}</span></span>`;
+    }
+
+    const fundamentalTagMeanings = {
+      "Accrual-heavy": "Profit is weakly supported by cash.",
+      "Asset quality improving": "Problem-loan trends are improving.",
+      "Broad expansion": "Profitability is improving broadly.",
+      "Broad growth": "Sales and earnings are growing together.",
+      "CASA erosion": "Low-cost deposits are declining.",
+      "CASA gain": "Low-cost deposits are increasing.",
+      "Capital accretion": "The capital buffer is strengthening.",
+      "Capital dilution": "The capital buffer is weakening.",
+      "Capital erosion": "The capital base is deteriorating.",
+      "Carry expansion": "Investment carry is becoming more profitable.",
+      "Carry squeeze": "Investment carry is becoming less profitable.",
+      "Cash burn": "Operations are consuming cash.",
+      "Cash gap": "Cash generation trails reported profit.",
+      "Cash-backed": "Profit is strongly supported by cash.",
+      "Claims inflation": "Insurance claims are becoming more costly.",
+      "Clean book": "Problem loans are contained and covered.",
+      "Contraction": "Sales and earnings are both shrinking.",
+      "Conversion improving": "More profit is converting into cash.",
+      "Core & stable": "Earnings are recurring and relatively stable.",
+      "Cost efficiency": "Operating efficiency is improving.",
+      "Cost efficient": "The operating cost base is efficient.",
+      "Cost inflation": "Operating efficiency is deteriorating.",
+      "Cost pressure": "Direct operating costs are rising.",
+      "Coverage erosion": "Protection against problem loans is weakening.",
+      "Credit-cost spike": "Loan-loss charges are rising sharply.",
+      "Cyclical spike": "Earnings are temporarily boosted by the cycle.",
+      "Deleveraging": "Debt pressure is declining.",
+      "Deposit franchise": "Funding is stable and deposit-led.",
+      "Deposit-backed": "Loan growth is supported by deposits.",
+      "Disciplined underwriting": "Insurance underwriting remains controlled.",
+      "Efficient cash cycle": "Working capital is managed efficiently.",
+      "Fading": "Positive growth is losing momentum.",
+      "Funding cost ↑": "Borrowing costs are rising.",
+      "Funding cost ↓": "Borrowing costs are falling.",
+      "Funding gap": "Borrowings exceed core funding resources.",
+      "Funding headroom": "Funding capacity remains comfortable.",
+      "Funding pressure": "Financing is becoming more expensive.",
+      "Funding stretch": "Loans are outgrowing deposits.",
+      "Group-2 migration": "Watch-list loans are increasing.",
+      "High leverage": "Debt is high relative to equity.",
+      "High returns": "Margins and returns are strong.",
+      "High-return bank": "Bank returns are above healthy levels.",
+      "Interest burden": "Interest consumes a large share of profit.",
+      "Interest cover ↑": "Earnings cover interest more comfortably.",
+      "Interest cover ↓": "Earnings cover interest less comfortably.",
+      "Investment dependent": "Profit relies heavily on investment income.",
+      "Investment-led": "Growth is driven mainly by investments.",
+      "LDR tight": "Deposit funding headroom is limited.",
+      "Leverage rising": "Debt is increasing relative to equity.",
+      "Liquidity build": "Short-term liquidity is improving.",
+      "Liquidity erosion": "Short-term liquidity is weakening.",
+      "Liquidity strong": "Short-term liquidity is comfortable.",
+      "Liquidity tight": "Short-term liquidity is limited.",
+      "Low coverage": "Problem-loan reserve coverage is low.",
+      "Margin ceiling": "Margin lending is near its limit.",
+      "Margin compression": "Core profit margins are shrinking.",
+      "Margin expansion": "Core profit margins are widening.",
+      "Margin headroom": "Margin lending has room to expand.",
+      "Margin pressure": "Insurance profitability is weakening.",
+      "Margin-led": "Growth is driven by margin lending.",
+      "Market dependent": "Earnings rely heavily on market activity.",
+      "NIM expansion": "Bank lending spreads are widening.",
+      "NIM pressure": "Bank lending spreads are narrowing.",
+      "NPL formation": "New problem loans are emerging.",
+      "Narrow growth": "Earnings growth lacks sales support.",
+      "Net cash": "Liquid resources exceed borrowings.",
+      "Non-core dependent": "Profit relies heavily on non-core income.",
+      "One-off boost": "A one-time item is lifting profit.",
+      "PPOP-led": "Bank growth is supported before provisions.",
+      "Peak margins": "Elevated margins have started retreating.",
+      "Premium-led": "Insurance growth is supported by premiums.",
+      "Provision-led": "Profit growth relies on lower provisions.",
+      "Recovery": "Earnings have returned to growth.",
+      "Recurring franchise": "Recurring income supports the cost base.",
+      "Recurring growth": "Recurring business lines are expanding.",
+      "Recurring mix up": "Recurring income is becoming more important.",
+      "Releveraging": "Debt pressure is increasing.",
+      "Returns weakening": "Margins and returns are deteriorating.",
+      "Stable earnings": "Earnings fluctuate relatively little.",
+      "Stressed book": "Problem loans are elevated.",
+      "Strong coverage": "Liquidity and debt coverage are comfortable.",
+      "Thin capital": "The capital buffer is limited.",
+      "Trading dependence": "Profit relies increasingly on trading.",
+      "Trading windfall": "Market gains are temporarily lifting profit.",
+      "Turnaround": "Sales and earnings have returned to growth.",
+      "Underwriting improving": "Insurance underwriting trends are improving.",
+      "Underwriting-led": "Insurance growth is supported by underwriting.",
+      "Unrealized dependent": "Profit relies heavily on unrealized gains.",
+      "Volatile earnings": "Earnings fluctuate significantly.",
+      "Weak economics": "Core profitability is weak.",
+      "Weak returns": "Returns are below healthy banking levels.",
+      "Well capitalized": "The capital buffer is strong.",
+      "Working-cap drag": "Working capital is absorbing cash.",
+      "Working-cap release": "Working capital is releasing cash.",
+      "Working-cap strain": "Working-capital pressure is worsening.",
+      "Yield pressure": "Investment returns are declining."
+    };
+
+    function escapeTagText(value) {
+      return String(value ?? "").replace(/[&<>"']/g, character => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      })[character]);
+    }
+
+    function dimensionTagMarkup(tags, ranking = false) {
+      if (!Array.isArray(tags) || !tags.length) return "";
+      return `<span class="dimension-tags${ranking ? " rank-tag-list" : ""}">${tags.map(tag => {
+        const polarity = tag.polarity === "positive" ? "positive" : "negative";
+        const meaning = fundamentalTagMeanings[tag.name] || tag.reason || tag.name;
+        const lengthClass = ranking
+          ? tag.name.length >= 22
+            ? " rank-tag-pill rank-tag-xlong"
+            : tag.name.length >= 18
+              ? " rank-tag-pill rank-tag-long"
+              : " rank-tag-pill"
+          : "";
+        return `<span class="dimension-tag tag-${polarity}${lengthClass}" data-tag-tooltip="${escapeTagText(meaning)}" tabindex="0" aria-describedby="fundamentalTagTooltip" aria-label="${escapeTagText(`${tag.name}: ${meaning}`)}">${escapeTagText(tag.name)}</span>`;
+      }).join("")}</span>`;
+    }
+
     function renderFundamentalDetails(model) {
       const section = document.getElementById("stockDetailsSection");
       const isSectorDetail = state.tableMode === "sectors";
@@ -2597,6 +3525,7 @@
         return;
       }
       section.hidden = false;
+      renderFundamentalDetailNavigation(model, subject, isSectorDetail);
       document.getElementById("stockDetailsTable").classList.toggle("sector-detail-table", isSectorDetail);
       const detailPeriods = subject.detail_periods || [];
       const periodLabels = model.annualView
@@ -2610,26 +3539,12 @@
       const detailName = isSectorDetail ? displaySector(subject.sector) : subject.ticker;
       document.getElementById("stockDetailsTitle").innerHTML = `${isSectorDetail ? "Sector" : "Stock"} Details — ${detailName} · <span class="detail-range-desktop">${periodRange}</span><span class="detail-range-mobile">${mobilePeriodRange}</span>`;
       document.getElementById("stockDetailsHint").textContent = isSectorDetail
-        ? `Consolidated from ${subject.detail_coverage || subject.total || subject.coverage || 0} stocks · relative ${fundamentalStatusText(subject)} · sector score ${fmtFundScore(subject.score)} · double-click/two-tap a field for best-to-worst stocks`
+        ? `Consolidated from ${subject.detail_coverage || subject.total || subject.coverage || 0} stocks · relative ${fundamentalStatusText(subject)} · sector score ${fmtFundScore(subject.score)} (70% agg. ${fmtFundScore(subject.aggregate_score)} + 30% breadth ${fmtFundScore(subject.breadth_score)}) · double-click/two-tap a field for best-to-worst stocks`
         : `${displaySector(subject.sector)} · ${fundamentalStatusText(subject)} · score ${fmtFundScore(subject.score)}`;
       const olderCutoff = Math.max(0, periodLabels.length - 4);
-      document.getElementById("stockDetailsHead").innerHTML = `<tr><th>Metric</th>${periodLabels.map((label, index) => `<th class="${index < olderCutoff ? "detail-older" : ""}">${label}</th>`).join("")}${isSectorDetail ? "<th>Signal</th><th>Agg. Signal</th>" : "<th>Signal</th>"}</tr>`;
+      document.getElementById("stockDetailsHead").innerHTML = `<tr><th>Metric</th>${periodLabels.map((label, index) => `<th class="${index < olderCutoff ? "detail-older" : ""}">${label}</th>`).join("")}</tr>`;
       const body = document.getElementById("stockDetailsRows");
       body.innerHTML = "";
-      const compactSignalLabels = {
-        "Accelerating": "Accel.",
-        "Recovering": "Recover",
-        "Contracting": "Contract",
-        "Sustained": "Sustained",
-        "Profitable": "Profit",
-        "Moderate": "Mid",
-        "Headroom": "Room",
-        "Conservative": "Conserv.",
-        "Dependent": "Depend.",
-        "Expanding": "Expand",
-        "Elevated": "Elev.",
-        "Reg. limit": "Limit"
-      };
       const compactMetricLabels = {
         "NPAT-MI (VND bn)": "NPAT-MI (bn)",
         "Top-line 3Y CAGR": "Rev. 3Y-CAGR",
@@ -2637,50 +3552,146 @@
         "Operating revenue YoY": "Opt. Rev. YoY",
         "Operating income YoY": "Opt. Inc. YoY",
         "Net premium YoY": "Net Prem. YoY",
+        "Core EBIT YoY": "EBIT YoY",
+        "OPM YoY Δ": "EBIT margin YoY Δ",
+        "OPM": "EBIT margin",
+        "One-off %": "Non-core Earn. %",
         "Profit / premium YoY Δ": "Profit / prem. YoY",
         "Investment income / PBT": "Invest. inc. / PBT",
         "Loan-loss coverage": "LLR",
         "Cost-to-income ratio": "CIR",
         "Loan-to-deposit ratio": "LDR",
         "Unrealized profit %": "Unreal. profit %",
-        "Accrual ratio": "Acc. ratio",
-        "12M accrual ratio": "12M Acc. ratio",
-        "Net interest / EBIT": "Net int. / EBIT"
+        "12M CFO margin": "CFO margin",
+        "Net interest / EBIT": "Net int. / EBIT",
+        "Gross profit YoY": "Gross prof. YoY",
+        "Gross margin YoY Δ": "Gross margin YoY Δ",
+        "Liquid cover YoY Δ": "Liquid cover YoY",
+        "Net debt/CFO YoY Δ": "Net debt/CFO YoY",
+        "Net debt / CFO": "Net debt/CFO",
+        "Earnings variability": "Earn. variability"
+        ,"PPOP / avg. assets": "PPOP / avg. A"
+        ,"Liquid assets / funding": "Liquid A. / fund."
+        ,"Wholesale funding %": "Wholesale fund. %"
+        ,"Equity / gross loans": "Equity / loans"
+        ,"Deposit-loan growth gap": "Deposit-loan gap"
+        ,"Equity-loan growth gap": "Equity-loan gap"
+        ,"Recurring revenue YoY": "Recurring rev. YoY"
+        ,"Recurring revenue % YoY Δ": "Recurring % YoY Δ"
+        ,"Margin-loan growth": "Margin loan YoY"
+        ,"Fee-revenue growth": "Fee revenue YoY"
+        ,"Investment yield": "Invest. yield"
+        ,"Insurance margin": "Ins. margin"
+        ,"Insurance margin YoY Δ": "Ins. margin Δ"
+        ,"Gross premium YoY": "Gross prem. YoY"
+        ,"Insurance result YoY": "Ins. result YoY"
+        ,"Claims ratio YoY Δ": "Claims YoY Δ"
+        ,"Direct cost YoY Δ": "Direct cost Δ"
+        ,"Retention YoY Δ": "Retention Δ"
+        ,"Invest. yield YoY Δ": "Invest. yield Δ"
+        ,"Claims ratio": "Claims ratio"
+        ,"Direct cost ratio": "Direct cost"
+        ,"Retention ratio": "Retention"
+        ,"Invest.-yield variability": "Invest. variability"
+        ,"Invest. inc. / PBT": "Invest. inc. / PBT"
+        ,"Invest. assets / assets": "Invest. A / A"
+        ,"Invest. assets / assets YoY Δ": "Invest. A / A Δ"
+        ,"Current ratio YoY Δ": "Current ratio Δ"
+        ,"Margin lending yield": "Margin yield"
+        ,"Margin yield YoY Δ": "Margin yield YoY Δ"
+        ,"Net carry spread": "Net carry"
+        ,"Net carry YoY Δ": "Net carry YoY Δ"
+        ,"Recurring revenue %": "Recurring rev. %"
+        ,"Recurring cost cover": "Recurring cover"
+        ,"Unrealized / PBT": "Unreal. / PBT"
+        ,"Unrealized / PBT YoY Δ": "Unreal. / PBT YoY Δ"
+        ,"Earnings variability YoY Δ": "Earn. variability YoY Δ"
+        ,"Short debt / current assets": "Short debt / CA"
+        ,"Short debt / current assets YoY Δ": "Short debt / CA YoY Δ"
+        ,"Liquid funding cover": "Liquid fund. cover"
+        ,"Fixed assets / assets": "Fixed assets / A"
       };
-      const detailSignalMarkup = signal => {
-        const full = signal || "–";
-        const compact = compactSignalLabels[full] || full;
-        return `<span class="detail-signal-full">${full}</span><span class="detail-signal-mobile" title="${full}">${compact}</span>`;
+      const detailItems = (subject.detail_rows || []).map((item, index) => ({ item, index }));
+      const sectionOrder = { "Momentum": 0, "Fundamental Health": 1 };
+      const dimensionOrder = {
+        "Growth": 0,
+        "Profitability Momentum": 1,
+        "Cash-flow Momentum": 2,
+        "Balance-sheet Momentum": 3,
+        "Profitability": 0,
+        "Cash Generation": 1,
+        "Balance Sheet": 2,
+        "Earnings Durability": 3
       };
+      const metricOrder = {
+        "Gross margin YoY Δ": 0,
+        "OPM YoY Δ": 1,
+        "ROE YoY Δ": 2,
+        "ROA YoY Δ": 3,
+        "Gross margin": 0,
+        "OPM": 1,
+        "ROE": 2,
+        "ROA": 3,
+        "Core Earn. %": 0,
+        "One-off %": 1,
+        "Earnings variability": 2
+      };
+      detailItems.sort((a, b) => {
+        const sectionDelta = (sectionOrder[a.item.section] ?? 99) - (sectionOrder[b.item.section] ?? 99);
+        if (sectionDelta) return sectionDelta;
+        if (subject.company_type === "CT") {
+          const dimensionDelta = (dimensionOrder[a.item.dimension] ?? 99) - (dimensionOrder[b.item.dimension] ?? 99);
+          if (dimensionDelta) return dimensionDelta;
+          const metricDelta = (metricOrder[a.item.metric] ?? 99) - (metricOrder[b.item.metric] ?? 99);
+          if (metricDelta) return metricDelta;
+        }
+        return a.index - b.index;
+      });
       let currentSection = "";
-      (subject.detail_rows || []).forEach(item => {
+      let currentDimension = "";
+      detailItems.forEach(({ item }) => {
         if (item.section !== currentSection) {
           currentSection = item.section;
+          currentDimension = "";
           const sectionRow = document.createElement("tr");
           sectionRow.className = "detail-section-row";
           const sectionLabel = currentSection === "Fundamental Health"
-            ? `${isSectorDetail ? "Aggregate " : ""}Fundamental Health inputs · ${isSectorDetail ? "absolute " : ""}score ${fmtFundScore(subject.health_score)}`
-            : `${isSectorDetail ? "Aggregate " : ""}Momentum inputs · ${isSectorDetail ? "absolute " : ""}score ${fmtFundScore(subject.momentum_score ?? subject.impulse)}`;
-          sectionRow.innerHTML = `<td colspan="${periodLabels.length + (isSectorDetail ? 3 : 2)}">${sectionLabel}</td>`;
+            ? `${isSectorDetail ? "Aggregate " : ""}Quality inputs · score ${fmtFundScore(isSectorDetail ? (subject.aggregate_health_score ?? subject.health_score) : subject.health_score)}`
+            : `${isSectorDetail ? "Aggregate " : ""}Momentum inputs · ${isSectorDetail ? "absolute " : ""}score ${fmtFundScore(isSectorDetail ? (subject.aggregate_momentum_score ?? subject.momentum_score ?? subject.impulse) : (subject.momentum_score ?? subject.impulse))}`;
+          sectionRow.innerHTML = `<td colspan="${periodLabels.length + 1}">${sectionLabel}</td>`;
           body.appendChild(sectionRow);
+        }
+        if (item.dimension && item.dimension !== currentDimension) {
+          currentDimension = item.dimension;
+          const dimensionScores = currentSection === "Fundamental Health"
+            ? (subject.quality_dimensions || {})
+            : (subject.momentum_dimensions || {});
+          const dimensionWeights = currentSection === "Fundamental Health"
+            ? (subject.quality_dimension_weights || {})
+            : (subject.momentum_dimension_weights || {});
+          const dimensionScore = dimensionScores[currentDimension];
+          const dimensionWeight = dimensionWeights[currentDimension];
+          const dimensionTags = (subject.dimension_tags || {})[currentDimension] || [];
+          const dimensionRow = document.createElement("tr");
+          dimensionRow.className = "detail-dimension-row";
+          const weightText = Number.isFinite(dimensionWeight) ? ` · ${Math.round(dimensionWeight * 100)}%` : "";
+          const scoreText = Number.isFinite(dimensionScore) ? ` · ${fmtFundScore(dimensionScore)}` : "";
+          dimensionRow.innerHTML = `<td colspan="${periodLabels.length + 1}">${dimensionHelpMarkup(currentDimension, isSectorDetail, subject.company_type)}${weightText}${scoreText}${dimensionTagMarkup(dimensionTags)}</td>`;
+          body.appendChild(dimensionRow);
         }
         const tr = document.createElement("tr");
         const cells = (item.values || []).map((value, index) => {
-          const directional = item.section === "Momentum" && Number.isFinite(value);
-          const className = [directional ? (value >= 0 ? "pos" : "neg") : "", index < olderCutoff ? "detail-older" : ""].filter(Boolean).join(" ");
+          const className = [fundamentalMetricValueClass(item, value, subject, index), index < olderCutoff ? "detail-older" : ""].filter(Boolean).join(" ");
           return `<td class="${className}">${formatFundamentalDetail(value, item.format)}</td>`;
         }).join("");
-        const breadthSignal = item.breadth_signal
-          ? `<span class="sector-breadth-signal"><span>${item.breadth_signal}</span><small>${item.breadth_count}/${item.breadth_total}</small></span>`
-          : "–";
-        tr.innerHTML = `<td><strong>${compactMetricLabels[item.metric] || item.metric}</strong></td>${cells}${isSectorDetail ? `<td>${breadthSignal}</td>` : ""}<td>${detailSignalMarkup(item.signal)}</td>`;
+        tr.innerHTML = `<td><strong>${compactMetricLabels[item.metric] || item.metric}</strong></td>${cells}`;
         body.appendChild(tr);
         if (isSectorDetail) {
           const key = `${subject.sector}|${model.annualView ? "year" : "quarter"}|${item.section}|${item.metric}`;
-          enableSectorDetailDrill(tr, model, subject, item, olderCutoff, detailSignalMarkup, key);
+          enableSectorDetailDrill(tr, model, subject, item, olderCutoff, key);
           if (expandedSectorMetrics.has(key)) {
             let anchor = tr;
-            sectorMetricStockRows(model, subject, item, olderCutoff, detailSignalMarkup, key).forEach(stockRow => {
+            sectorMetricStockRows(model, subject, item, olderCutoff, key).forEach(stockRow => {
               anchor.insertAdjacentElement("afterend", stockRow);
               anchor = stockRow;
             });
@@ -2724,34 +3735,44 @@
       document.getElementById("selectedViewHelp").innerHTML = annualView
         ? `<strong>Displayed growth:</strong> latest TTM versus the prior comparable 12 months. Structural trend uses the rolling five-year median and three-year CAGR to reduce abnormal-period distortion.`
         : `<strong>Displayed growth:</strong> top-line and bottom-line figures are the latest reported quarter versus the same quarter a year earlier. Historical normalization is used only inside ranking signals to control abnormal bases.`;
-      document.getElementById("rankingIntroHelp").innerHTML = `<strong>Fundamental Score:</strong> 50% quarterly Fundamental Health plus 50% quarterly Momentum, less confirmed deterioration modifiers. Quarterly ROE and ROA are annualized to a 12-month run rate. Corporate interest burden uses net interest expense divided by core EBIT. Bank quality includes Group-2 loans; broker resilience includes funding and regulatory headroom.`;
+      document.getElementById("rankingIntroHelp").innerHTML = `<strong>Fundamental Score:</strong> 50% Quality plus 50% Momentum. Tags remain visible as explanations but only adjust scores against the base direction: above 51, negative tags may deduct points; below 49, positive tags may add points; within the 49–51 neutral band, either direction can apply. Every scored dimension and input is shown in the detail table. Sector scores use consolidated financial statements and the same dimension formulas as stocks. Quarterly ROE and ROA are annualized to a 12-month run rate.`;
       document.getElementById("scoreMethodHelp").innerHTML = `<strong>Comments:</strong> compact labels identify the main warning: Contraction, Cooling, Margin ↓, Int. burden, Cash-gap, Credit risk, B/Sheet, Reg. limit, Earn.Quality, Turnaround, Low-base, High-base, or One-off. An empty cell means no active warning.`;
+    }
+
+    function ensureFundamentalDetailSelection(model) {
+      if (state.tableMode === "sectors") {
+        const sectorExists = model.sectorStats.some(row => row.sector === state.selectedFundamentalSector);
+        if (!sectorExists) {
+          const bestSector = model.sectorStats.filter(row => Number.isFinite(row.score)).sort((a, b) => b.score - a.score)[0];
+          state.selectedFundamentalSector = bestSector?.sector || "";
+        }
+        state.selectedFundamentalTicker = "";
+        return;
+      }
+      const selectedPool = selectedFundamentalStocks(model).filter(row => Number.isFinite(row.score));
+      const currentIsVisible = selectedPool.some(row => row.ticker === state.selectedFundamentalTicker);
+      if (!currentIsVisible) {
+        const bestAvailable = selectedPool.slice().sort((a, b) => b.score - a.score)[0]
+          || model.stockStats.filter(row => Number.isFinite(row.score)).sort((a, b) => b.score - a.score)[0];
+        state.selectedFundamentalTicker = bestAvailable?.ticker || "";
+      }
+    }
+
+    function renderDetailedView(model) {
+      ensureFundamentalDetailSelection(model);
+      document.getElementById("stockDetailsSection").hidden = false;
+      renderFundamentalDetails(model);
     }
 
     function renderAll(model) {
       if (state.methodology === "fundamentals") {
-        if (state.tableMode === "sectors") {
-          const sectorExists = model.sectorStats.some(row => row.sector === state.selectedFundamentalSector);
-          if (!sectorExists) {
-            const bestSector = model.sectorStats.filter(row => Number.isFinite(row.score)).sort((a, b) => b.score - a.score)[0];
-            state.selectedFundamentalSector = bestSector?.sector || "";
-          }
-          state.selectedFundamentalTicker = "";
-        } else {
-          const selectedPool = selectedFundamentalStocks(model).filter(row => Number.isFinite(row.score));
-          const currentIsVisible = selectedPool.some(row => row.ticker === state.selectedFundamentalTicker);
-          if (!currentIsVisible) {
-            const bestAvailable = selectedPool.slice().sort((a, b) => b.score - a.score)[0]
-              || model.stockStats.filter(row => Number.isFinite(row.score)).sort((a, b) => b.score - a.score)[0];
-            state.selectedFundamentalTicker = bestAvailable?.ticker || "";
-          }
-        }
-        document.getElementById("stockDetailsSection").hidden = false;
+        updateFundamentalTagOptions(model);
+        ensureFundamentalDetailSelection(model);
+        document.getElementById("stockDetailsSection").hidden = true;
         renderFundamentalHelp();
         renderFundamentalStats(model);
         renderFundamentalChart(model);
         renderFundamentalTable(model);
-        renderFundamentalDetails(model);
         return;
       }
       document.getElementById("stockDetailsSection").hidden = true;
@@ -2773,7 +3794,7 @@
       const isRrg = state.methodology === "relative-rotation";
       const isFundamentals = state.methodology === "fundamentals";
       document.querySelector(".grid-2").classList.toggle("fundamentals-grid", isFundamentals);
-      document.getElementById("app").classList.toggle("fundamentals-mode", isFundamentals);
+      document.getElementById("app").classList.toggle("fundamentals-mode", state.page === "details" || state.page === "methodology" && isFundamentals);
       document.getElementById("periodLabel").textContent = "Period";
       document.getElementById("tailControl").hidden = !isRrg;
       document.getElementById("periodControl").hidden = false;
@@ -2813,6 +3834,30 @@
         let model = fullModel;
 
         function rebuildAndRender() {
+          applyPageVisibility();
+          if (state.page === "home") {
+            const homeFlowModel = buildModel(rawRows, coverage, state.baseDate, state.flowPeriod);
+            const homeRrgModel = buildRrgModel(rrgData);
+            const homeFundamentalModel = buildFundamentalModel(fundamentalsData, "quarter");
+            model = homeFlowModel;
+            document.getElementById("stockDetailsSection").hidden = true;
+            document.getElementById("asOf").textContent = `Market data ${homeFlowModel.latestDate} · Financials ${fundamentalsData.latest_period_label}`;
+            document.getElementById("coverageInfo").textContent = `${fundamentalsData.coverage} stocks across ${fundamentalsData.sectors.length} sectors`;
+            document.getElementById("signalInfo").textContent = "Top and bottom three use each methodology's full-universe score.";
+            renderHomeRankings(homeFlowModel, homeRrgModel, homeFundamentalModel);
+            return;
+          }
+          if (state.page === "details") {
+            model = buildFundamentalModel(fundamentalsData, state.fundamentalPeriod);
+            const annualView = state.fundamentalPeriod === "year";
+            document.getElementById("asOf").textContent = annualView
+              ? `Detailed financials through ${fundamentalsData.annual_latest_period_label}`
+              : `Detailed financials through ${fundamentalsData.latest_period_label}`;
+            document.getElementById("coverageInfo").textContent = `${fundamentalsData.scored_coverage} scored / ${fundamentalsData.coverage} stocks`;
+            document.getElementById("signalInfo").textContent = "Consolidated sector and company financial-statement inputs.";
+            renderDetailedView(model);
+            return;
+          }
           model = state.methodology === "relative-rotation"
             ? buildRrgModel(rrgData)
             : state.methodology === "fundamentals"
@@ -2835,18 +3880,88 @@
           renderAll(model);
         }
 
-        document.getElementById("methodology").addEventListener("change", event => {
-          state.methodology = event.target.value;
+        function syncPageUrl(push = true) {
+          const url = new URL(window.location.href);
+          url.searchParams.set("page", state.page);
+          if (state.page === "home") url.searchParams.delete("method");
+          else url.searchParams.set("method", state.methodology);
+          const action = push ? "pushState" : "replaceState";
+          window.history[action]({ page: state.page, method: state.methodology }, "", url);
+        }
+
+        function resetDashboardSelection() {
           state.sector = "All";
           state.search = "";
           state.tagFilter = "";
           state.tableMode = "sectors";
           state.selectedFundamentalSector = "";
           state.selectedFundamentalTicker = "";
-          if (state.methodology === "fundamentals") state.fundamentalPeriod = "quarter";
+          resetSectorMetricBreakdown();
           document.getElementById("search").value = "";
           document.getElementById("tagFilter").value = "";
+        }
+
+        function navigatePage(page, methodology = state.methodology, push = true) {
+          if (!VALID_PAGES.has(page)) page = "home";
+          if (VALID_METHODOLOGIES.has(methodology)) state.methodology = methodology;
+          state.page = page;
+          if (page === "methodology") resetDashboardSelection();
+          document.getElementById("methodology").value = state.methodology;
           updateMethodologyControls();
+          syncPageUrl(push);
+          rebuildAndRender();
+        }
+
+        function showFundamentalSectorDetail(sector) {
+          if (!model.sectorStats?.some(row => row.sector === sector)) return;
+          state.sector = "All";
+          state.search = "";
+          state.tagFilter = "";
+          state.tableMode = "sectors";
+          state.selectedFundamentalSector = sector;
+          state.selectedFundamentalTicker = "";
+          lastFundamentalSectorTap = { sector: "", at: 0 };
+          resetSectorMetricBreakdown();
+          document.getElementById("search").value = "";
+          document.getElementById("tagFilter").value = "";
+          if (state.page === "details") renderDetailedView(model);
+          else renderAll(model);
+        }
+
+        function showFundamentalTickerDetail(value) {
+          const ticker = String(value || "").trim().toUpperCase();
+          const target = model.stockStats.find(row => row.ticker === ticker);
+          if (!target) return false;
+          if (state.tableMode === "stocks" && state.selectedFundamentalTicker === ticker) return true;
+          state.sector = "All";
+          state.search = ticker;
+          state.tagFilter = "";
+          state.tableMode = "stocks";
+          state.selectedFundamentalSector = target.sector;
+          state.selectedFundamentalTicker = ticker;
+          resetSectorMetricBreakdown();
+          document.getElementById("search").value = ticker;
+          document.getElementById("tagFilter").value = "";
+          if (state.page === "details") renderDetailedView(model);
+          else renderAll(model);
+          return true;
+        }
+
+        document.getElementById("methodology").addEventListener("change", event => {
+          if (event.target.value === "fundamentals") state.fundamentalPeriod = "quarter";
+          navigatePage("methodology", event.target.value);
+        });
+
+        document.getElementById("homeMethodGrid").addEventListener("click", event => {
+          const button = event.target.closest("[data-open-methodology]");
+          if (!button) return;
+          navigatePage("methodology", button.dataset.openMethodology);
+        });
+        document.getElementById("homeNav").addEventListener("click", () => navigatePage("home"));
+        document.getElementById("methodologyNav").addEventListener("click", () => navigatePage("methodology"));
+        document.getElementById("detailsNav").addEventListener("click", () => navigatePage("details"));
+        document.getElementById("detailPeriod").addEventListener("change", event => {
+          state.fundamentalPeriod = event.target.value;
           rebuildAndRender();
         });
         document.getElementById("period").addEventListener("change", event => {
@@ -2884,13 +3999,28 @@
           }
           renderAll(model);
         });
-        document.getElementById("tagFilter").addEventListener("change", event => {
-          state.tagFilter = event.target.value;
+        document.getElementById("tagFilter").addEventListener("input", event => {
+          const query = event.target.value.trim();
+          const names = JSON.parse(event.target.dataset.tags || "[]");
+          const match = names.find(name => name.toLowerCase() === query.toLowerCase());
+          if (query && !match) return;
+          state.tagFilter = match || "";
           state.sector = "All";
           state.tableMode = "stocks";
           state.selectedFundamentalSector = "";
           state.selectedFundamentalTicker = "";
           renderAll(model);
+        });
+        document.getElementById("detailSectorSelect").addEventListener("change", event => {
+          showFundamentalSectorDetail(event.target.value);
+        });
+        document.getElementById("detailTickerSearch").addEventListener("input", event => {
+          showFundamentalTickerDetail(event.target.value);
+        });
+        document.getElementById("detailTickerSearch").addEventListener("keydown", event => {
+          if (event.key !== "Enter") return;
+          event.preventDefault();
+          showFundamentalTickerDetail(event.currentTarget.value);
         });
         document.getElementById("marketReset").addEventListener("click", () => {
           state.sector = "All";
@@ -2925,25 +4055,61 @@
           document.getElementById("tagFilter").value = "";
           renderAll(model);
         });
-        document.querySelectorAll(".info-button").forEach(button => {
-          button.addEventListener("click", event => {
+        document.addEventListener("click", event => {
+          const tag = event.target.closest(".dimension-tag[data-tag-tooltip]");
+          if (tag) {
+            event.preventDefault();
             event.stopPropagation();
-            const wrapper = button.closest(".title-with-help");
-            const willOpen = !wrapper.classList.contains("help-visible");
-            closeHelpPopovers(wrapper);
-            wrapper.classList.toggle("help-visible", willOpen);
-          });
+            showFundamentalTagTooltip(tag);
+            return;
+          }
+          const button = event.target.closest(".info-button");
+          if (!button) return;
+          event.stopPropagation();
+          const wrapper = button.closest(".title-with-help");
+          if (!wrapper) return;
+          const willOpen = !wrapper.classList.contains("help-visible");
+          closeHelpPopovers(wrapper);
+          wrapper.classList.toggle("help-visible", willOpen);
         });
         document.addEventListener("pointerdown", event => {
           if (!event.target.closest(".title-with-help")) closeHelpPopovers();
           if (!event.target.closest("#tooltip")) hideTooltip();
+          if (!event.target.closest(".dimension-tag[data-tag-tooltip]")) hideFundamentalTagTooltip();
           if (pinnedRrgEntity && !event.target.closest("[data-rrg-entity]")) {
             pinnedRrgEntity = "";
             lastRrgTouch = { entityId: "", at: 0 };
             clearRrgEntityFocus(true);
           }
         });
+        document.addEventListener("pointerover", event => {
+          const tag = event.target.closest(".dimension-tag[data-tag-tooltip]");
+          if (tag && event.pointerType !== "touch") showFundamentalTagTooltip(tag);
+        });
+        document.addEventListener("pointerout", event => {
+          const tag = event.target.closest(".dimension-tag[data-tag-tooltip]");
+          if (tag && !tag.contains(event.relatedTarget) && event.pointerType !== "touch") hideFundamentalTagTooltip();
+        });
+        document.addEventListener("focusin", event => {
+          const tag = event.target.closest(".dimension-tag[data-tag-tooltip]");
+          if (tag) showFundamentalTagTooltip(tag);
+        });
+        document.addEventListener("focusout", event => {
+          if (event.target.closest(".dimension-tag[data-tag-tooltip]")) hideFundamentalTagTooltip();
+        });
+        document.addEventListener("keydown", event => {
+          if (event.key === "Escape") hideFundamentalTagTooltip();
+        });
+        window.addEventListener("popstate", () => {
+          const params = new URLSearchParams(window.location.search);
+          state.page = VALID_PAGES.has(params.get("page")) ? params.get("page") : "home";
+          if (VALID_METHODOLOGIES.has(params.get("method"))) state.methodology = params.get("method");
+          document.getElementById("methodology").value = state.methodology;
+          updateMethodologyControls();
+          rebuildAndRender();
+        });
         updateMethodologyControls();
+        syncPageUrl(false);
         rebuildAndRender();
       } catch (error) {
         document.getElementById("app").innerHTML = `<div class="error">${error.message}. Serve this folder over HTTP so the dashboard can read the CSV.</div>`;
