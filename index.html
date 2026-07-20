@@ -146,16 +146,140 @@
       line-height: 1.5;
     }
 
+    #homePage {
+      gap: 12px;
+    }
+
     .home-method-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 14px;
     }
 
+    .home-overall-card {
+      display: grid;
+      gap: 8px;
+      padding: 13px;
+    }
+
+    .home-overall-head h2 {
+      margin: 0 0 2px;
+      font-size: 18px;
+    }
+
+    .home-overall-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .home-expand-button {
+      appearance: none;
+      flex: 0 0 auto;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--surface-2);
+      color: var(--text);
+      padding: 6px 9px;
+      font: inherit;
+      font-size: 10px;
+      font-weight: 650;
+      cursor: pointer;
+    }
+
+    .home-expand-button:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .home-overall-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.4;
+    }
+
+    .home-overall-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .home-overall-block {
+      min-width: 0;
+      padding: 7px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fafbf9;
+    }
+
+    .home-overall-block h3 {
+      margin: 0 0 4px;
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .home-overall-list {
+      display: grid;
+      gap: 3px;
+    }
+
+    .home-overall-stock {
+      display: grid;
+      grid-template-columns: 60px minmax(0, 1fr);
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      padding: 5px 7px;
+      border-radius: 6px;
+      background: var(--surface);
+    }
+
+    .home-overall-ticker {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      min-width: 0;
+      font-size: 13px;
+    }
+
+    .home-overall-ticker span {
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .home-overall-signals {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 5px;
+      min-width: 0;
+    }
+
+    .home-overall-signal {
+      min-width: 0;
+      padding: 3px 5px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface-2);
+      font-size: 10px;
+      line-height: 1.2;
+      text-align: center;
+      overflow-wrap: anywhere;
+    }
+
+    .home-overall-signal b {
+      color: var(--muted);
+      font-weight: 650;
+    }
+
     .home-method-card {
       display: grid;
-      gap: 13px;
+      gap: 9px;
       min-width: 0;
+      padding: 13px;
     }
 
     .home-method-head {
@@ -180,19 +304,19 @@
     .home-rank-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
+      gap: 7px;
     }
 
     .home-rank-block {
       min-width: 0;
-      padding: 9px;
+      padding: 7px;
       border: 1px solid var(--line);
       border-radius: 7px;
       background: #fafbf9;
     }
 
     .home-rank-block h4 {
-      margin: 0 0 6px;
+      margin: 0 0 4px;
       color: var(--muted);
       font-size: 10px;
       letter-spacing: 0.04em;
@@ -201,7 +325,7 @@
 
     .home-rank-list {
       display: grid;
-      gap: 5px;
+      gap: 2px;
       margin: 0;
       padding: 0;
       list-style: none;
@@ -214,6 +338,7 @@
       gap: 4px;
       min-width: 0;
       font-size: 11px;
+      line-height: 1.2;
     }
 
     .home-rank-list .rank-number {
@@ -465,6 +590,11 @@
 
     .bar-pos { fill: var(--accent); }
     .bar-neg { fill: var(--bad); }
+    .bar-neutral { fill: var(--warn); }
+
+    .flow-state-positive { color: var(--good); font-weight: 650; }
+    .flow-state-negative { color: var(--bad); font-weight: 650; }
+    .flow-state-neutral { color: var(--warn); font-weight: 650; }
     .mark-line { fill: none; stroke: var(--accent); stroke-width: 2; }
     .mark-line-2 { fill: none; stroke: var(--accent-2); stroke-width: 2; }
     .dot { fill: var(--accent); }
@@ -1107,7 +1237,11 @@
 
       .home-method-grid {
         grid-template-columns: 1fr;
-        gap: 10px;
+        gap: 8px;
+      }
+
+      .home-overall-stock {
+        grid-template-columns: 52px minmax(0, 1fr);
       }
 
       .toolbar {
@@ -1244,6 +1378,48 @@
 
       .home-rank-grid {
         gap: 6px;
+      }
+
+      .home-overall-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 4px;
+      }
+
+      .home-overall-card {
+        gap: 7px;
+      }
+
+      .home-expand-button {
+        padding: 5px 7px;
+        font-size: 9px;
+      }
+
+      .home-overall-block {
+        padding: 5px;
+      }
+
+      .home-overall-stock {
+        display: block;
+        padding: 4px;
+      }
+
+      .home-overall-ticker {
+        margin-bottom: 2px;
+      }
+
+      .home-overall-signals {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      .home-overall-signal {
+        padding: 1px 0;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        font-size: 8px;
+        line-height: 1.1;
+        text-align: left;
       }
 
       .home-rank-block {
@@ -1499,6 +1675,7 @@
         <h2>Market Overview</h2>
         <p>Top and bottom sectors and stocks across Flow Rotation, Relative Rotation, and Fundamentals. Open a methodology for its full sector view, or use Detailed View for the consolidated sector and company financial tables.</p>
       </section>
+      <section class="home-overall-card" id="homeOverallCard" aria-label="Overall stock rankings"></section>
       <div class="home-method-grid" id="homeMethodGrid" aria-label="Methodology rankings"></div>
     </div>
 
@@ -1585,7 +1762,7 @@
             <h2 id="tableTitle">Sector Table</h2>
             <button class="info-button" type="button" aria-label="Stock ranking methodology" aria-describedby="rankingHelp">?</button>
             <div class="help-popover" id="rankingHelp" role="tooltip">
-              <p id="rankingIntroHelp"><strong>Score scale:</strong> each input is percentile-ranked across the coverage universe at the selected base date. The stock score is the average of the available percentile ranks, from 0.00 to 1.00.</p>
+              <p id="rankingIntroHelp"><strong>Score scale:</strong> Flow Rotation scores run from 0 to 100.</p>
               <p id="scoreMethodHelp"></p>
               <p><strong>Filters:</strong> sector clicks or ticker search only change which stocks are displayed. The percentile score is still calculated against the full coverage universe.</p>
             </div>
@@ -1641,7 +1818,7 @@
 
   <div id="tooltip" class="tooltip"></div>
 
-  <script src="relative_rotation.js"></script>
+  <script src="relative_rotation.js?v=50-center-1"></script>
   <script>
     const pricePath = "0.pricedata.csv";
     const coveragePath = "0.coverage_universe.csv";
@@ -1699,12 +1876,14 @@
     let lastSectorDetailTap = { key: "", at: 0 };
     const expandedSectorMetrics = new Set();
     const FUNDAMENTAL_DOUBLE_TAP_MS = 550;
+    let homeRankingExpanded = false;
     const displaySector = sector => SECTOR_LABELS[sector] || sector;
     const fmtPct = value => Number.isFinite(value) ? `${(value * 100).toFixed(1)}%` : "-";
     const fmtSignedPct = value => Number.isFinite(value) ? `${value >= 0 ? "+" : ""}${(value * 100).toFixed(1)}%` : "-";
     const fmtPp = value => Number.isFinite(value) ? `${(value * 100).toFixed(2)}pp` : "-";
     const fmtBn = value => Number.isFinite(value) ? value.toLocaleString("en-US", { maximumFractionDigits: 0 }) : "-";
-    const fmtScore = value => Number.isFinite(value) ? value.toFixed(2) : "-";
+    const fmtScore = value => Number.isFinite(value) ? (value * 100).toFixed(0) : "-";
+    const fmtFlowScore = value => Number.isFinite(value) ? (value * 100).toFixed(1) : "-";
     const fmtRrg = value => Number.isFinite(value) ? value.toFixed(1) : "-";
     const fmtSignedRrg = value => Number.isFinite(value) ? `${value >= 0 ? "+" : ""}${value.toFixed(1)}` : "-";
     const fmtFundScore = value => Number.isFinite(value) ? value.toFixed(1) : "-";
@@ -1761,11 +1940,53 @@
       return values.filter(Number.isFinite).reduce((a, b) => a + b, 0);
     }
 
-    function percentileRanks(items, key) {
+    function percentileRanks(items, key, idKey = "ticker") {
       const valid = items.filter(d => Number.isFinite(d[key])).sort((a, b) => a[key] - b[key]);
       const ranks = new Map();
-      valid.forEach((d, i) => ranks.set(d.ticker, valid.length > 1 ? i / (valid.length - 1) : 0.5));
+      valid.forEach((d, i) => ranks.set(d[idKey], valid.length > 1 ? i / (valid.length - 1) : 0.5));
       return ranks;
+    }
+
+    function clampFlow(value, minimum, maximum) {
+      return Math.min(maximum, Math.max(minimum, value));
+    }
+
+    function flowTimeFactor(shortDays = 10) {
+      return Math.sqrt(Math.max(1, shortDays) / 10);
+    }
+
+    function flowReturnThreshold(baseThreshold, shortDays = 10) {
+      return baseThreshold * flowTimeFactor(shortDays);
+    }
+
+    function confirmedFlowScore(activityRatio, excessReturn, shortDays = 10, activityScale = 1) {
+      if (![activityRatio, excessReturn].every(Number.isFinite)) return NaN;
+      const activity = clampFlow((activityRatio - 1) / activityScale, 0, 1);
+      const directionScale = flowReturnThreshold(0.10, shortDays);
+      const direction = clampFlow(excessReturn / directionScale, -1, 1);
+      return 50 + 50 * activity * direction;
+    }
+
+    function classifyFlowState(activityRatio, excessReturn, shortDays = 10, elevatedRatio = 1.25, veryElevatedRatio = 2) {
+      if (![activityRatio, excessReturn].every(Number.isFinite)) return "Neutral";
+      const veryElevated = activityRatio >= veryElevatedRatio;
+      const elevated = activityRatio >= elevatedRatio;
+      const meaningfulMove = flowReturnThreshold(0.03, shortDays);
+      const strongMove = flowReturnThreshold(0.08, shortDays);
+      if (veryElevated && excessReturn >= strongMove) return "Strong Accumulation";
+      if (veryElevated && excessReturn <= -strongMove) return "Strong Distribution";
+      if (elevated && excessReturn >= meaningfulMove) return "Accumulation";
+      if (elevated && excessReturn <= -meaningfulMove) return "Distribution";
+      if (elevated) return "Churn";
+      if (excessReturn >= meaningfulMove) return "Quiet Strength";
+      if (excessReturn <= -meaningfulMove) return "Quiet Weakness";
+      return "Neutral";
+    }
+
+    function flowStateTone(stateName) {
+      if (["Strong Accumulation", "Accumulation", "Quiet Strength"].includes(stateName)) return "positive";
+      if (["Strong Distribution", "Distribution", "Quiet Weakness"].includes(stateName)) return "negative";
+      return "neutral";
     }
 
     function pctChange(series, lookback) {
@@ -1796,6 +2017,7 @@
       const rows = snapshotRows.filter(row => row.ticker !== "VNINDEX");
 
       rows.sort((a, b) => a.date.localeCompare(b.date) || a.ticker.localeCompare(b.ticker));
+      indexRows.sort((a, b) => a.date.localeCompare(b.date));
       const dates = [...new Set(rows.map(d => d.date))].sort();
       const latestDate = dates[dates.length - 1];
       const shortDates = dates.slice(-period.short);
@@ -1805,6 +2027,8 @@
         if (!byTicker.has(row.ticker)) byTicker.set(row.ticker, []);
         byTicker.get(row.ticker).push(row);
       });
+      const indexShortReturn = pctChange(indexRows, period.short);
+      const indexLongReturn = pctChange(indexRows, period.long);
       const sectorDaily = new Map();
       dates.forEach(date => {
         const dayRows = rows.filter(row => row.date === date);
@@ -1823,6 +2047,7 @@
       const sectors = [...new Set(rows.map(d => d.sector))].sort();
       const sectorStats = sectors.map(sector => {
         const allRows = rows.filter(row => row.sector === sector);
+        const sectorTickers = [...new Set(allRows.map(d => d.ticker))];
         const shortValue = sum(allRows.filter(row => shortDates.includes(row.date)).map(d => d.value));
         const totalShortValue = sum(rows.filter(row => shortDates.includes(row.date)).map(d => d.value));
         const longValue = sum(allRows.filter(row => longDates.includes(row.date)).map(d => d.value));
@@ -1832,19 +2057,55 @@
         const shortAdtv = mean(shortDates.map(date => sectorDaily.get(`${date}|${sector}`)?.value ?? 0));
         const longAdtv = mean(longDates.map(date => sectorDaily.get(`${date}|${sector}`)?.value ?? 0));
         const adtvGrowth = longAdtv ? shortAdtv / longAdtv - 1 : NaN;
-        const periodReturn = mean([...new Set(allRows.map(d => d.ticker))].map(ticker => pctChange(byTicker.get(ticker), period.long)));
-        return { sector, shortShare, longShare, delta: shortShare - longShare, periodReturn, adtvGrowth, shortAdtv };
-      }).sort((a, b) => b.delta - a.delta);
+        const adtvRatio = longAdtv ? shortAdtv / longAdtv : NaN;
+        const activityRatio = longShare ? shortShare / longShare : NaN;
+        const shortPeriodReturn = mean(sectorTickers.map(ticker => pctChange(byTicker.get(ticker), period.short)));
+        const periodReturn = mean(sectorTickers.map(ticker => pctChange(byTicker.get(ticker), period.long)));
+        const shortExcessReturn = Number.isFinite(indexShortReturn) ? shortPeriodReturn - indexShortReturn : shortPeriodReturn;
+        const longExcessReturn = Number.isFinite(indexLongReturn) ? periodReturn - indexLongReturn : periodReturn;
+        const breadth = mean(sectorTickers.map(ticker => {
+          const value = pctChange(byTicker.get(ticker), period.short);
+          return Number.isFinite(value) && Number.isFinite(indexShortReturn) ? Number(value > indexShortReturn) : NaN;
+        }));
+        const flowScore = confirmedFlowScore(activityRatio, shortExcessReturn, period.short, 0.20);
+        const flowState = classifyFlowState(activityRatio, shortExcessReturn, period.short, 1.08, 1.20);
+        return { sector, shortShare, longShare, delta: shortShare - longShare, shortPeriodReturn, periodReturn, shortExcessReturn, longExcessReturn, breadth, adtvGrowth, adtvRatio, activityRatio, flowScore, flowState, shortAdtv };
+      });
+
+      const sectorShortRanks = percentileRanks(sectorStats, "shortExcessReturn", "sector");
+      const sectorLongRanks = percentileRanks(sectorStats, "longExcessReturn", "sector");
+      sectorStats.forEach(row => {
+        const shortRank = sectorShortRanks.get(row.sector);
+        const longRank = sectorLongRanks.get(row.sector);
+        if ([shortRank, longRank, row.flowScore, row.breadth].every(Number.isFinite)) {
+          row.pricePoints = 30 * shortRank + 20 * longRank;
+          row.flowPoints = 0.30 * row.flowScore;
+          row.breadthPoints = 20 * row.breadth;
+          row.priceSubscore = row.pricePoints / 0.50;
+          row.breadthSubscore = row.breadth * 100;
+          row.score = (row.pricePoints + row.flowPoints + row.breadthPoints) / 100;
+        } else {
+          row.pricePoints = row.flowPoints = row.breadthPoints = row.priceSubscore = row.breadthSubscore = row.score = NaN;
+        }
+      });
+      sectorStats.sort((a, b) => (b.score || 0) - (a.score || 0));
 
       const sectorDelta = new Map(sectorStats.map(d => [d.sector, d.delta]));
+      const sectorScore = new Map(sectorStats.map(d => [d.sector, d.score]));
       const stockStats = [...byTicker.entries()].map(([ticker, series]) => {
         const latest = series[series.length - 1];
         const periodHigh = Math.max(...series.slice(-period.long).map(d => d.adjustedLast).filter(Number.isFinite));
         const shortAdtv = mean(series.slice(-period.short).map(d => d.value));
         const longAdtv = mean(series.slice(-period.long).map(d => d.value));
         const adtvGrowth = longAdtv ? shortAdtv / longAdtv - 1 : NaN;
+        const activityRatio = longAdtv ? shortAdtv / longAdtv : NaN;
+        const shortPeriodReturn = pctChange(series, period.short);
         const periodReturn = pctChange(series, period.long);
+        const shortExcessReturn = Number.isFinite(indexShortReturn) ? shortPeriodReturn - indexShortReturn : shortPeriodReturn;
+        const longExcessReturn = Number.isFinite(indexLongReturn) ? periodReturn - indexLongReturn : periodReturn;
         const trendProximity = Number.isFinite(periodHigh) && periodHigh ? latest.adjustedLast / periodHigh - 1 : NaN;
+        const flowScore = confirmedFlowScore(activityRatio, shortExcessReturn, period.short);
+        const flowState = classifyFlowState(activityRatio, shortExcessReturn, period.short);
         return {
           ticker,
           sector: latest.sector,
@@ -1852,22 +2113,39 @@
           marketCap: latest.marketCap,
           shortAdtv,
           adtvGrowth,
+          activityRatio,
+          shortPeriodReturn,
           periodReturn,
+          shortExcessReturn,
+          longExcessReturn,
           trendProximity,
+          flowScore,
+          flowState,
+          flowShortDays: period.short,
           sectorDelta: sectorDelta.get(latest.sector) || 0,
+          sectorScore: sectorScore.get(latest.sector),
           series
         };
       });
 
-      return { rows, indexRows, dates, latestDate, requestedDate, effectiveDate, availableDates, sectorStats, stockStats, period };
+      scoreStocks(stockStats);
+
+      return { rows, indexRows, dates, latestDate, requestedDate, effectiveDate, availableDates, sectorStats, stockStats, period, indexShortReturn, indexLongReturn };
     }
 
     function scoreStocks(stocks) {
-      const inputs = ["trendProximity", "periodReturn", "adtvGrowth", "sectorDelta"];
+      const inputs = ["shortExcessReturn", "longExcessReturn", "trendProximity"];
       const ranks = Object.fromEntries(inputs.map(key => [key, percentileRanks(stocks, key)]));
       stocks.forEach(row => {
-        const parts = inputs.map(key => ranks[key].get(row.ticker)).filter(Number.isFinite);
-        row.score = parts.length ? mean(parts) : NaN;
+        const shortRank = ranks.shortExcessReturn.get(row.ticker);
+        const longRank = ranks.longExcessReturn.get(row.ticker);
+        const proximityRank = ranks.trendProximity.get(row.ticker);
+        row.score = [shortRank, longRank, proximityRank, row.flowScore, row.sectorScore].every(Number.isFinite)
+          ? 0.25 * shortRank + 0.15 * longRank + 0.10 * proximityRank + 0.30 * (row.flowScore / 100) + 0.20 * row.sectorScore
+          : NaN;
+        const timeFactor = flowTimeFactor(row.flowShortDays || 10);
+        if (row.activityRatio >= 2 && row.shortExcessReturn <= -0.12 * timeFactor) row.score = Math.min(row.score, 0.25);
+        else if (row.activityRatio >= 1.5 && row.shortExcessReturn <= -0.08 * timeFactor) row.score = Math.min(row.score, 0.35);
       });
     }
 
@@ -1983,16 +2261,23 @@
       if (selection.type === "market") {
         return {
           title: "Sector Rotation",
-          hint: `${short}D sector value share vs ${long}D share`,
+          hint: `Sector score contribution: Price 50 · Flow 30 · Breadth 20`,
           labelKey: "sector",
-          valueFormat: fmtPp,
+          valueFormat: value => `${value >= 0 ? "+" : ""}${(value * 100).toFixed(0)}`,
           rows: model.sectorStats.map(d => ({
           label: displaySector(d.sector),
-          value: d.delta,
+          value: (d.flowScore - 50) / 100,
+          score: d.score,
+          flowState: d.flowState,
+          components: [
+            { key: "P", label: "Price", points: d.pricePoints, subscore: d.priceSubscore, maximum: 50 },
+            { key: "F", label: "Flow", points: d.flowPoints, subscore: d.flowScore, maximum: 30 },
+            { key: "B", label: "Breadth", points: d.breadthPoints, subscore: d.breadthSubscore, maximum: 20 }
+          ],
           share: d.shortShare,
           periodReturn: d.periodReturn,
           clickValue: d.sector,
-          tooltip: `<strong>${displaySector(d.sector)}</strong><br>${short}D share ${fmtPct(d.shortShare)}<br>${long}D share ${fmtPct(d.longShare)}<br>Delta ${fmtPp(d.delta)}<br>${long}D sector return ${fmtPct(d.periodReturn)}`
+          tooltip: `<strong>${displaySector(d.sector)}</strong> · score ${fmtScore(d.score)}<br>${d.flowState}<br>Price ${d.pricePoints.toFixed(1)}/50 · Flow ${d.flowPoints.toFixed(1)}/30 · Breadth ${d.breadthPoints.toFixed(1)}/20<br>${short}D excess return ${fmtSignedPct(d.shortExcessReturn)} · ${long}D excess ${fmtSignedPct(d.longExcessReturn)}<br>Turnover share ${short}/${long} ${d.activityRatio.toFixed(2)}× · share Δ ${fmtPp(d.delta)}`
         }))
         };
       }
@@ -2000,11 +2285,12 @@
       const selectedStocks = selection.stocks
         .map(d => ({
           label: d.ticker,
-          value: d.adtvGrowth,
+          value: (d.flowScore - 50) / 100,
+          flowState: d.flowState,
           adtv: d.shortAdtv,
           periodReturn: d.periodReturn,
           clickValue: d.ticker,
-          tooltip: `<strong>${d.ticker}</strong><br>${displaySector(d.sector)}<br>ADTV ${short}D vs ${long}D ${fmtSignedPct(d.adtvGrowth)}<br>${long}D return ${fmtPct(d.periodReturn)}<br>vs ${long}D high ${fmtPct(d.trendProximity)}`
+          tooltip: `<strong>${d.ticker}</strong> · ${d.flowState}<br>${displaySector(d.sector)}<br>Confirmed flow ${d.flowScore.toFixed(0)}<br>${short}D excess return ${fmtSignedPct(d.shortExcessReturn)}<br>ADTV ${short}/${long} ${d.activityRatio.toFixed(2)}×<br>${long}D excess return ${fmtSignedPct(d.longExcessReturn)}`
         }))
         .filter(d => Number.isFinite(d.value))
         .sort((a, b) => b.value - a.value);
@@ -2012,12 +2298,94 @@
       return {
         title: `${selection.title} Rotation`,
         hint: selection.type === "custom"
-          ? `Custom basket ADTV growth: ${short}D vs ${long}D`
-          : `Stock ADTV growth: ${short}D vs ${long}D`,
+          ? `Custom basket price-confirmed activity score`
+          : `Stock price-confirmed activity score`,
         labelKey: "ticker",
         valueFormat: value => `${value >= 0 ? "+" : ""}${(value * 100).toFixed(0)}%`,
         rows: selectedStocks
       };
+    }
+
+    function sectorComponentFill(subscore, componentIndex) {
+      const palette = subscore >= 55
+        ? ["#18794e", "#2f8f5b", "#5ca978"]
+        : subscore <= 45
+          ? ["#aa3f39", "#c0564f", "#d47b72"]
+          : ["#a97821", "#bb8d35", "#c9a55f"];
+      return palette[componentIndex] || palette[0];
+    }
+
+    function renderSectorContributionChart(container, model, data) {
+      const width = chartWidth(container, 820);
+      const compact = width < 520;
+      const margin = compact ? { top: 27, right: 10, bottom: 8, left: 10 } : { top: 31, right: 14, bottom: 10, left: 14 };
+      const rowH = compact ? 39 : 45;
+      const barH = compact ? 12 : 15;
+      const height = margin.top + margin.bottom + data.length * rowH;
+      const innerW = width - margin.left - margin.right;
+      const x = score => margin.left + clampFlow(score, 0, 100) / 100 * innerW;
+      const svg = makeSvg(width, height);
+      addSvgNode(svg, "text", { x: margin.left, y: 12, fill: "#626b60", "font-size": compact ? 8 : 10, "font-weight": 650 }, "P Price 50 · F Flow 30 · B Breadth 20");
+      addSvgNode(svg, "text", { x: width - margin.right, y: 12, fill: "#7a8278", "font-size": compact ? 8 : 9, "text-anchor": "end" }, "0 · 50 · 100");
+
+      data.forEach((row, index) => {
+        const y = margin.top + index * rowH;
+        const group = addSvgNode(svg, "g", { class: "sector-contribution-row" });
+        group.style.cursor = "pointer";
+        group.addEventListener("click", () => {
+          state.sector = row.clickValue;
+          state.search = "";
+          state.tableMode = "stocks";
+          document.getElementById("search").value = "";
+          renderAll(model);
+        });
+        group.addEventListener("pointermove", event => {
+          if (event.pointerType === "mouse") showTooltip(row.tooltip, event);
+        });
+        group.addEventListener("pointerleave", hideTooltip);
+        group.addEventListener("pointerdown", event => {
+          if (event.pointerType !== "mouse") hideTooltip();
+        });
+
+        addSvgNode(group, "text", { x: margin.left, y: y + 9, fill: "currentColor", "font-size": compact ? 9 : 11, "font-weight": 650 }, row.label);
+        const tone = flowStateTone(row.flowState);
+        addSvgNode(group, "text", {
+          x: width - margin.right, y: y + 9,
+          fill: tone === "positive" ? "#18794e" : tone === "negative" ? "#aa3f39" : "#a97821",
+          "font-size": compact ? 8.5 : 10, "font-weight": 650, "text-anchor": "end"
+        }, `${fmtScore(row.score)} · ${row.flowState}`);
+
+        const barY = y + 15;
+        addSvgNode(group, "rect", {
+          x: margin.left, y: barY, width: innerW, height: barH, rx: barH / 2,
+          fill: "#e8ece5", stroke: "#d3d9cf", "stroke-width": 0.7
+        });
+        let cumulative = 0;
+        row.components.forEach((component, componentIndex) => {
+          if (!Number.isFinite(component.points) || component.points <= 0) return;
+          const start = x(cumulative);
+          cumulative += component.points;
+          const end = x(cumulative);
+          const segmentWidth = Math.max(0, end - start);
+          addSvgNode(group, "rect", {
+            x: start, y: barY, width: segmentWidth, height: barH,
+            fill: sectorComponentFill(component.subscore, componentIndex),
+            "data-component": component.label
+          });
+          if (segmentWidth >= (compact ? 18 : 22)) {
+            addSvgNode(group, "text", {
+              x: start + segmentWidth / 2, y: barY + barH * 0.72,
+              fill: "#ffffff", "font-size": compact ? 7 : 8, "font-weight": 750, "text-anchor": "middle",
+              "pointer-events": "none"
+            }, component.key);
+          }
+        });
+        addSvgNode(group, "line", {
+          x1: x(50), x2: x(50), y1: barY - 1, y2: barY + barH + 1,
+          stroke: "#ffffff", "stroke-width": 1, opacity: 0.8, "pointer-events": "none"
+        });
+      });
+      container.appendChild(svg);
     }
 
     function renderSectorChart(model) {
@@ -2033,6 +2401,11 @@
       const data = chartData.rows;
       if (!data.length) {
         container.innerHTML = `<div class="error">No matching tickers in the current selection.</div>`;
+        return;
+      }
+      if (selection.type === "market") {
+        container.setAttribute("aria-label", "Sector Rotation 0-to-100 contribution chart");
+        renderSectorContributionChart(container, model, data);
         return;
       }
       const width = chartWidth(container, 820);
@@ -2069,7 +2442,8 @@
         bar.setAttribute("width", Math.abs(x(d.value) - zero));
         bar.setAttribute("height", Math.max(10, rowH - 10));
         bar.setAttribute("rx", 4);
-        bar.setAttribute("class", d.value >= 0 ? "bar-pos" : "bar-neg");
+        const tone = flowStateTone(d.flowState);
+        bar.setAttribute("class", tone === "positive" ? "bar-pos" : tone === "negative" ? "bar-neg" : "bar-neutral");
         bar.style.cursor = "pointer";
         bar.addEventListener("click", () => {
           const selection = activeSelection(model);
@@ -2134,20 +2508,22 @@
       const body = document.getElementById("combinedTableRows");
       const title = document.getElementById("tableTitle");
       const hint = document.getElementById("tableHint");
-      setCombinedTableColumns();
+      setCombinedTableColumns([22, 14, 28, 18, 18]);
       body.innerHTML = "";
       if (state.tableMode === "sectors") {
         const { short, long } = model.period;
         table.className = "sector-table";
         title.textContent = "Sector Table";
         hint.textContent = "Click a sector row to view its stock ranking";
-        head.innerHTML = `<tr><th>Sector</th><th>${long}D Ret</th><th>ADTV ${short}/${long}</th><th>Delta ${short}/${long}</th></tr>`;
+        head.innerHTML = `<tr><th>Sector</th><th>Score</th><th>Flow State</th><th>${short}D Ex.</th><th>Share Δ</th></tr>`;
         model.sectorStats.forEach(row => {
           const tr = document.createElement("tr");
+          const tone = flowStateTone(row.flowState);
           tr.innerHTML = `
             <td>${displaySector(row.sector)}</td>
-            <td class="${row.periodReturn >= 0 ? "pos" : "neg"}">${fmtPct(row.periodReturn)}</td>
-            <td class="${row.adtvGrowth >= 0 ? "pos" : "neg"}">${fmtSignedPct(row.adtvGrowth)}</td>
+            <td>${fmtScore(row.score)}</td>
+            <td class="flow-state-${tone}">${row.flowState}</td>
+            <td class="${row.shortExcessReturn >= 0 ? "pos" : "neg"}">${fmtSignedPct(row.shortExcessReturn)}</td>
             <td class="${row.delta >= 0 ? "pos" : "neg"}">${fmtPp(row.delta)}</td>
           `;
           tr.addEventListener("click", () => {
@@ -2169,19 +2545,20 @@
       hint.textContent = selection.type === "market"
         ? `All coverage stocks, ranked by the ${model.period.label} Flow Rotation score`
         : `${selection.stocks.length} stocks in the current selection, ranked against the full coverage universe`;
-      head.innerHTML = `<tr><th>Ticker</th><th>Score</th><th>${long}D Ret</th><th>ADTV ${short}/${long}</th><th>vs ${long}D High</th></tr>`;
+      head.innerHTML = `<tr><th>Ticker</th><th>Score</th><th>Flow State</th><th>${short}D Ex.</th><th>ADTV</th></tr>`;
       if (!rows.length) {
         body.innerHTML = "<tr><td colspan=\"5\">No matching tickers.</td></tr>";
         return;
       }
       rows.forEach(row => {
         const tr = document.createElement("tr");
+        const tone = flowStateTone(row.flowState);
         tr.innerHTML = `
           <td><strong>${row.ticker}</strong></td>
           <td>${fmtScore(row.score)}</td>
-          <td class="${row.periodReturn >= 0 ? "pos" : "neg"}">${fmtPct(row.periodReturn)}</td>
-          <td class="${row.adtvGrowth >= 0 ? "pos" : "neg"}">${fmtSignedPct(row.adtvGrowth)}</td>
-          <td class="${row.trendProximity >= 0 ? "pos" : "neg"}">${fmtPct(row.trendProximity)}</td>
+          <td class="flow-state-${tone}">${row.flowState}</td>
+          <td class="${row.shortExcessReturn >= 0 ? "pos" : "neg"}">${fmtSignedPct(row.shortExcessReturn)}</td>
+          <td>${row.activityRatio.toFixed(2)}×</td>
         `;
         body.appendChild(tr);
       });
@@ -2189,29 +2566,33 @@
 
     function renderStats(model) {
       setStatLabels(false);
-      const best = model.sectorStats[0];
-      const worst = model.sectorStats[model.sectorStats.length - 1];
+      const rankedSectors = model.sectorStats.filter(row => Number.isFinite(row.score)).slice().sort((a, b) => b.score - a.score);
+      const best = rankedSectors[0];
+      const worst = rankedSectors[rankedSectors.length - 1];
       scoreStocks(model.stockStats);
       const stocks = filteredStocks(model);
       const top = stocks[0] || model.stockStats.sort((a, b) => b.score - a.score)[0];
       const bottom = stocks.slice().reverse().find(row => Number.isFinite(row.score));
       document.getElementById("bestSector").textContent = best ? displaySector(best.sector) : "-";
-      document.getElementById("bestSectorNote").textContent = best ? `${fmtPp(best.delta)} rotation delta, ${fmtPct(best.shortShare)} of coverage turnover` : "-";
+      document.getElementById("bestSectorNote").textContent = best ? `${best.flowState} · score ${fmtScore(best.score)} · ${model.period.short}D excess ${fmtSignedPct(best.shortExcessReturn)}` : "-";
       document.getElementById("worstSector").textContent = worst ? displaySector(worst.sector) : "-";
-      document.getElementById("worstSectorNote").textContent = worst ? `${fmtPp(worst.delta)} rotation delta, ${fmtPct(worst.shortShare)} of coverage turnover` : "-";
+      document.getElementById("worstSectorNote").textContent = worst ? `${worst.flowState} · score ${fmtScore(worst.score)} · ${model.period.short}D excess ${fmtSignedPct(worst.shortExcessReturn)}` : "-";
       document.getElementById("topStock").textContent = top ? top.ticker : "-";
-      document.getElementById("topStockNote").textContent = top ? `${displaySector(top.sector)}, score ${fmtScore(top.score)}, ${model.period.long}d ${fmtPct(top.periodReturn)}` : "-";
+      document.getElementById("topStockNote").textContent = top ? `${displaySector(top.sector)} · ${top.flowState} · score ${fmtScore(top.score)}` : "-";
       document.getElementById("worstStock").textContent = bottom ? bottom.ticker : "-";
-      document.getElementById("worstStockNote").textContent = bottom ? `${displaySector(bottom.sector)}, score ${fmtScore(bottom.score)}, ${model.period.long}d ${fmtPct(bottom.periodReturn)}` : "-";
+      document.getElementById("worstStockNote").textContent = bottom ? `${displaySector(bottom.sector)} · ${bottom.flowState} · score ${fmtScore(bottom.score)}` : "-";
     }
 
     function renderMethodologyHelp(model) {
       const { short, long } = model.period;
-      document.getElementById("rankingIntroHelp").innerHTML = `<strong>Score scale:</strong> each input is percentile-ranked across the coverage universe at the selected base date. The stock score is the average of the available percentile ranks, from 0.00 to 1.00.`;
-      document.getElementById("sectorViewHelp").innerHTML = `<strong>Sector view:</strong> ${short}D share is each sector's traded value over the latest ${short} trading days divided by total coverage traded value. It is compared with the equivalent ${long}D share.`;
-      document.getElementById("rotationDeltaHelp").innerHTML = `<strong>Rotation delta:</strong> ${short}D share minus ${long}D share. Bars are ranked from the largest positive delta to the weakest delta.`;
-      document.getElementById("selectedViewHelp").innerHTML = `<strong>Selected sector or custom basket:</strong> the chart shows each stock's ${short}D ADTV growth versus its ${long}D ADTV.`;
-      document.getElementById("scoreMethodHelp").innerHTML = `<strong>${model.period.label} method:</strong> proximity to the ${long}D adjusted-price high, ${long}D adjusted-price momentum, ${short}D-vs-${long}D ADTV growth, and ${short}D-vs-${long}D sector rotation delta. Each factor has equal weight.`;
+      const meaningfulMove = flowReturnThreshold(0.03, short);
+      const strongMove = flowReturnThreshold(0.08, short);
+      const severeMove = flowReturnThreshold(0.12, short);
+      document.getElementById("rankingIntroHelp").innerHTML = `<strong>Score scale:</strong> 0 to 100. Stock scores combine 50% price strength, 30% price-confirmed trading activity, and 20% sector context.`;
+      document.getElementById("sectorViewHelp").innerHTML = `<strong>Price-confirmed activity:</strong> stocks use ${short}D/${long}D ADTV, while sectors use their share of total market turnover. Sector share above 1.08× is elevated and above 1.20× is very elevated. Rising activity is positive only with VN-Index outperformance; rising activity with underperformance is Distribution.`;
+      document.getElementById("rotationDeltaHelp").innerHTML = `<strong>States:</strong> Accumulation and Distribution require elevated activity. Churn is elevated activity with a flat relative price; Quiet Strength or Weakness describes price movement without elevated activity.`;
+      document.getElementById("selectedViewHelp").innerHTML = `<strong>Bars:</strong> positive bars indicate confirmed accumulation and negative bars indicate confirmed distribution. Raw ADTV and excess-return inputs remain visible in the table and tooltips.`;
+      document.getElementById("scoreMethodHelp").innerHTML = `<strong>${model.period.label} method:</strong> price strength uses ${short}D and ${long}D returns versus VN-Index plus distance from the ${long}D high. Excess-return thresholds scale with √time: meaningful ±${(meaningfulMove * 100).toFixed(1)}pp and strong ±${(strongMove * 100).toFixed(1)}pp for ${short}D. Confirmed distribution caps the score at 35; severe distribution above 2× activity and below −${(severeMove * 100).toFixed(1)}pp caps it at 25.`;
     }
 
     function buildRrgModel(data) {
@@ -2405,17 +2786,18 @@
       const margin = compact ? { top: 28, right: 24, bottom: 44, left: 46 } : { top: 34, right: 42, bottom: 52, left: 58 };
       const innerW = width - margin.left - margin.right;
       const innerH = height - margin.top - margin.bottom;
+      const rrgCenter = RelativeRotation.DISPLAY_CENTER || 50;
       const farthestDeviation = Math.max(...allPoints.flatMap(point => [
-        Math.abs(point.x - 100),
-        Math.abs(point.y - 100)
+        Math.abs(point.x - rrgCenter),
+        Math.abs(point.y - rrgCenter)
       ]));
       const axisSpan = Math.max(2.5, farthestDeviation * 1.2 + 0.2);
       const xSpan = axisSpan;
       const ySpan = axisSpan;
-      const x = value => margin.left + ((value - (100 - xSpan)) / (2 * xSpan)) * innerW;
-      const y = value => margin.top + ((100 + ySpan - value) / (2 * ySpan)) * innerH;
-      const centerX = x(100);
-      const centerY = y(100);
+      const x = value => margin.left + ((value - (rrgCenter - xSpan)) / (2 * xSpan)) * innerW;
+      const y = value => margin.top + ((rrgCenter + ySpan - value) / (2 * ySpan)) * innerH;
+      const centerX = x(rrgCenter);
+      const centerY = y(rrgCenter);
       const svg = makeSvg(width, height);
 
       addSvgNode(svg, "rect", { x: margin.left, y: margin.top, width: innerW / 2, height: innerH / 2, fill: "#edf5f7" });
@@ -2431,8 +2813,8 @@
       addSvgNode(svg, "text", { x: width / 2, y: height - 12, fill: "#626b60", "font-size": 11, "text-anchor": "middle" }, "Relative Strength");
       const yLabel = addSvgNode(svg, "text", { x: 14, y: height / 2, fill: "#626b60", "font-size": 11, "text-anchor": "middle" }, "Relative Momentum");
       yLabel.setAttribute("transform", `rotate(-90 14 ${height / 2})`);
-      addSvgNode(svg, "text", { x: centerX + 4, y: height - margin.bottom + 15, fill: "#626b60", "font-size": 10 }, "100");
-      addSvgNode(svg, "text", { x: margin.left - 7, y: centerY - 5, fill: "#626b60", "font-size": 10, "text-anchor": "end" }, "100");
+      addSvgNode(svg, "text", { x: centerX + 4, y: height - margin.bottom + 15, fill: "#626b60", "font-size": 10 }, String(rrgCenter));
+      addSvgNode(svg, "text", { x: margin.left - 7, y: centerY - 5, fill: "#626b60", "font-size": 10, "text-anchor": "end" }, String(rrgCenter));
 
       series.forEach(item => {
         const color = SECTOR_COLORS[item.row.sector] || "#256f63";
@@ -2552,7 +2934,7 @@
     }
 
     function renderRrgHelp(model) {
-      document.getElementById("sectorViewHelp").innerHTML = `<strong>How to read the axes:</strong> Relative Strength (horizontal) shows performance versus the VN-Index over the rolling ${model.mode.normalizationWindow}-session comparison: above 100 is outperforming, below 100 is underperforming. Relative Momentum (vertical) asks whether that relative performance has improved or weakened versus ${model.mode.momentumLookback} sessions earlier: above 100 is improving, below 100 is slowing.`;
+      document.getElementById("sectorViewHelp").innerHTML = `<strong>How to read the axes:</strong> Relative Strength (horizontal) shows performance versus the VN-Index over the rolling ${model.mode.normalizationWindow}-session comparison: above 50 is outperforming, below 50 is underperforming. Relative Momentum (vertical) asks whether that relative performance has improved or weakened versus ${model.mode.momentumLookback} sessions earlier: above 50 is improving, below 50 is slowing.`;
       document.getElementById("rotationDeltaHelp").innerHTML = `<strong>Four quadrants:</strong> Leading = outperforming and the lead is widening. Weakening = still outperforming, but the lead is narrowing versus ${model.mode.momentumLookback} sessions earlier. Lagging = underperforming and the gap is widening. Improving = still underperforming, but the gap is narrowing versus ${model.mode.momentumLookback} sessions earlier.`;
       document.getElementById("selectedViewHelp").innerHTML = `<strong>Reading the tail:</strong> each point is one trading day; the latest point is the sector's current position. Moving right or up is positive, while moving left or down is negative. On touch screens, tap once to focus and double-tap the same sector to open its stocks.`;
       document.getElementById("rankingIntroHelp").innerHTML = `<strong>RRG score:</strong> the average of Relative Strength and Relative Momentum. A higher score means stronger relative performance and momentum combined.`;
@@ -2590,9 +2972,75 @@
       return `<div class="home-rank-block"><h4>${title}</h4>${homeRankList(rows, labelKey, valueFormatter)}</div>`;
     }
 
+    function homePercentileRanks(rows, tickerKey) {
+      const ranked = rows.filter(row => Number.isFinite(row.score)).slice().sort((a, b) => a.score - b.score);
+      const result = new Map();
+      ranked.forEach((row, index) => result.set(row[tickerKey], ranked.length > 1 ? index / (ranked.length - 1) : 0.5));
+      return result;
+    }
+
+    function primaryFundamentalTag(row) {
+      return [
+        ...topFundamentalRankingTags(row, "momentum"),
+        ...topFundamentalRankingTags(row, "quality")
+      ].sort((a, b) => b.importance - a.importance || a.name.localeCompare(b.name))[0] || null;
+    }
+
+    function homeOverallSignal(label, value, className = "") {
+      return `<span class="home-overall-signal ${className}"><b>${label}:</b> ${escapeTagText(value || "-")}</span>`;
+    }
+
+    function homeOverallStockMarkup(row, index) {
+      const fundamentalClass = row.fundamentalTag?.polarity === "positive"
+        ? "quadrant-leading"
+        : row.fundamentalTag
+          ? "quadrant-lagging"
+          : "";
+      return `<div class="home-overall-stock">
+        <div class="home-overall-ticker"><span>${index + 1}</span><strong>${escapeTagText(row.ticker)}</strong></div>
+        <div class="home-overall-signals">
+          ${homeOverallSignal("Flow", row.flowState, `flow-state-${flowStateTone(row.flowState)}`)}
+          ${homeOverallSignal("Relative", row.rrgQuadrant, quadrantClass(row.rrgQuadrant))}
+          ${homeOverallSignal("Fundamental", row.fundamentalTag?.name || fundamentalStatusText(row.fundamental), fundamentalClass)}
+        </div>
+      </div>`;
+    }
+
+    function renderHomeOverallStocks(flowStocks, rrgStocks, fundamentalStocks, rankingCount) {
+      const flowByTicker = new Map(flowStocks.map(row => [row.ticker, row]));
+      const rrgByTicker = new Map(rrgStocks.map(row => [row.label, row]));
+      const fundamentalByTicker = new Map(fundamentalStocks.map(row => [row.ticker, row]));
+      const flowRanks = homePercentileRanks(flowStocks, "ticker");
+      const rrgRanks = homePercentileRanks(rrgStocks, "label");
+      const fundamentalRanks = homePercentileRanks(fundamentalStocks, "ticker");
+      const combined = [...flowByTicker.keys()].filter(ticker => rrgByTicker.has(ticker) && fundamentalByTicker.has(ticker)).map(ticker => {
+        const flow = flowByTicker.get(ticker);
+        const rrg = rrgByTicker.get(ticker);
+        const fundamental = fundamentalByTicker.get(ticker);
+        return {
+          ticker,
+          overallRank: (flowRanks.get(ticker) + rrgRanks.get(ticker) + fundamentalRanks.get(ticker)) / 3,
+          flowState: flow.flowState,
+          rrgQuadrant: rrg.quadrant,
+          fundamental,
+          fundamentalTag: primaryFundamentalTag(fundamental)
+        };
+      }).sort((a, b) => b.overallRank - a.overallRank || a.ticker.localeCompare(b.ticker));
+      const best = combined.slice(0, rankingCount);
+      const worst = combined.slice(-rankingCount).reverse();
+      document.getElementById("homeOverallCard").innerHTML = `
+        <div class="home-overall-head"><div><h2>Overall Stocks</h2><p>Equal-weight percentile ranking across Flow Rotation, Relative Rotation, and Fundamentals. Labels show each methodology's key current signal; the combined score is intentionally hidden.</p></div><button class="home-expand-button" id="homeRankingToggle" type="button" aria-expanded="${homeRankingExpanded}" aria-label="${homeRankingExpanded ? "Show top and bottom 5" : "Show top and bottom 10"}">${homeRankingExpanded ? "Show 5" : "Expand to 10"}</button></div>
+        <div class="home-overall-grid">
+          <div class="home-overall-block"><h3>Best ${rankingCount} overall</h3><div class="home-overall-list">${best.map(homeOverallStockMarkup).join("")}</div></div>
+          <div class="home-overall-block"><h3>Worst ${rankingCount} overall</h3><div class="home-overall-list">${worst.map(homeOverallStockMarkup).join("")}</div></div>
+        </div>`;
+    }
+
     function renderHomeRankings(flowModel, rrgModel, fundamentalModel) {
+      const rankingCount = homeRankingExpanded ? 10 : 5;
+      document.getElementById("signalInfo").textContent = `Top and bottom ${rankingCount === 10 ? "ten" : "five"} use each methodology's full-universe score.`;
       scoreStocks(flowModel.stockStats);
-      const flowSectors = flowModel.sectorStats.slice().sort((a, b) => b.delta - a.delta);
+      const flowSectors = flowModel.sectorStats.filter(row => Number.isFinite(row.score)).slice().sort((a, b) => b.score - a.score);
       const flowStocks = flowModel.stockStats.filter(row => Number.isFinite(row.score)).slice().sort((a, b) => b.score - a.score);
       const rrgSectors = sortRrgRows(rrgRowsWithMovement(rrgModel.sectorCalc, rrgModel.latestDate));
       const rrgStocks = sortRrgRows(rrgRowsWithMovement(rrgModel.stockCalc, rrgModel.latestDate));
@@ -2602,13 +3050,13 @@
         {
           method: "flow-rotation",
           title: "Flow Rotation",
-          note: `${flowModel.period.label} traded-value rotation and stock participation`,
+          note: `${flowModel.period.label} price-confirmed trading activity`,
           sectors: flowSectors,
           stocks: flowStocks,
           sectorLabel: row => displaySector(row.sector),
-          sectorValue: row => fmtPp(row.delta),
+          sectorValue: row => fmtFlowScore(row.score),
           stockLabel: row => row.ticker,
-          stockValue: row => fmtScore(row.score)
+          stockValue: row => fmtFlowScore(row.score)
         },
         {
           method: "relative-rotation",
@@ -2633,21 +3081,26 @@
           stockValue: row => fmtFundScore(row.score)
         }
       ];
+      renderHomeOverallStocks(flowStocks, rrgStocks, fundamentalStocks, rankingCount);
       document.getElementById("homeMethodGrid").innerHTML = cards.map(card => {
-        const topSectors = card.sectors.slice(0, 3).map(row => ({ ...row, homeLabel: card.sectorLabel(row) }));
-        const bottomSectors = card.sectors.slice().reverse().slice(0, 3).map(row => ({ ...row, homeLabel: card.sectorLabel(row) }));
-        const topStocks = card.stocks.slice(0, 3).map(row => ({ ...row, homeLabel: card.stockLabel(row) }));
-        const bottomStocks = card.stocks.slice().reverse().slice(0, 3).map(row => ({ ...row, homeLabel: card.stockLabel(row) }));
+        const topSectors = card.sectors.slice(0, rankingCount).map(row => ({ ...row, homeLabel: card.sectorLabel(row) }));
+        const bottomSectors = card.sectors.slice().reverse().slice(0, rankingCount).map(row => ({ ...row, homeLabel: card.sectorLabel(row) }));
+        const topStocks = card.stocks.slice(0, rankingCount).map(row => ({ ...row, homeLabel: card.stockLabel(row) }));
+        const bottomStocks = card.stocks.slice().reverse().slice(0, rankingCount).map(row => ({ ...row, homeLabel: card.stockLabel(row) }));
         return `<section class="home-method-card">
           <div class="home-method-head"><div><h3>${card.title}</h3><p>${card.note}</p></div><button class="home-method-link" type="button" data-open-methodology="${card.method}">Open</button></div>
           <div class="home-rank-grid">
-            ${homeRankBlock("Top 3 sectors", topSectors, "homeLabel", card.sectorValue)}
-            ${homeRankBlock("Bottom 3 sectors", bottomSectors, "homeLabel", card.sectorValue)}
-            ${homeRankBlock("Top 3 stocks", topStocks, "homeLabel", card.stockValue)}
-            ${homeRankBlock("Bottom 3 stocks", bottomStocks, "homeLabel", card.stockValue)}
+            ${homeRankBlock(`Top ${rankingCount} sectors`, topSectors, "homeLabel", card.sectorValue)}
+            ${homeRankBlock(`Bottom ${rankingCount} sectors`, bottomSectors, "homeLabel", card.sectorValue)}
+            ${homeRankBlock(`Top ${rankingCount} stocks`, topStocks, "homeLabel", card.stockValue)}
+            ${homeRankBlock(`Bottom ${rankingCount} stocks`, bottomStocks, "homeLabel", card.stockValue)}
           </div>
         </section>`;
       }).join("");
+      document.getElementById("homeRankingToggle").addEventListener("click", () => {
+        homeRankingExpanded = !homeRankingExpanded;
+        renderHomeRankings(flowModel, rrgModel, fundamentalModel);
+      });
     }
 
     function applyPageVisibility() {
@@ -3843,7 +4296,7 @@
             document.getElementById("stockDetailsSection").hidden = true;
             document.getElementById("asOf").textContent = `Market data ${homeFlowModel.latestDate} · Financials ${fundamentalsData.latest_period_label}`;
             document.getElementById("coverageInfo").textContent = `${fundamentalsData.coverage} stocks across ${fundamentalsData.sectors.length} sectors`;
-            document.getElementById("signalInfo").textContent = "Top and bottom three use each methodology's full-universe score.";
+            document.getElementById("signalInfo").textContent = "Top and bottom five use each methodology's full-universe score.";
             renderHomeRankings(homeFlowModel, homeRrgModel, homeFundamentalModel);
             return;
           }
