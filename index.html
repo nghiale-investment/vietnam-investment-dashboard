@@ -227,11 +227,20 @@
       gap: 3px;
     }
 
+    .home-overall-list.rank-count-5 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: repeat(3, auto);
+      grid-auto-flow: column;
+    }
+
+    .home-overall-list.rank-count-10 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: repeat(5, auto);
+      grid-auto-flow: column;
+    }
+
     .home-overall-stock {
-      display: grid;
-      grid-template-columns: 60px minmax(0, 1fr);
-      align-items: center;
-      gap: 8px;
+      display: block;
       min-width: 0;
       padding: 5px 7px;
       border-radius: 6px;
@@ -244,6 +253,7 @@
       gap: 5px;
       min-width: 0;
       font-size: 13px;
+      margin-bottom: 3px;
     }
 
     .home-overall-ticker span {
@@ -253,20 +263,20 @@
 
     .home-overall-signals {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 5px;
+      grid-template-columns: 1fr;
+      gap: 1px;
       min-width: 0;
     }
 
     .home-overall-signal {
       min-width: 0;
-      padding: 3px 5px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: var(--surface-2);
-      font-size: 10px;
-      line-height: 1.2;
-      text-align: center;
+      padding: 1px 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      font-size: 9px;
+      line-height: 1.15;
+      text-align: left;
       overflow-wrap: anywhere;
     }
 
@@ -909,6 +919,10 @@
       display: none;
     }
 
+    #stockDetailsSection {
+      min-width: 0;
+    }
+
     .sector-detail-drill > td {
       cursor: zoom-in;
       user-select: none;
@@ -952,9 +966,13 @@
       table-layout: fixed;
     }
 
+    .fund-detail-table th {
+      position: static;
+    }
+
     .fund-detail-table th:first-child,
     .fund-detail-table td:first-child {
-      width: 22%;
+      width: 24%;
       min-width: 0;
       text-align: left;
       white-space: normal;
@@ -963,7 +981,7 @@
 
     .fund-detail-table th:not(:first-child),
     .fund-detail-table td:not(:first-child) {
-      width: 13%;
+      width: calc(76% / var(--detail-period-count, 8));
       min-width: 0;
       text-align: right;
       white-space: normal;
@@ -972,7 +990,7 @@
 
     .fund-detail-table.sector-detail-table th:not(:first-child),
     .fund-detail-table.sector-detail-table td:not(:first-child) {
-      width: 13%;
+      width: calc(76% / var(--detail-period-count, 8));
     }
 
     .sector-breadth-signal {
@@ -1240,8 +1258,15 @@
         gap: 8px;
       }
 
+      .home-overall-list.rank-count-5,
+      .home-overall-list.rank-count-10 {
+        grid-template-columns: 1fr;
+        grid-template-rows: none;
+        grid-auto-flow: row;
+      }
+
       .home-overall-stock {
-        grid-template-columns: 52px minmax(0, 1fr);
+        padding: 4px 6px;
       }
 
       .toolbar {
@@ -1293,16 +1318,38 @@
         display: inline;
       }
 
+      #stockDetailsSection .stock-details-title-row {
+        display: grid;
+        grid-template-columns: 1fr;
+        width: 100%;
+        gap: 8px;
+      }
+
+      #stockDetailsSection .detail-switchers {
+        width: 100%;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        margin-left: 0;
+      }
+
+      .fund-detail-table {
+        min-width: 100%;
+      }
+
+      .fund-detail-table th:first-child,
+      .fund-detail-table td:first-child {
+        width: 34%;
+      }
+
       .fund-detail-table th:not(:first-child),
       .fund-detail-table td:not(:first-child),
       .fund-detail-table th:last-child,
       .fund-detail-table td:last-child {
-        width: 15.4%;
+        width: 16.5%;
       }
 
       .fund-detail-table.sector-detail-table th:not(:first-child),
       .fund-detail-table.sector-detail-table td:not(:first-child) {
-        width: 12.833%;
+        width: 16.5%;
       }
 
       .sector-breadth-signal {
@@ -1399,7 +1446,6 @@
       }
 
       .home-overall-stock {
-        display: block;
         padding: 4px;
       }
 
@@ -1408,18 +1454,12 @@
       }
 
       .home-overall-signals {
-        grid-template-columns: 1fr;
         gap: 0;
       }
 
       .home-overall-signal {
-        padding: 1px 0;
-        border: 0;
-        border-radius: 0;
-        background: transparent;
         font-size: 8px;
         line-height: 1.1;
-        text-align: left;
       }
 
       .home-rank-block {
@@ -1599,12 +1639,12 @@
 
       .fund-detail-table th:first-child,
       .fund-detail-table td:first-child {
-        width: 21%;
+        width: 34%;
       }
 
       .fund-detail-table th:not(:first-child),
       .fund-detail-table td:not(:first-child) {
-        width: 19.75%;
+        width: 16.5%;
       }
 
       .detail-signal-full {
@@ -2997,7 +3037,7 @@
           ? "quadrant-lagging"
           : "";
       return `<div class="home-overall-stock">
-        <div class="home-overall-ticker"><span>${index + 1}</span><strong>${escapeTagText(row.ticker)}</strong></div>
+        <div class="home-overall-ticker"><span>${index + 1}.</span><strong>${escapeTagText(row.ticker)}</strong></div>
         <div class="home-overall-signals">
           ${homeOverallSignal("Flow", row.flowState, `flow-state-${flowStateTone(row.flowState)}`)}
           ${homeOverallSignal("Relative", row.rrgQuadrant, quadrantClass(row.rrgQuadrant))}
@@ -3031,14 +3071,15 @@
       document.getElementById("homeOverallCard").innerHTML = `
         <div class="home-overall-head"><div><h2>Overall Stocks</h2><p>Equal-weight percentile ranking across Flow Rotation, Relative Rotation, and Fundamentals. Labels show each methodology's key current signal; the combined score is intentionally hidden.</p></div><button class="home-expand-button" id="homeRankingToggle" type="button" aria-expanded="${homeRankingExpanded}" aria-label="${homeRankingExpanded ? "Show top and bottom 5" : "Show top and bottom 10"}">${homeRankingExpanded ? "Show 5" : "Expand to 10"}</button></div>
         <div class="home-overall-grid">
-          <div class="home-overall-block"><h3>Best ${rankingCount} overall</h3><div class="home-overall-list">${best.map(homeOverallStockMarkup).join("")}</div></div>
-          <div class="home-overall-block"><h3>Worst ${rankingCount} overall</h3><div class="home-overall-list">${worst.map(homeOverallStockMarkup).join("")}</div></div>
+          <div class="home-overall-block"><h3>Best ${rankingCount} overall</h3><div class="home-overall-list rank-count-${best.length}">${best.map(homeOverallStockMarkup).join("")}</div></div>
+          <div class="home-overall-block"><h3>Worst ${rankingCount} overall</h3><div class="home-overall-list rank-count-${worst.length}">${worst.map(homeOverallStockMarkup).join("")}</div></div>
         </div>`;
     }
 
     function renderHomeRankings(flowModel, rrgModel, fundamentalModel) {
-      const rankingCount = homeRankingExpanded ? 10 : 5;
-      document.getElementById("signalInfo").textContent = `Top and bottom ${rankingCount === 10 ? "ten" : "five"} use each methodology's full-universe score.`;
+      const overallRankingCount = homeRankingExpanded ? 10 : 5;
+      const methodologyRankingCount = 5;
+      document.getElementById("signalInfo").textContent = "Methodology rankings show five; Overall Stocks can expand to ten.";
       scoreStocks(flowModel.stockStats);
       const flowSectors = flowModel.sectorStats.filter(row => Number.isFinite(row.score)).slice().sort((a, b) => b.score - a.score);
       const flowStocks = flowModel.stockStats.filter(row => Number.isFinite(row.score)).slice().sort((a, b) => b.score - a.score);
@@ -3081,19 +3122,19 @@
           stockValue: row => fmtFundScore(row.score)
         }
       ];
-      renderHomeOverallStocks(flowStocks, rrgStocks, fundamentalStocks, rankingCount);
+      renderHomeOverallStocks(flowStocks, rrgStocks, fundamentalStocks, overallRankingCount);
       document.getElementById("homeMethodGrid").innerHTML = cards.map(card => {
-        const topSectors = card.sectors.slice(0, rankingCount).map(row => ({ ...row, homeLabel: card.sectorLabel(row) }));
-        const bottomSectors = card.sectors.slice().reverse().slice(0, rankingCount).map(row => ({ ...row, homeLabel: card.sectorLabel(row) }));
-        const topStocks = card.stocks.slice(0, rankingCount).map(row => ({ ...row, homeLabel: card.stockLabel(row) }));
-        const bottomStocks = card.stocks.slice().reverse().slice(0, rankingCount).map(row => ({ ...row, homeLabel: card.stockLabel(row) }));
+        const topSectors = card.sectors.slice(0, methodologyRankingCount).map(row => ({ ...row, homeLabel: card.sectorLabel(row) }));
+        const bottomSectors = card.sectors.slice().reverse().slice(0, methodologyRankingCount).map(row => ({ ...row, homeLabel: card.sectorLabel(row) }));
+        const topStocks = card.stocks.slice(0, methodologyRankingCount).map(row => ({ ...row, homeLabel: card.stockLabel(row) }));
+        const bottomStocks = card.stocks.slice().reverse().slice(0, methodologyRankingCount).map(row => ({ ...row, homeLabel: card.stockLabel(row) }));
         return `<section class="home-method-card">
           <div class="home-method-head"><div><h3>${card.title}</h3><p>${card.note}</p></div><button class="home-method-link" type="button" data-open-methodology="${card.method}">Open</button></div>
           <div class="home-rank-grid">
-            ${homeRankBlock(`Top ${rankingCount} sectors`, topSectors, "homeLabel", card.sectorValue)}
-            ${homeRankBlock(`Bottom ${rankingCount} sectors`, bottomSectors, "homeLabel", card.sectorValue)}
-            ${homeRankBlock(`Top ${rankingCount} stocks`, topStocks, "homeLabel", card.stockValue)}
-            ${homeRankBlock(`Bottom ${rankingCount} stocks`, bottomStocks, "homeLabel", card.stockValue)}
+            ${homeRankBlock("Top 5 sectors", topSectors, "homeLabel", card.sectorValue)}
+            ${homeRankBlock("Bottom 5 sectors", bottomSectors, "homeLabel", card.sectorValue)}
+            ${homeRankBlock("Top 5 stocks", topStocks, "homeLabel", card.stockValue)}
+            ${homeRankBlock("Bottom 5 stocks", bottomStocks, "homeLabel", card.stockValue)}
           </div>
         </section>`;
       }).join("");
@@ -3474,18 +3515,18 @@
       const body = document.getElementById("combinedTableRows");
       const title = document.getElementById("tableTitle");
       const hint = document.getElementById("tableHint");
-      setCombinedTableColumns([14, 10, 19, 19, 19, 19]);
       body.innerHTML = "";
       if (state.tableMode === "sectors") {
+        setCombinedTableColumns([24, 19, 19, 19, 19]);
         table.className = "sector-table fund-table fund-tag-table";
         title.textContent = "Sector Table";
         hint.textContent = `Default sort: Fundamental Score. Two most material Momentum and Quality tags are shown. Click/tap for sector details; double-click/two-tap for stocks.`;
-        head.innerHTML = `<tr><th class="entity-col">Sector</th><th class="score-col">Score</th><th class="fund-tag-group" colspan="2">Momentum</th><th class="fund-tag-group" colspan="2">Quality</th></tr>`;
+        head.innerHTML = `<tr><th class="entity-col">Sector</th><th class="fund-tag-group" colspan="2">Momentum</th><th class="fund-tag-group" colspan="2">Quality</th></tr>`;
         model.sectorStats.slice().sort((a, b) => b.score - a.score).forEach(row => {
           const tr = document.createElement("tr");
           tr.dataset.fundSector = row.sector;
           tr.classList.toggle("selected", state.selectedFundamentalSector === row.sector);
-          tr.innerHTML = `<td class="entity-col"><strong>${displaySector(row.sector)}</strong></td><td class="score-col">${fmtFundScore(row.score)}</td>${fundamentalRankingTagCells(row)}`;
+          tr.innerHTML = `<td class="entity-col"><strong>${displaySector(row.sector)}</strong></td>${fundamentalRankingTagCells(row)}`;
           tr.addEventListener("click", event => handleFundamentalSectorActivation(row.sector, model, event));
           body.appendChild(tr);
         });
@@ -3496,6 +3537,7 @@
         Number.isFinite(b.score) - Number.isFinite(a.score) || (b.score || 0) - (a.score || 0) || a.ticker.localeCompare(b.ticker)
       );
       const showSector = false;
+      setCombinedTableColumns([14, 10, 19, 19, 19, 19]);
       table.className = `stock-table fund-table fund-tag-table ${showSector ? "show-sector" : "sector-drill"}`;
       title.textContent = state.sector !== "All" ? `${displaySector(state.sector)} Stock Table` : "Stock Table";
       hint.textContent = `Default sort: Fundamental Score. Two most material Momentum and Quality tags are shown. Click a stock for details.`;
@@ -3666,7 +3708,10 @@
           const values = sectorPeriods.map((period, index) => {
             const stockPeriodIndex = stockPeriods.indexOf(period);
             const value = stockItem && stockPeriodIndex >= 0 ? (stockItem.values || [])[stockPeriodIndex] : null;
-            const className = [fundamentalMetricValueClass(item, value, stock, stockPeriodIndex), index < olderCutoff ? "detail-older" : ""].filter(Boolean).join(" ");
+            const className = [
+              fundamentalMetricValueClass(item, value, stock, stockPeriodIndex),
+              index < olderCutoff ? "detail-older" : ""
+            ].filter(Boolean).join(" ");
             return `<td class="${className}">${formatFundamentalDetail(value, stockItem?.format || item.format)}</td>`;
           }).join("");
           row.innerHTML = `<td><span class="sector-stock-rank">${rankIndex + 1}.</span><strong>${stock.ticker}</strong></td>${values}`;
@@ -3900,7 +3945,7 @@
       "Liquidity tight": "Short-term liquidity is limited.",
       "Low coverage": "Problem-loan reserve coverage is low.",
       "Margin ceiling": "Margin lending is near its limit.",
-      "Margin compression": "Core profit margins are shrinking.",
+      "Margin squeeze": "Core profit margins are shrinking.",
       "Margin expansion": "Core profit margins are widening.",
       "Margin headroom": "Margin lending has room to expand.",
       "Margin pressure": "Insurance profitability is weakening.",
@@ -3995,7 +4040,12 @@
         ? `Consolidated from ${subject.detail_coverage || subject.total || subject.coverage || 0} stocks · relative ${fundamentalStatusText(subject)} · sector score ${fmtFundScore(subject.score)} (70% agg. ${fmtFundScore(subject.aggregate_score)} + 30% breadth ${fmtFundScore(subject.breadth_score)}) · double-click/two-tap a field for best-to-worst stocks`
         : `${displaySector(subject.sector)} · ${fundamentalStatusText(subject)} · score ${fmtFundScore(subject.score)}`;
       const olderCutoff = Math.max(0, periodLabels.length - 4);
-      document.getElementById("stockDetailsHead").innerHTML = `<tr><th>Metric</th>${periodLabels.map((label, index) => `<th class="${index < olderCutoff ? "detail-older" : ""}">${label}</th>`).join("")}</tr>`;
+      const detailTable = document.getElementById("stockDetailsTable");
+      detailTable.style.setProperty("--detail-period-count", String(Math.max(1, periodLabels.length)));
+      document.getElementById("stockDetailsHead").innerHTML = `<tr><th>Metric</th>${periodLabels.map((label, index) => {
+        const className = index < olderCutoff ? "detail-older" : "";
+        return `<th class="${className}">${label}</th>`;
+      }).join("")}</tr>`;
       const body = document.getElementById("stockDetailsRows");
       body.innerHTML = "";
       const compactMetricLabels = {
@@ -4134,7 +4184,10 @@
         }
         const tr = document.createElement("tr");
         const cells = (item.values || []).map((value, index) => {
-          const className = [fundamentalMetricValueClass(item, value, subject, index), index < olderCutoff ? "detail-older" : ""].filter(Boolean).join(" ");
+          const className = [
+            fundamentalMetricValueClass(item, value, subject, index),
+            index < olderCutoff ? "detail-older" : ""
+          ].filter(Boolean).join(" ");
           return `<td class="${className}">${formatFundamentalDetail(value, item.format)}</td>`;
         }).join("");
         tr.innerHTML = `<td><strong>${compactMetricLabels[item.metric] || item.metric}</strong></td>${cells}`;
