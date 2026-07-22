@@ -560,6 +560,131 @@
       align-items: start;
     }
 
+    .technical-analysis-mode .grid-2 {
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    }
+
+    .technical-analysis-mode .stats {
+      display: none;
+    }
+
+    .technical-analysis-mode #sectorChart .technical-panel-body {
+      grid-template-columns: 1fr;
+    }
+
+    .technical-analysis-mode #sectorChart .technical-summary-box {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    #technicalSectorFilter {
+      min-width: 160px;
+      padding: 6px 8px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--text);
+      background: var(--surface-2);
+      font: inherit;
+      font-size: 11px;
+    }
+
+    #technicalSectorFilter[hidden] { display: none; }
+
+    .technical-analysis-mode #sectorChart {
+      min-height: 0;
+      overflow: visible;
+    }
+
+    .technical-analysis-mode #sectorChart .technical-panel {
+      margin: 0;
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+
+    .technical-analysis-mode .table-wrap {
+      overflow-x: hidden;
+      scrollbar-gutter: auto;
+    }
+
+    .ta-breadth-table {
+      table-layout: fixed;
+      font-size: 10px;
+    }
+
+    .ta-breadth-table th,
+    .ta-breadth-table td {
+      padding: 7px 3px;
+      text-align: center;
+      white-space: normal;
+      line-height: 1.1;
+    }
+
+    .ta-breadth-table th:first-child,
+    .ta-breadth-table td:first-child {
+      width: 18%;
+      text-align: left;
+      font-weight: 650;
+    }
+
+    .ta-breadth-table th:not(:first-child),
+    .ta-breadth-table td:not(:first-child) {
+      width: 9.11%;
+    }
+
+    .ta-stock-table {
+      table-layout: fixed;
+    }
+
+    .ta-stock-table th,
+    .ta-stock-table td {
+      text-align: center;
+      white-space: normal;
+      line-height: 1.15;
+      vertical-align: middle;
+    }
+
+    .ta-stock-table th:first-child,
+    .ta-stock-table td:first-child {
+      width: 12%;
+      text-align: left;
+    }
+
+    .ta-stock-table th:nth-child(2),
+    .ta-stock-table td:nth-child(2) { width: 25%; }
+
+    .ta-stock-table th:nth-child(3),
+    .ta-stock-table td:nth-child(3) { width: 17%; }
+
+    .ta-stock-table th:nth-child(4),
+    .ta-stock-table td:nth-child(4),
+    .ta-stock-table th:nth-child(5),
+    .ta-stock-table td:nth-child(5) { width: 23%; }
+
+    .ta-stock-table tbody tr,
+    .ta-stock-table tbody td {
+      height: 42px;
+      max-height: 42px;
+      overflow: hidden;
+    }
+
+    .ta-reason-text {
+      display: -webkit-box;
+      max-height: 2.3em;
+      overflow: hidden;
+      color: var(--muted);
+      font-size: 9px;
+      font-weight: 550;
+      line-height: 1.15;
+      text-align: left;
+      overflow-wrap: anywhere;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+    }
+
+    .ta-rating-positive { color: var(--good); font-weight: 650; }
+    .ta-rating-warning { color: var(--warn); font-weight: 650; }
+    .ta-rating-negative { color: var(--bad); font-weight: 650; }
+    .ta-rating-neutral { color: var(--muted); font-weight: 650; }
+
     .chart {
       width: 100%;
       min-height: 300px;
@@ -993,6 +1118,240 @@
       width: calc(76% / var(--detail-period-count, 8));
     }
 
+    .technical-panel {
+      display: grid;
+      gap: 9px;
+      margin: 12px 0 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .technical-panel[hidden] {
+      display: none;
+    }
+
+    .technical-panel-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .technical-panel-body {
+      display: grid;
+      grid-template-columns: minmax(0, 1.7fr) minmax(390px, 1fr);
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    .technical-chart-box,
+    .technical-summary-box {
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+
+    .technical-chart-box {
+      padding: 4px 5px 0;
+    }
+
+    .technical-summary-box {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-content: start;
+      gap: 10px;
+      padding: 10px;
+    }
+
+    .technical-summary-section {
+      display: grid;
+      gap: 5px;
+    }
+
+    .technical-summary-section[hidden] {
+      display: none;
+    }
+
+    .technical-indicators-section {
+      grid-column: 1 / -1;
+    }
+
+    .technical-summary-heading {
+      color: var(--muted);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .technical-title-block {
+      display: grid;
+      gap: 2px;
+    }
+
+    .technical-title-line {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+
+    .technical-title-line strong {
+      font-size: 14px;
+    }
+
+    .technical-state {
+      display: inline-flex;
+      align-items: center;
+      min-height: 22px;
+      padding: 2px 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .technical-state.positive { color: var(--good); background: color-mix(in srgb, var(--good) 10%, transparent); }
+    .technical-state.warning { color: var(--warn); background: color-mix(in srgb, var(--warn) 10%, transparent); }
+    .technical-state.negative { color: var(--bad); background: color-mix(in srgb, var(--bad) 10%, transparent); }
+    .technical-state.neutral { color: var(--muted); background: var(--surface-2); }
+
+    .technical-timeframes {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(38px, 1fr));
+      gap: 4px;
+    }
+
+    .technical-timeframe {
+      min-height: 28px;
+      padding: 4px 9px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--text);
+      background: var(--surface-2);
+      font: inherit;
+      font-size: 10px;
+      cursor: pointer;
+    }
+
+    .technical-timeframe.active {
+      color: var(--surface);
+      background: var(--text);
+      border-color: var(--text);
+    }
+
+    .technical-levels {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 4px;
+    }
+
+    .technical-level {
+      min-width: 0;
+      padding: 7px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--surface-2);
+      text-align: left;
+    }
+
+    .technical-level span {
+      display: block;
+      margin-bottom: 2px;
+      color: var(--muted);
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .technical-level strong {
+      display: block;
+      overflow-wrap: anywhere;
+      font-size: 12px;
+    }
+
+    .technical-level strong.pos { color: var(--good); }
+    .technical-level strong.neg { color: var(--bad); }
+    .technical-level strong.warn { color: var(--warn); }
+    .technical-level strong.muted { color: var(--muted); }
+
+    .technical-level.is-action {
+      border-color: color-mix(in srgb, var(--text) 18%, var(--line));
+    }
+
+    .technical-level.is-reason strong {
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 600;
+      line-height: 1.25;
+    }
+
+    .technical-chart {
+      width: 100%;
+      min-height: 0;
+    }
+
+    .technical-chart svg {
+      overflow: hidden;
+    }
+
+    .technical-series-line,
+    .technical-series-label {
+      transition: opacity 130ms ease, filter 130ms ease;
+    }
+
+    .technical-series-line.is-dimmed,
+    .technical-series-label.is-dimmed {
+      opacity: 0.13;
+    }
+
+    .technical-series-line.is-focused {
+      filter: drop-shadow(0 0 1.5px currentColor);
+    }
+
+    .technical-series-label {
+      cursor: default;
+      font-weight: 700;
+    }
+
+    .technical-indicator-strip {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 4px;
+    }
+
+    .technical-indicator {
+      min-width: 0;
+      padding: 7px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--surface-2);
+      text-align: left;
+    }
+
+    .technical-indicator span,
+    .technical-indicator strong {
+      display: block;
+      overflow-wrap: anywhere;
+    }
+
+    .technical-indicator span {
+      margin-bottom: 2px;
+      color: var(--muted);
+      font-size: 9px;
+      text-transform: uppercase;
+    }
+
+    .technical-indicator strong {
+      font-size: 11px;
+    }
+
+    .technical-indicator strong.pos { color: var(--good); }
+    .technical-indicator strong.neg { color: var(--bad); }
+    .technical-indicator strong.warn { color: var(--warn); }
+
     .sector-breadth-signal {
       display: inline-flex;
       width: 100%;
@@ -1159,7 +1518,18 @@
     }
 
     .stock-details-title-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      width: 100%;
+      gap: 8px;
       flex: 1 1 auto;
+    }
+
+    #stockDetailsSection > .section-head {
+      display: grid;
+      grid-template-columns: 1fr;
+      align-items: start;
+      gap: 7px;
     }
 
     .detail-switchers {
@@ -1167,7 +1537,9 @@
       grid-template-columns: repeat(3, minmax(100px, 160px));
       gap: 6px;
       align-items: end;
-      margin-left: 6px;
+      width: fit-content;
+      max-width: 100%;
+      margin-left: 0;
     }
 
     .detail-switchers label {
@@ -1233,6 +1605,10 @@
     }
 
     @media (max-width: 980px) {
+      .technical-analysis-mode .grid-2 {
+        grid-template-columns: 1fr;
+      }
+
       header {
         position: static;
         padding: 14px 16px 10px;
@@ -1331,6 +1707,34 @@
         margin-left: 0;
       }
 
+      .technical-levels {
+        grid-template-columns: 1fr;
+      }
+
+      .technical-panel-body {
+        grid-template-columns: 1fr;
+      }
+
+      .technical-chart {
+        min-height: 0;
+      }
+
+      .technical-indicator-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .technical-indicator {
+        padding: 6px 7px;
+      }
+
+      .technical-indicator span {
+        font-size: 8px;
+      }
+
+      .technical-indicator strong {
+        font-size: 10px;
+      }
+
       .fund-detail-table {
         min-width: 100%;
       }
@@ -1394,6 +1798,60 @@
     }
 
     @media (max-width: 560px) {
+      .ta-breadth-table {
+        font-size: 7px;
+      }
+
+      .ta-breadth-table th,
+      .ta-breadth-table td {
+        padding: 5px 1px;
+        letter-spacing: 0;
+        min-width: 0;
+        overflow-wrap: anywhere;
+      }
+
+      .ta-breadth-table th:first-child,
+      .ta-breadth-table td:first-child {
+        width: 20%;
+      }
+
+      .ta-breadth-table th:not(:first-child),
+      .ta-breadth-table td:not(:first-child) {
+        width: 8.88%;
+      }
+
+      .ta-stock-table {
+        font-size: 8px;
+      }
+
+      .ta-stock-table th,
+      .ta-stock-table td {
+        padding: 5px 2px;
+        letter-spacing: 0;
+        min-width: 0;
+        overflow-wrap: anywhere;
+        font-size: 7.5px;
+      }
+
+      .ta-stock-table small { font-size: 6.5px; }
+
+      .ta-stock-table tbody tr,
+      .ta-stock-table tbody td {
+        height: 40px;
+        max-height: 40px;
+      }
+
+      .ta-reason-text {
+        font-size: 6.5px;
+        line-height: 1.1;
+      }
+
+      .technical-indicator:nth-child(2),
+      .technical-indicator:nth-child(3),
+      .technical-indicator:nth-child(4) {
+        display: none;
+      }
+
       .dashboard-brand-row {
         align-items: flex-start;
         gap: 8px;
@@ -1727,6 +2185,7 @@
           <option value="flow-rotation" selected>Flow Rotation</option>
           <option value="relative-rotation">Relative Rotation</option>
           <option value="fundamentals">Fundamentals</option>
+          <option value="technical-analysis">Technical Analysis</option>
         </select>
       </label>
       <label id="periodControl">
@@ -1746,32 +2205,40 @@
       </label>
       <label>
         Search ticker
-        <input id="search" type="search" placeholder="e.g. HDB, VND, HVN">
+        <input id="search" type="search" placeholder="e.g. VN-Index, HDB">
       </label>
       <label id="tagControl" hidden>
         Search tag
         <input id="tagFilter" type="search" list="fundamentalTagOptions" autocomplete="off" spellcheck="false" placeholder="All tags">
         <datalist id="fundamentalTagOptions"></datalist>
       </label>
+      <label id="technicalRatingControl" hidden>
+        Rating
+        <select id="technicalRatingFilter" aria-label="Filter technical rating"></select>
+      </label>
+      <label id="technicalActionControl" hidden>
+        Action
+        <select id="technicalActionFilter" aria-label="Filter technical action"></select>
+      </label>
     </div>
 
     <div class="stats" aria-label="Summary metrics">
-      <div class="stat">
+      <div class="stat" id="bestSectorStat">
         <div class="label" id="bestSectorLabel">Best current sector</div>
         <div class="value" id="bestSector">-</div>
         <div class="note" id="bestSectorNote">-</div>
       </div>
-      <div class="stat">
+      <div class="stat" id="worstSectorStat">
         <div class="label" id="worstSectorLabel">Worst current sector</div>
         <div class="value" id="worstSector">-</div>
         <div class="note" id="worstSectorNote">-</div>
       </div>
-      <div class="stat">
+      <div class="stat" id="topStockStat">
         <div class="label" id="topStockLabel">Top stock score</div>
         <div class="value" id="topStock">-</div>
         <div class="note" id="topStockNote">-</div>
       </div>
-      <div class="stat">
+      <div class="stat" id="worstStockStat">
         <div class="label" id="worstStockLabel">Worst stock score</div>
         <div class="value" id="worstStock">-</div>
         <div class="note" id="worstStockNote">-</div>
@@ -1810,6 +2277,7 @@
           <div class="table-actions">
             <button class="reset-view" id="tableOverview" type="button">Overview</button>
             <button class="reset-view" id="allStockRanking" type="button">Stock Ranking</button>
+            <select id="technicalSectorFilter" aria-label="Filter technical stocks by sector" hidden></select>
           </div>
         </div>
         <div class="hint" id="tableHint">Click a sector row to view its stock ranking</div>
@@ -1835,18 +2303,57 @@
             </label>
             <label>
               Ticker
-              <input id="detailTickerSearch" type="search" maxlength="12" autocomplete="off" spellcheck="false" placeholder="Search ticker" aria-label="View ticker details">
+              <input id="detailTickerSearch" type="search" maxlength="12" autocomplete="off" spellcheck="false" placeholder="VN-Index or ticker" aria-label="View ticker details">
             </label>
             <label>
-              Period
-              <select id="detailPeriod" aria-label="Detailed view period">
-                <option value="quarter">Quarter</option>
-                <option value="year">Year</option>
+              Select view
+              <select id="detailPeriod" aria-label="Detailed view">
+                <option value="fundamental-quarter">Fundamental Quarter</option>
+                <option value="fundamental-year">Fundamental Year</option>
+                <option value="technical-analysis">Technical Analysis</option>
               </select>
             </label>
           </div>
         </div>
         <div class="hint" id="stockDetailsHint">Reported figures and business-model-specific quality indicators</div>
+      </div>
+      <div id="technicalPanelAnchor"></div>
+      <div class="technical-panel" id="technicalPanel">
+        <div class="technical-panel-head">
+          <div class="technical-title-block">
+            <div class="technical-title-line">
+              <strong id="technicalChartTitle">Technical position</strong>
+              <span class="technical-state neutral" id="technicalState">Loading</span>
+            </div>
+            <span class="hint" id="technicalChartHint">Daily adjusted-price trend and current action levels</span>
+          </div>
+          <div class="technical-timeframes" id="technicalTimeframes" role="group" aria-label="Technical chart timeframe">
+            <button class="technical-timeframe" type="button" data-technical-range="YTD">YTD</button>
+            <button class="technical-timeframe" type="button" data-technical-range="3M">3M</button>
+            <button class="technical-timeframe active" type="button" data-technical-range="6M">6M</button>
+            <button class="technical-timeframe" type="button" data-technical-range="1Y">1Y</button>
+            <button class="technical-timeframe" type="button" data-technical-range="5Y">5Y</button>
+          </div>
+        </div>
+        <div class="technical-panel-body">
+          <div class="technical-chart-box">
+            <div class="technical-chart" id="technicalChart" role="img" aria-label="Daily price and technical indicators"></div>
+          </div>
+          <aside class="technical-summary-box" aria-label="Current technical summary">
+            <div class="technical-summary-section" id="technicalHolderSection">
+              <div class="technical-summary-heading" id="technicalHolderHeading">Holder</div>
+              <div class="technical-levels" id="technicalHolderLevels" aria-label="Existing holder recommendation"></div>
+            </div>
+            <div class="technical-summary-section" id="technicalBuyerSection">
+              <div class="technical-summary-heading">Buyer</div>
+              <div class="technical-levels" id="technicalBuyerLevels" aria-label="Buyer recommendation"></div>
+            </div>
+            <div class="technical-summary-section technical-indicators-section">
+              <div class="technical-summary-heading">Indicators</div>
+              <div class="technical-indicator-strip" id="technicalIndicators" aria-label="Latest technical indicators"></div>
+            </div>
+          </aside>
+        </div>
       </div>
       <table class="fund-detail-table" id="stockDetailsTable">
         <thead id="stockDetailsHead"></thead>
@@ -1892,7 +2399,7 @@
       "Utilities": "#64748b"
     };
     const VALID_PAGES = new Set(["home", "methodology", "details"]);
-    const VALID_METHODOLOGIES = new Set(["flow-rotation", "relative-rotation", "fundamentals"]);
+    const VALID_METHODOLOGIES = new Set(["flow-rotation", "relative-rotation", "fundamentals", "technical-analysis"]);
     const state = {
       page: VALID_PAGES.has(initialParams.get("page")) ? initialParams.get("page") : "home",
       methodology: VALID_METHODOLOGIES.has(initialParams.get("method")) ? initialParams.get("method") : "flow-rotation",
@@ -1903,10 +2410,17 @@
       sector: "All",
       search: "",
       tagFilter: "",
+      technicalRatingFilter: "All",
+      technicalActionFilter: "All",
       tableMode: "sectors",
       baseDate: "",
       selectedFundamentalSector: "",
-      selectedFundamentalTicker: ""
+      selectedFundamentalTicker: "",
+      selectedTechnicalTicker: "",
+      detailView: "fundamental-quarter",
+      detailTechnicalTicker: "VN-Index",
+      technicalAnalysisPeriod: "bollinger",
+      technicalTimeframe: "1Y"
     };
     let pinnedRrgEntity = "";
     let fundamentalTagTooltipAnchor = null;
@@ -1917,6 +2431,11 @@
     const expandedSectorMetrics = new Set();
     const FUNDAMENTAL_DOUBLE_TAP_MS = 550;
     let homeRankingExpanded = false;
+    let technicalPriceData = { byTicker: new Map(), index: [], bySector: new Map(), exchanges: new Map() };
+    let technicalAnalysisCache = new Map();
+    let currentTechnicalSubject = null;
+    let activeTechnicalExchange = "";
+    let technicalResizeTimer = null;
     const displaySector = sector => SECTOR_LABELS[sector] || sector;
     const fmtPct = value => Number.isFinite(value) ? `${(value * 100).toFixed(1)}%` : "-";
     const fmtSignedPct = value => Number.isFinite(value) ? `${value >= 0 ? "+" : ""}${(value * 100).toFixed(1)}%` : "-";
@@ -3154,8 +3673,9 @@
         else button.removeAttribute("aria-current");
       });
       document.getElementById("methodology").value = state.methodology;
-      document.getElementById("detailPeriod").value = state.fundamentalPeriod;
+      document.getElementById("detailPeriod").value = state.detailView;
       document.getElementById("app").classList.toggle("fundamentals-mode", state.page === "methodology" && state.methodology === "fundamentals" || state.page === "details");
+      document.getElementById("app").classList.toggle("technical-analysis-mode", state.page === "methodology" && state.methodology === "technical-analysis");
     }
 
     function compactAnnualPeriodLabel(label) {
@@ -4033,6 +4553,1359 @@
       }).join("")}</span>`;
     }
 
+    function prepareTechnicalPriceData(rawRows, coverage, exchanges = new Map()) {
+      const byTicker = new Map();
+      const sectorDates = new Map();
+      const index = [];
+      rawRows.forEach(row => {
+        const price = Number(row.adjusted_last);
+        if (!row.date || !row.ticker || !Number.isFinite(price)) return;
+        const point = {
+          date: row.date,
+          price,
+          last: Number(row.last),
+          volume: Number(row.volume),
+          value: Number(row.value_vnd_bn),
+          marketCap: Number(row.market_cap_vnd_bn)
+        };
+        if (row.ticker === "VNINDEX") {
+          index.push(point);
+          return;
+        }
+        if (!byTicker.has(row.ticker)) byTicker.set(row.ticker, []);
+        byTicker.get(row.ticker).push(point);
+        const sector = coverage.get(row.ticker);
+        if (!sector || !Number.isFinite(point.marketCap) || point.marketCap <= 0) return;
+        if (!sectorDates.has(sector)) sectorDates.set(sector, new Map());
+        const dateMap = sectorDates.get(sector);
+        dateMap.set(point.date, (dateMap.get(point.date) || 0) + point.marketCap);
+      });
+      byTicker.forEach(series => series.sort((a, b) => a.date.localeCompare(b.date)));
+      index.sort((a, b) => a.date.localeCompare(b.date));
+      const bySector = new Map();
+      sectorDates.forEach((dateMap, sector) => {
+        bySector.set(sector, [...dateMap.entries()]
+          .map(([date, marketCap]) => ({ date, marketCap }))
+          .sort((a, b) => a.date.localeCompare(b.date)));
+      });
+      return { byTicker, index, bySector, exchanges };
+    }
+
+    function technicalSma(values, period) {
+      const output = Array(values.length).fill(NaN);
+      let total = 0;
+      let count = 0;
+      const queue = [];
+      values.forEach((value, index) => {
+        queue.push(value);
+        if (Number.isFinite(value)) { total += value; count += 1; }
+        if (queue.length > period) {
+          const removed = queue.shift();
+          if (Number.isFinite(removed)) { total -= removed; count -= 1; }
+        }
+        if (queue.length === period && count === period) output[index] = total / period;
+      });
+      return output;
+    }
+
+    function technicalEma(values, period) {
+      const output = Array(values.length).fill(NaN);
+      const alpha = 2 / (period + 1);
+      let current = NaN;
+      values.forEach((value, index) => {
+        if (!Number.isFinite(value)) return;
+        current = Number.isFinite(current) ? alpha * value + (1 - alpha) * current : value;
+        output[index] = current;
+      });
+      return output;
+    }
+
+    function technicalMean(values) {
+      const valid = values.filter(Number.isFinite);
+      return valid.length ? valid.reduce((total, value) => total + value, 0) / valid.length : NaN;
+    }
+
+    function technicalStdDev(values) {
+      const valid = values.filter(Number.isFinite);
+      if (valid.length < 2) return NaN;
+      const average = technicalMean(valid);
+      return Math.sqrt(valid.reduce((total, value) => total + (value - average) ** 2, 0) / (valid.length - 1));
+    }
+
+    function technicalRangeStart(latestDate, range) {
+      const latest = new Date(`${latestDate}T00:00:00`);
+      const start = new Date(latest);
+      if (range === "YTD") start.setMonth(0, 1);
+      else if (range === "3M") start.setMonth(start.getMonth() - 3);
+      else if (range === "6M") start.setMonth(start.getMonth() - 6);
+      else if (range === "1Y") start.setFullYear(start.getFullYear() - 1);
+      else start.setFullYear(start.getFullYear() - 5);
+      return start.toISOString().slice(0, 10);
+    }
+
+    function technicalFormatPrice(value, direction = "nearest", exchange = activeTechnicalExchange) {
+      if (!Number.isFinite(value)) return "—";
+      const rounded = technicalRoundPrice(value, direction, exchange);
+      return rounded.toLocaleString("en-US", {
+        minimumFractionDigits: rounded < 100 ? 1 : 0,
+        maximumFractionDigits: rounded < 100 ? 1 : 0
+      });
+    }
+
+    function technicalTickSize(value, exchange = activeTechnicalExchange) {
+      if (!Number.isFinite(value)) return NaN;
+      if (exchange === "INDEX") return 1;
+      if (exchange === "HOSE") {
+        if (value < 10000) return 10;
+        if (value < 50000) return 50;
+        return 100;
+      }
+      return Math.abs(value) >= 100 ? 100 : 0.1;
+    }
+
+    function technicalRoundPrice(value, direction = "nearest", exchange = activeTechnicalExchange) {
+      if (!Number.isFinite(value)) return NaN;
+      const increment = technicalTickSize(value, exchange);
+      const method = direction === "up" ? Math.ceil : direction === "down" ? Math.floor : Math.round;
+      return method(value / increment) * increment;
+    }
+
+    function technicalPriceTicks(minimum, maximum, targetIntervals = 4) {
+      if (![minimum, maximum].every(Number.isFinite) || maximum <= minimum) return [];
+      const rawStep = (maximum - minimum) / Math.max(1, targetIntervals);
+      const magnitude = 10 ** Math.floor(Math.log10(rawStep));
+      const normalized = rawStep / magnitude;
+      const multiplier = normalized <= 1 ? 1 : normalized <= 2 ? 2 : normalized <= 5 ? 5 : 10;
+      const minimumTick = Math.max(technicalTickSize(minimum), technicalTickSize(maximum));
+      const niceStep = multiplier * magnitude;
+      const step = Math.max(minimumTick, Math.ceil(niceStep / minimumTick) * minimumTick);
+      const start = Math.floor(minimum / step) * step;
+      const end = Math.ceil(maximum / step) * step;
+      const ticks = [];
+      for (let value = start; value <= end + step * 0.01 && ticks.length < 10; value += step) ticks.push(value);
+      return ticks;
+    }
+
+    function technicalFormatRange(low, high) {
+      return Number.isFinite(low) && Number.isFinite(high)
+        ? `${technicalFormatPrice(low)}–${technicalFormatPrice(high)}`
+        : "—";
+    }
+
+    function latestTechnicalValue(values) {
+      for (let index = values.length - 1; index >= 0; index -= 1) {
+        if (Number.isFinite(values[index])) return values[index];
+      }
+      return NaN;
+    }
+
+    function technicalNextSupport(series, current, riskUnit) {
+      if (!series.length || ![current, riskUnit].every(Number.isFinite)) return NaN;
+      const data = series.slice(-756);
+      const pivotWindow = 5;
+      const tolerance = Math.max(riskUnit * 1.5, current * 0.015);
+      const rawPivots = [];
+      for (let index = pivotWindow; index < data.length - pivotWindow; index += 1) {
+        const point = data[index];
+        const localLow = Math.min(...data.slice(index - pivotWindow, index + pivotWindow + 1).map(item => item.price));
+        if (Number.isFinite(point.price) && point.price <= localLow && point.price < current - riskUnit * 0.75) {
+          rawPivots.push({ ...point, index });
+        }
+      }
+      const pivots = [];
+      rawPivots.forEach(point => {
+        const prior = pivots[pivots.length - 1];
+        if (prior && point.index - prior.index <= 8 && Math.abs(point.price - prior.price) <= tolerance) {
+          if ((point.value || 0) > (prior.value || 0)) pivots[pivots.length - 1] = point;
+        } else pivots.push(point);
+      });
+      if (!pivots.length) return NaN;
+      const clusters = [];
+      [...pivots].sort((a, b) => a.price - b.price).forEach(point => {
+        let target = null;
+        for (let index = clusters.length - 1; index >= 0; index -= 1) {
+          if (Math.abs(point.price - clusters[index].level) <= tolerance) { target = clusters[index]; break; }
+          if (point.price - clusters[index].level > tolerance) break;
+        }
+        if (!target) {
+          clusters.push({ level: point.price, points: [point] });
+          return;
+        }
+        target.points.push(point);
+        const totalValue = sum(target.points.map(item => Number.isFinite(item.value) ? item.value : 0));
+        target.level = totalValue
+          ? sum(target.points.map(item => item.price * (Number.isFinite(item.value) ? item.value : 0))) / totalValue
+          : technicalMean(target.points.map(item => item.price));
+      });
+      const pivotValues = pivots.map(point => point.value).filter(Number.isFinite).sort((a, b) => a - b);
+      const medianValue = pivotValues.length
+        ? pivotValues[Math.floor((pivotValues.length - 1) / 2)]
+        : 0;
+      const meaningful = clusters.filter(cluster => {
+        const totalValue = sum(cluster.points.map(point => point.value));
+        return cluster.points.length >= 2 || (medianValue > 0 && totalValue >= medianValue * 1.5);
+      });
+      const candidates = (meaningful.length ? meaningful : clusters)
+        .filter(cluster => cluster.level < current - riskUnit * 0.75);
+      return candidates.length ? Math.max(...candidates.map(cluster => cluster.level)) : NaN;
+    }
+
+    function technicalNextResistance(series, current, riskUnit) {
+      if (!series.length || ![current, riskUnit].every(Number.isFinite)) return NaN;
+      const data = series.slice(-756);
+      const pivotWindow = 5;
+      const tolerance = Math.max(riskUnit * 1.5, current * 0.015);
+      const rawPivots = [];
+      for (let index = pivotWindow; index < data.length - pivotWindow; index += 1) {
+        const point = data[index];
+        const localHigh = Math.max(...data.slice(index - pivotWindow, index + pivotWindow + 1).map(item => item.price));
+        if (Number.isFinite(point.price) && point.price >= localHigh && point.price > current + riskUnit * 0.75) {
+          rawPivots.push({ ...point, index });
+        }
+      }
+      const pivots = [];
+      rawPivots.forEach(point => {
+        const prior = pivots[pivots.length - 1];
+        if (prior && point.index - prior.index <= 8 && Math.abs(point.price - prior.price) <= tolerance) {
+          if ((point.value || 0) > (prior.value || 0)) pivots[pivots.length - 1] = point;
+        } else pivots.push(point);
+      });
+      if (!pivots.length) return NaN;
+      const clusters = [];
+      [...pivots].sort((a, b) => a.price - b.price).forEach(point => {
+        let target = null;
+        for (let index = clusters.length - 1; index >= 0; index -= 1) {
+          if (Math.abs(point.price - clusters[index].level) <= tolerance) { target = clusters[index]; break; }
+          if (point.price - clusters[index].level > tolerance) break;
+        }
+        if (!target) {
+          clusters.push({ level: point.price, points: [point] });
+          return;
+        }
+        target.points.push(point);
+        const totalValue = sum(target.points.map(item => Number.isFinite(item.value) ? item.value : 0));
+        target.level = totalValue
+          ? sum(target.points.map(item => item.price * (Number.isFinite(item.value) ? item.value : 0))) / totalValue
+          : technicalMean(target.points.map(item => item.price));
+      });
+      const pivotValues = pivots.map(point => point.value).filter(Number.isFinite).sort((a, b) => a - b);
+      const medianValue = pivotValues.length ? pivotValues[Math.floor((pivotValues.length - 1) / 2)] : 0;
+      const meaningful = clusters.filter(cluster => {
+        const totalValue = sum(cluster.points.map(point => point.value));
+        return cluster.points.length >= 2 || (medianValue > 0 && totalValue >= medianValue * 1.5);
+      });
+      const candidates = (meaningful.length ? meaningful : clusters)
+        .filter(cluster => cluster.level > current + riskUnit * 0.75);
+      return candidates.length ? Math.min(...candidates.map(cluster => cluster.level)) : NaN;
+    }
+
+    function technicalWeekKey(value) {
+      const date = new Date(`${value}T00:00:00Z`);
+      const weekday = (date.getUTCDay() + 6) % 7;
+      date.setUTCDate(date.getUTCDate() - weekday);
+      return date.toISOString().slice(0, 10);
+    }
+
+    function technicalResampleSeries(input, signalPeriod = "daily") {
+      if (signalPeriod !== "weekly") return input;
+      const groups = new Map();
+      input.forEach(point => {
+        const key = technicalWeekKey(point.date);
+        if (!groups.has(key)) groups.set(key, []);
+        groups.get(key).push(point);
+      });
+      return [...groups.entries()].map(([periodKey, points]) => {
+        const latest = points[points.length - 1];
+        return {
+          ...latest,
+          periodKey,
+          value: sum(points.map(point => point.value)),
+          volume: sum(points.map(point => point.volume))
+        };
+      });
+    }
+
+    function technicalPointKey(point, signalPeriod = "daily") {
+      return signalPeriod === "weekly" ? (point.periodKey || technicalWeekKey(point.date)) : point.date;
+    }
+
+    function buildStockTechnicalModel(ticker, signalPeriod = "daily") {
+      const rawSeries = technicalPriceData.byTicker.get(ticker) || [];
+      const series = technicalResampleSeries(rawSeries, signalPeriod);
+      if (!series.length) return null;
+      const strategic = signalPeriod === "weekly";
+      const prices = series.map(point => point.price);
+      const ema20 = technicalEma(prices, 20);
+      const mediumTrendPeriod = strategic ? 40 : 50;
+      const longTrendPeriod = strategic ? 65 : 200;
+      const sma50 = technicalSma(prices, mediumTrendPeriod);
+      const sma200 = technicalSma(prices, longTrendPeriod);
+      const ema12 = technicalEma(prices, 12);
+      const ema26 = technicalEma(prices, 26);
+      const ppo = prices.map((value, index) => Number.isFinite(ema12[index]) && Number.isFinite(ema26[index]) && ema26[index]
+        ? (ema12[index] / ema26[index] - 1) * 100
+        : NaN);
+      const ppoSignal = technicalEma(ppo, 9);
+      const ppoHistogram = ppo.map((value, index) => Number.isFinite(value) && Number.isFinite(ppoSignal[index]) ? value - ppoSignal[index] : NaN);
+      const benchmarkSeries = technicalResampleSeries(technicalPriceData.index, signalPeriod);
+      const indexByDate = new Map(benchmarkSeries.map(point => [technicalPointKey(point, signalPeriod), point.price]));
+      const relative = series.map(point => {
+        const benchmark = indexByDate.get(technicalPointKey(point, signalPeriod));
+        return Number.isFinite(benchmark) && benchmark ? point.price / benchmark : NaN;
+      });
+      const flow = series.map((point, index) => {
+        if (index < 50) return NaN;
+        const shortValue = technicalMean(series.slice(index - 9, index + 1).map(item => item.value));
+        const longValue = technicalMean(series.slice(index - 49, index + 1).map(item => item.value));
+        const activity = Number.isFinite(longValue) && longValue ? shortValue / longValue : NaN;
+        const stockReturn = series[index - 10]?.price ? point.price / series[index - 10].price - 1 : NaN;
+        const currentIndex = indexByDate.get(technicalPointKey(point, signalPeriod));
+        const priorIndex = indexByDate.get(technicalPointKey(series[index - 10], signalPeriod));
+        const indexReturn = Number.isFinite(currentIndex) && Number.isFinite(priorIndex) && priorIndex ? currentIndex / priorIndex - 1 : NaN;
+        return confirmedFlowScore(activity, stockReturn - indexReturn, signalPeriod === "weekly" ? 50 : 10);
+      });
+      const returns20 = series.slice(-21).map((point, index, items) => index && items[index - 1].price > 0
+        ? Math.log(point.price / items[index - 1].price)
+        : NaN);
+      const current = prices[prices.length - 1];
+      const riskUnit = Math.max(current * (technicalStdDev(returns20) || 0), current * 0.005);
+      const latestEma20 = latestTechnicalValue(ema20);
+      const latestSma50 = latestTechnicalValue(sma50);
+      const latestSma200 = latestTechnicalValue(sma200);
+      const latestPpo = latestTechnicalValue(ppo);
+      const latestPpoSignal = latestTechnicalValue(ppoSignal);
+      const latestPpoHistogram = latestTechnicalValue(ppoHistogram);
+      const latestFlow = latestTechnicalValue(flow);
+      const nextSupport = technicalNextSupport(series, current, riskUnit);
+      const nextResistance = technicalNextResistance(series, current, riskUnit);
+      const prior55High = Math.max(...prices.slice(-56, -1).filter(Number.isFinite));
+      const prior20High = Math.max(...prices.slice(-21, -1).filter(Number.isFinite));
+      const recent63High = Math.max(...prices.slice(-63).filter(Number.isFinite));
+      const trailingYear = prices.slice(-(strategic ? 52 : 252)).filter(Number.isFinite);
+      const trailingThreeYears = prices.slice(-(strategic ? 156 : 756)).filter(Number.isFinite);
+      const trailingYearHigh = trailingYear.length ? Math.max(...trailingYear) : NaN;
+      const trailingYearLow = trailingYear.length ? Math.min(...trailingYear) : NaN;
+      const trailingThreeYearHigh = trailingThreeYears.length ? Math.max(...trailingThreeYears) : NaN;
+      const baseRange = [trailingYearHigh, trailingYearLow].every(Number.isFinite) ? trailingYearHigh - trailingYearLow : NaN;
+      const measuredObjective = strategic && Number.isFinite(baseRange)
+        ? Math.max(current, trailingYearHigh) + Math.max(baseRange * 0.60, current * 0.15)
+        : nextResistance;
+      const strategicObjectiveCandidates = [nextResistance, trailingThreeYearHigh, measuredObjective]
+        .filter(value => Number.isFinite(value) && value >= current * 1.15);
+      const strategicObjective = strategic
+        ? (strategicObjectiveCandidates.length ? Math.min(...strategicObjectiveCandidates) : measuredObjective)
+        : nextResistance;
+      const strategicUpside = Number.isFinite(strategicObjective) && current ? strategicObjective / current - 1 : NaN;
+      const relativeCurrent = latestTechnicalValue(relative);
+      const relativeLookback = strategic ? 52 : 20;
+      const relativeConfirmLookback = strategic ? 13 : 5;
+      const relativePrior = relative.length > relativeLookback ? relative[relative.length - relativeLookback - 1] : NaN;
+      const relativeChange = Number.isFinite(relativeCurrent) && Number.isFinite(relativePrior) && relativePrior
+        ? relativeCurrent / relativePrior - 1
+        : NaN;
+      const relativePrior5 = relative.length > relativeConfirmLookback ? relative[relative.length - relativeConfirmLookback - 1] : NaN;
+      const relative5dChange = Number.isFinite(relativeCurrent) && Number.isFinite(relativePrior5) && relativePrior5
+        ? relativeCurrent / relativePrior5 - 1
+        : NaN;
+      const trendSlopeLookback = strategic ? 13 : 10;
+      const sma50Prior = sma50.length > trendSlopeLookback ? sma50[sma50.length - trendSlopeLookback - 1] : NaN;
+      const trendPositive = [current, latestSma50, latestSma200].every(Number.isFinite)
+        && current > latestSma50 && latestSma50 > latestSma200
+        && (!Number.isFinite(sma50Prior) || latestSma50 >= sma50Prior);
+      const supportCandidates = [latestEma20, latestSma50, latestSma200, prior55High]
+        .filter(value => Number.isFinite(value) && value <= current);
+      const support = supportCandidates.length ? Math.max(...supportCandidates) : latestSma50;
+      const pullbackLow = trendPositive && Number.isFinite(support) ? support - 0.5 * riskUnit : NaN;
+      const pullbackHigh = trendPositive && Number.isFinite(support) ? Math.min(current, support + 0.5 * riskUnit) : NaN;
+      const breakout = Number.isFinite(prior55High) ? prior55High + 0.1 * riskUnit : NaN;
+      const profitAnchor = Math.max(current, Number.isFinite(breakout) ? breakout : current);
+      const profitLow = profitAnchor + 2 * riskUnit;
+      const profitHigh = profitAnchor + 3 * riskUnit;
+      const reduce = Math.min(current * 0.995, Math.max(
+        Number.isFinite(latestSma50) ? latestSma50 - 0.5 * riskUnit : -Infinity,
+        Number.isFinite(recent63High) ? recent63High - 3 * riskUnit : -Infinity
+      ));
+      const exit = Math.min(
+        Number.isFinite(latestSma200) ? latestSma200 : reduce - riskUnit,
+        reduce - riskUnit
+      );
+      const momentumStateLookback = strategic ? 13 : 5;
+      const histogramPrior = ppoHistogram.length > momentumStateLookback
+        ? ppoHistogram[ppoHistogram.length - momentumStateLookback - 1]
+        : NaN;
+      const distribution = Number.isFinite(latestFlow) && latestFlow < 40;
+      const breakdown = Number.isFinite(latestSma200) && current < latestSma200;
+      const trendWeakening = !breakdown && Number.isFinite(latestSma50) && current < latestSma50;
+      const extended = Number.isFinite(latestEma20) && current > latestEma20 + 2.5 * riskUnit;
+      const breakoutActive = trendPositive && Number.isFinite(prior55High) && current >= prior55High
+        && Number.isFinite(latestFlow) && latestFlow >= 60 && latestPpo >= latestPpoSignal;
+      const pullbackReady = trendPositive && Number.isFinite(support) && Math.abs(current - support) <= riskUnit
+        && latestPpoHistogram >= (Number.isFinite(histogramPrior) ? histogramPrior : latestPpoHistogram);
+      const momentumFading = trendPositive && Number.isFinite(histogramPrior) && latestPpoHistogram < histogramPrior
+        && Number.isFinite(relativeChange) && relativeChange < 0;
+      let stateName = "Neutral";
+      let action = "Wait";
+      let tone = "neutral";
+      if (breakdown) { stateName = "Breakdown"; action = "Exit / avoid"; tone = "negative"; }
+      else if (distribution) { stateName = "Distribution"; action = "Reduce"; tone = "negative"; }
+      else if (trendWeakening) { stateName = "Trend weakening"; action = "Reduce / exit"; tone = "negative"; }
+      else if (extended) { stateName = "Extended"; action = "Hold / trim"; tone = "warning"; }
+      else if (breakoutActive) { stateName = "Breakout"; action = "Buy / add"; tone = "positive"; }
+      else if (pullbackReady) { stateName = "Pullback entry"; action = "Accumulate"; tone = "positive"; }
+      else if (momentumFading) { stateName = "Momentum fading"; action = "Hold / reduce"; tone = "warning"; }
+      else if (trendPositive) { stateName = "Trend intact"; action = "Hold"; tone = "positive"; }
+      const bottomFishLow = Number.isFinite(nextSupport) ? nextSupport - 0.5 * riskUnit : NaN;
+      const bottomFishHigh = Number.isFinite(nextSupport) ? nextSupport + 0.5 * riskUnit : NaN;
+      const supportFailure = Number.isFinite(nextSupport) ? nextSupport - 1.25 * riskUnit : NaN;
+      const recoveryTrigger = Math.max(latestEma20, prior20High, current + riskUnit);
+      const trendRepair = Math.max(latestSma50, latestSma200);
+      const resistanceZoneLow = Number.isFinite(nextResistance) ? nextResistance - 0.5 * riskUnit : NaN;
+      const resistanceZoneHigh = Number.isFinite(nextResistance) ? nextResistance + 0.5 * riskUnit : NaN;
+      const supportDistanceR = Number.isFinite(nextSupport) ? (current - nextSupport) / riskUnit : NaN;
+      const supportDistancePct = Number.isFinite(nextSupport) && current ? (current - nextSupport) / current : NaN;
+      const nearSupport = (Number.isFinite(supportDistanceR) && supportDistanceR <= 1.25)
+        || (Number.isFinite(supportDistancePct) && supportDistancePct <= 0.03);
+      const resistanceDistanceR = Number.isFinite(nextResistance) ? (nextResistance - current) / riskUnit : NaN;
+      const extensionR = Number.isFinite(latestEma20) ? (current - latestEma20) / riskUnit : NaN;
+      const coreSupportCandidates = [latestSma50, latestSma200]
+        .filter(value => Number.isFinite(value) && value <= current);
+      const coreSupport = coreSupportCandidates.length ? Math.max(...coreSupportCandidates) : nextSupport;
+      const coreInvalidation = Number.isFinite(latestSma200)
+        ? latestSma200 - riskUnit
+        : supportFailure;
+      const decisionTarget = strategic ? strategicObjective : nextResistance;
+      const decisionUpside = Number.isFinite(decisionTarget) && current ? decisionTarget / current - 1 : NaN;
+      const ppoImproving = Number.isFinite(histogramPrior) && latestPpoHistogram >= histogramPrior;
+      const deteriorationConfirmed = distribution
+        || (Number.isFinite(latestPpoSignal) && latestPpo < latestPpoSignal && Number.isFinite(relativeChange) && relativeChange < 0);
+
+      let holderAction = "Hold";
+      let holderReason = "No structural sell trigger";
+      if (breakdown) {
+        if (nearSupport) {
+          holderAction = "Hold";
+          holderReason = "Selling near support may be late";
+        } else if (deteriorationConfirmed) {
+          holderAction = "Sell";
+          holderReason = "Breakdown confirmed with room to support";
+        } else {
+          holderAction = "Reduce";
+          holderReason = "Long-term trend is broken";
+        }
+      } else if (distribution) {
+        holderAction = "Reduce";
+        holderReason = "Weak price action is volume-confirmed";
+      } else if (trendWeakening) {
+        if (nearSupport) {
+          holderAction = "Hold";
+          holderReason = "Price is already near support";
+        } else {
+          holderAction = "Reduce";
+          holderReason = "Medium-term trend is weakening";
+        }
+      } else if (!strategic && (trendPositive || extended) && Number.isFinite(resistanceDistanceR) && resistanceDistanceR <= 2) {
+        holderAction = "Profit-taking";
+        holderReason = "Price is within two risk units of resistance";
+      } else if (strategic && extended && Number.isFinite(resistanceDistanceR) && resistanceDistanceR <= 1.5
+        && (latestPpo < latestPpoSignal || relativeChange < 0)) {
+        holderAction = "Profit-taking";
+        holderReason = "Extended at resistance with weakening weekly momentum";
+      } else if (extended || momentumFading) {
+        holderAction = "Trim";
+        holderReason = extended ? "Price is extended above its short-term trend" : "Momentum and relative strength are fading";
+      } else if (trendPositive) {
+        holderReason = strategic ? "Structural trend retains long-term price room" : "Trend remains intact with room to resistance";
+      }
+
+      const bottomEntry = Number.isFinite(nextSupport) ? nextSupport : NaN;
+      const bottomRisk = Number.isFinite(bottomEntry) && Number.isFinite(supportFailure) ? bottomEntry - supportFailure : NaN;
+      const bottomRewardRisk = Number.isFinite(decisionTarget) && bottomRisk > 0
+        ? (decisionTarget - bottomEntry) / bottomRisk
+        : NaN;
+      const accumulateEntry = [pullbackLow, pullbackHigh].every(Number.isFinite) ? (pullbackLow + pullbackHigh) / 2 : NaN;
+      const accumulateInvalidation = Number.isFinite(accumulateEntry)
+        ? strategic && Number.isFinite(coreInvalidation)
+          ? coreInvalidation
+          : Math.min(accumulateEntry - 0.5 * riskUnit, Math.max(Number.isFinite(exit) ? exit : -Infinity, pullbackLow - riskUnit))
+        : NaN;
+      const accumulateRisk = Number.isFinite(accumulateEntry) && Number.isFinite(accumulateInvalidation)
+        ? accumulateEntry - accumulateInvalidation
+        : NaN;
+      const accumulateRewardRisk = Number.isFinite(decisionTarget) && accumulateRisk > 0
+        ? (decisionTarget - accumulateEntry) / accumulateRisk
+        : NaN;
+      const chaseInvalidation = strategic && Number.isFinite(coreInvalidation) ? coreInvalidation : current - riskUnit;
+      const chaseRewardRisk = Number.isFinite(decisionTarget) && riskUnit > 0
+        ? (decisionTarget - current) / riskUnit
+        : NaN;
+      const stabilizationCount = [
+        ppoImproving,
+        Number.isFinite(latestFlow) && latestFlow >= 40,
+        Number.isFinite(relative5dChange) && relative5dChange >= 0
+      ].filter(Boolean).length;
+      const bottomFishEligible = (breakdown || trendWeakening || distribution)
+        && nearSupport
+        && stabilizationCount >= 2 && (!Number.isFinite(decisionTarget) || bottomRewardRisk >= 2);
+      const accumulateEligible = trendPositive && [pullbackLow, pullbackHigh].every(Number.isFinite)
+        && current >= pullbackLow && current <= pullbackHigh + 0.25 * riskUnit
+        && ppoImproving && latestFlow >= 40
+        && (!Number.isFinite(decisionTarget) || accumulateRewardRisk >= 2)
+        && (!strategic || decisionUpside >= 0.15);
+      const chaseEligible = trendPositive && current >= prior55High && current <= breakout + riskUnit
+        && latestFlow >= 60 && latestPpo >= latestPpoSignal && relativeChange > 0
+        && extensionR <= 2.5 && (!Number.isFinite(decisionTarget) || chaseRewardRisk >= 2)
+        && (!strategic || decisionUpside >= 0.20);
+      let newBuyerAction = "Wait";
+      let newBuyerReason = "Entry is not yet attractive";
+      let newBuyerEntryLow = NaN;
+      let newBuyerEntryHigh = NaN;
+      let newBuyerInvalidation = NaN;
+      let newBuyerRewardRisk = NaN;
+      if (bottomFishEligible) {
+        newBuyerAction = "Bottom-fish";
+        newBuyerReason = "Near support with stabilization evidence";
+        newBuyerEntryLow = bottomFishLow;
+        newBuyerEntryHigh = bottomFishHigh;
+        newBuyerInvalidation = supportFailure;
+        newBuyerRewardRisk = bottomRewardRisk;
+      } else if (accumulateEligible) {
+        newBuyerAction = "Accumulate";
+        newBuyerReason = "Healthy pullback inside an intact trend";
+        newBuyerEntryLow = pullbackLow;
+        newBuyerEntryHigh = pullbackHigh;
+        newBuyerInvalidation = accumulateInvalidation;
+        newBuyerRewardRisk = accumulateRewardRisk;
+      } else if (chaseEligible) {
+        newBuyerAction = "Chase";
+        newBuyerReason = "Confirmed breakout with sufficient upside";
+        newBuyerEntryLow = current;
+        newBuyerEntryHigh = current;
+        newBuyerInvalidation = chaseInvalidation;
+        newBuyerRewardRisk = chaseRewardRisk;
+      } else if (strategic && trendPositive && !extended && Number.isFinite(decisionUpside) && decisionUpside >= 0.20) {
+        newBuyerAction = "Accumulate";
+        newBuyerReason = "Structural uptrend retains long-term price room";
+        newBuyerEntryLow = Number.isFinite(pullbackLow) ? pullbackLow : current - 0.5 * riskUnit;
+        newBuyerEntryHigh = Number.isFinite(pullbackHigh) ? pullbackHigh : current + 0.25 * riskUnit;
+        newBuyerInvalidation = Number.isFinite(accumulateInvalidation) ? accumulateInvalidation : current - 1.5 * riskUnit;
+        newBuyerRewardRisk = accumulateRewardRisk;
+      } else if ((breakdown || trendWeakening || distribution) && Number.isFinite(nextSupport)) {
+        newBuyerEntryLow = bottomFishLow;
+        newBuyerEntryHigh = bottomFishHigh;
+        newBuyerInvalidation = supportFailure;
+        newBuyerRewardRisk = bottomRewardRisk;
+      } else if (trendPositive && [pullbackLow, pullbackHigh].every(Number.isFinite)) {
+        newBuyerEntryLow = pullbackLow;
+        newBuyerEntryHigh = pullbackHigh;
+        newBuyerInvalidation = accumulateInvalidation;
+        newBuyerRewardRisk = accumulateRewardRisk;
+      } else if (Number.isFinite(breakout) && (!Number.isFinite(nextResistance) || nextResistance > breakout)) {
+        newBuyerEntryLow = breakout;
+        newBuyerEntryHigh = breakout;
+        newBuyerInvalidation = breakout - riskUnit;
+        newBuyerRewardRisk = Number.isFinite(decisionTarget) && riskUnit > 0
+          ? (decisionTarget - breakout) / riskUnit
+          : NaN;
+      }
+      const newBuyerEntryMid = [newBuyerEntryLow, newBuyerEntryHigh].every(Number.isFinite)
+        ? (newBuyerEntryLow + newBuyerEntryHigh) / 2
+        : NaN;
+      const newBuyerTarget = Number.isFinite(decisionTarget)
+        && (!Number.isFinite(newBuyerEntryMid) || decisionTarget > newBuyerEntryMid)
+        ? decisionTarget
+        : NaN;
+      return {
+        ticker, signalPeriod, strategic, exchange: technicalPriceData.exchanges.get(ticker) || "", series, ema20, sma50, sma200, ppo, ppoSignal, ppoHistogram, relative, flow,
+        trendLabels: { short: "EMA20", medium: strategic ? "SMA40" : "SMA50", long: strategic ? "SMA65" : "SMA200" },
+        latest: series[series.length - 1], current, riskUnit, latestEma20, latestSma50, latestSma200,
+        latestPpo, latestPpoSignal, latestPpoHistogram, latestFlow, relativeChange, relative5dChange,
+        pullbackLow, pullbackHigh, breakout, profitLow, profitHigh, reduce, exit,
+        nextSupport, nextResistance, strategicObjective, strategicUpside, decisionTarget, decisionUpside,
+        coreSupport, coreInvalidation,
+        bottomFishLow, bottomFishHigh, supportFailure, recoveryTrigger, trendRepair,
+        resistanceZoneLow, resistanceZoneHigh, supportDistanceR, supportDistancePct, resistanceDistanceR, extensionR,
+        holderAction, holderReason, newBuyerAction, newBuyerReason,
+        newBuyerEntryLow, newBuyerEntryHigh, newBuyerInvalidation, newBuyerRewardRisk, newBuyerTarget,
+        stateName, action, tone, trendPositive
+      };
+    }
+
+    const TECHNICAL_RATING_ORDER = [
+      "Breakout", "Pullback entry", "Trend intact", "Extended",
+      "Momentum fading", "Neutral", "Distribution", "Trend weakening", "Breakdown"
+    ];
+
+    const TECHNICAL_RATING_SCORES = {
+      "Breakout": 100,
+      "Pullback entry": 90,
+      "Trend intact": 80,
+      "Extended": 68,
+      "Momentum fading": 55,
+      "Neutral": 50,
+      "Distribution": 35,
+      "Trend weakening": 25,
+      "Breakdown": 10
+    };
+
+    const TECHNICAL_ACTION_ORDER = [
+      "Profit-taking", "Chase", "Accumulate", "Hold", "Wait",
+      "Trim", "Reduce", "Sell", "Bottom-fish"
+    ];
+
+    function technicalRatingTone(rating) {
+      if (["Breakout", "Pullback entry", "Trend intact"].includes(rating)) return "positive";
+      if (["Extended", "Momentum fading", "Neutral"].includes(rating)) return "warning";
+      if (["Distribution", "Trend weakening", "Breakdown"].includes(rating)) return "negative";
+      return "neutral";
+    }
+
+    function technicalWeightedBinary(signals, maximum) {
+      const available = signals.filter(signal => signal.available !== false);
+      if (!available.length) return maximum / 2;
+      const totalWeight = sum(available.map(signal => signal.weight));
+      const earned = sum(available.map(signal => signal.value ? signal.weight : 0));
+      return totalWeight ? earned / totalWeight * maximum : maximum / 2;
+    }
+
+    function scoreTechnicalModel(model) {
+      const momentumLookback = model.strategic ? 13 : 5;
+      const histogramPrior = model.ppoHistogram.length > momentumLookback ? model.ppoHistogram[model.ppoHistogram.length - momentumLookback - 1] : NaN;
+      const latestHistogram = model.latestPpoHistogram;
+      const trendPoints = technicalWeightedBinary([
+        { value: model.current > model.latestEma20, weight: model.strategic ? 8 : 5, available: Number.isFinite(model.latestEma20) },
+        { value: model.current > model.latestSma50, weight: model.strategic ? 12 : 10, available: Number.isFinite(model.latestSma50) },
+        { value: model.current > model.latestSma200, weight: model.strategic ? 12 : 10, available: Number.isFinite(model.latestSma200) },
+        { value: model.latestSma50 > model.latestSma200, weight: model.strategic ? 8 : 10, available: [model.latestSma50, model.latestSma200].every(Number.isFinite) }
+      ], model.strategic ? 40 : 35);
+      const momentumPoints = technicalWeightedBinary([
+        { value: model.latestPpo > model.latestPpoSignal, weight: 8, available: [model.latestPpo, model.latestPpoSignal].every(Number.isFinite) },
+        { value: model.latestPpo > 0, weight: 6, available: Number.isFinite(model.latestPpo) },
+        { value: latestHistogram >= histogramPrior, weight: 6, available: [latestHistogram, histogramPrior].every(Number.isFinite) }
+      ], 20);
+      const relativeScale = model.strategic ? 0.30 : 0.10;
+      const relativeWeight = model.strategic ? 0.25 : 0.20;
+      const relativePoints = Number.isFinite(model.relativeChange)
+        ? clampFlow(50 + model.relativeChange / relativeScale * 50, 0, 100) * relativeWeight
+        : 50 * relativeWeight;
+      const flowPoints = Number.isFinite(model.latestFlow) ? clampFlow(model.latestFlow, 0, 100) * 0.15 : 7.5;
+      const setupPoints = model.strategic ? 0 : (TECHNICAL_RATING_SCORES[model.stateName] ?? 50) * 0.10;
+      return clampFlow(trendPoints + momentumPoints + relativePoints + flowPoints + setupPoints, 0, 100);
+    }
+
+    function technicalBollingerBand(prices, length, deviations = 2) {
+      const middle = technicalSma(prices, length);
+      const upper = Array(prices.length).fill(NaN);
+      const lower = Array(prices.length).fill(NaN);
+      for (let index = length - 1; index < prices.length; index += 1) {
+        const window = prices.slice(index - length + 1, index + 1).filter(Number.isFinite);
+        if (window.length !== length || !Number.isFinite(middle[index])) continue;
+        const sigma = technicalStdDev(window);
+        upper[index] = middle[index] + deviations * sigma;
+        lower[index] = middle[index] - deviations * sigma;
+      }
+      return { length, middle, upper, lower };
+    }
+
+    function buildBollingerTechnicalModel(ticker) {
+      const normalizedTicker = String(ticker || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+      const isIndex = normalizedTicker === "VNINDEX";
+      const displayTicker = isIndex ? "VN-Index" : normalizedTicker;
+      const series = isIndex ? technicalPriceData.index : (technicalPriceData.byTicker.get(normalizedTicker) || []);
+      if (!series.length) return null;
+      const prices = series.map(point => point.price);
+      const bands = {
+        50: technicalBollingerBand(prices, 50),
+        100: technicalBollingerBand(prices, 100),
+        200: technicalBollingerBand(prices, 200)
+      };
+      const current = prices[prices.length - 1];
+      const latestBand = length => ({
+        length,
+        middle: latestTechnicalValue(bands[length].middle),
+        upper: latestTechnicalValue(bands[length].upper),
+        lower: latestTechnicalValue(bands[length].lower)
+      });
+      const latestBands = { 50: latestBand(50), 100: latestBand(100), 200: latestBand(200) };
+      const supportPeriod = [50, 100, 200].find(length => Number.isFinite(latestBands[length].lower) && current >= latestBands[length].lower) || null;
+      const resistancePeriod = [50, 100, 200].find(length => Number.isFinite(latestBands[length].upper) && current <= latestBands[length].upper) || null;
+      const support = supportPeriod ? latestBands[supportPeriod].lower : NaN;
+      const resistance = resistancePeriod ? latestBands[resistancePeriod].upper : NaN;
+      const supportDistance = Number.isFinite(support) && current ? support / current - 1 : NaN;
+      const resistanceDistance = Number.isFinite(resistance) && current ? resistance / current - 1 : NaN;
+      let stateName = "50D range";
+      let tone = "neutral";
+      if (!supportPeriod) {
+        stateName = "Long-term trend break";
+        tone = "negative";
+      } else if (!resistancePeriod) {
+        stateName = "Upside price discovery";
+        tone = "positive";
+      } else if (resistancePeriod === 200) {
+        stateName = "Above 100D upper band";
+        tone = "positive";
+      } else if (resistancePeriod === 100) {
+        stateName = "Above 50D upper band";
+        tone = "positive";
+      } else if (supportPeriod === 200) {
+        stateName = "Testing 200D support";
+        tone = "negative";
+      } else if (supportPeriod === 100) {
+        stateName = "Testing 100D support";
+        tone = "warning";
+      }
+      let score = 50;
+      if (!supportPeriod) score = 0;
+      else if (!resistancePeriod) score = 100;
+      else if (supportPeriod === 200) score = 20;
+      else if (supportPeriod === 100) score = 35;
+      else if (resistancePeriod === 200) score = 85;
+      else if (resistancePeriod === 100) score = 70;
+      else {
+        const lower = latestBands[50].lower;
+        const upper = latestBands[50].upper;
+        score = [lower, upper].every(Number.isFinite) && upper > lower
+          ? 40 + clampFlow((current - lower) / (upper - lower), 0, 1) * 20
+          : 50;
+      }
+      return {
+        ticker: displayTicker,
+        exchange: isIndex ? "INDEX" : (technicalPriceData.exchanges.get(normalizedTicker) || ""),
+        series,
+        latest: series[series.length - 1],
+        current,
+        bands,
+        latestBands,
+        supportPeriod,
+        resistancePeriod,
+        support,
+        resistance,
+        supportDistance,
+        resistanceDistance,
+        stateName,
+        tone,
+        score
+      };
+    }
+
+    function buildTechnicalAnalysisModel(coverage) {
+      const cacheKey = "bollinger-50-100-200";
+      const cached = technicalAnalysisCache.get(cacheKey);
+      if (cached) return cached;
+      const stockStats = [...technicalPriceData.byTicker.keys()].map(ticker => {
+        const technical = buildBollingerTechnicalModel(ticker);
+        if (!technical) return null;
+        return {
+          ticker,
+          sector: coverage.get(ticker) || "Unknown",
+          technical,
+          rating: technical.stateName,
+          score: technical.score,
+          upsideLevel: technical.resistance,
+          upsidePct: technical.resistanceDistance,
+          downsideLevel: technical.support,
+          downsidePct: technical.supportDistance
+        };
+      }).filter(Boolean);
+      const sectors = [...new Set(stockStats.map(row => row.sector).filter(sector => sector !== "Unknown"))];
+      const sectorStats = sectors.map(sector => {
+        const stocks = stockStats.filter(row => row.sector === sector);
+        const averageScore = mean(stocks.map(row => row.score));
+        return {
+          sector,
+          stocks,
+          total: stocks.length,
+          averageScore,
+          score: averageScore
+        };
+      }).sort((a, b) => b.score - a.score || a.sector.localeCompare(b.sector));
+      stockStats.sort((a, b) => b.score - a.score || a.ticker.localeCompare(b.ticker));
+      const model = {
+        latestDate: stockStats.map(row => row.technical.latest?.date).filter(Boolean).sort().pop() || "",
+        horizon: "bollinger",
+        signalPeriod: "daily",
+        stockStats,
+        sectorStats
+      };
+      technicalAnalysisCache.set(cacheKey, model);
+      return model;
+    }
+
+    function technicalFilterMatch(row) {
+      return true;
+    }
+
+    function isVnIndexTicker(value) {
+      return String(value || "").toUpperCase().replace(/[^A-Z0-9]/g, "") === "VNINDEX";
+    }
+
+    function technicalIndexRow() {
+      const technical = buildBollingerTechnicalModel("VN-Index");
+      return technical ? {
+        ticker: "VN-Index",
+        sector: "Benchmark",
+        technical,
+        rating: technical.stateName,
+        score: technical.score,
+        upsideLevel: technical.resistance,
+        upsidePct: technical.resistanceDistance,
+        downsideLevel: technical.support,
+        downsidePct: technical.supportDistance
+      } : null;
+    }
+
+    function filteredTechnicalStocks(model) {
+      const tickerQuery = state.search.trim().toUpperCase();
+      if (isVnIndexTicker(tickerQuery)) {
+        const indexRow = technicalIndexRow();
+        return indexRow ? [indexRow] : [];
+      }
+      return model.stockStats
+        .filter(row => state.sector === "All" || row.sector === state.sector)
+        .filter(technicalFilterMatch)
+        .filter(row => !tickerQuery || row.ticker.includes(tickerQuery));
+    }
+
+    function technicalLinePath(points, x, y, valueKey) {
+      let path = "";
+      let open = false;
+      points.forEach((point, index) => {
+        const value = typeof valueKey === "function" ? valueKey(point, index) : point[valueKey];
+        if (!Number.isFinite(value)) { open = false; return; }
+        path += `${open ? "L" : "M"}${x(index).toFixed(2)},${y(value).toFixed(2)}`;
+        open = true;
+      });
+      return path;
+    }
+
+    function enableTechnicalSeriesFocus(svg) {
+      const styled = [...svg.querySelectorAll(".technical-series-line, .technical-series-label")];
+      const targets = [...svg.querySelectorAll(".technical-series-hit, .technical-series-label")];
+      const focus = series => styled.forEach(node => {
+        const selected = node.dataset.series === series || node.dataset.series === "price";
+        node.classList.toggle("is-dimmed", !selected);
+        node.classList.toggle("is-focused", selected);
+      });
+      const clear = () => styled.forEach(node => node.classList.remove("is-dimmed", "is-focused"));
+      targets.forEach(node => {
+        node.addEventListener("pointerenter", () => focus(node.dataset.series));
+        node.addEventListener("pointerleave", clear);
+      });
+    }
+
+    function technicalDateLabel(value) {
+      const date = new Date(`${value}T00:00:00`);
+      return date.toLocaleDateString("en-GB", { month: "short", year: "2-digit" });
+    }
+
+    function technicalLevelMarkup(items) {
+      return items.map(item => `<div class="technical-level ${item.cardClass || ""}"><span>${item.label}</span><strong class="${item.className || ""}">${item.value}</strong></div>`).join("");
+    }
+
+    function renderBollingerTechnicalPanel(model) {
+      activeTechnicalExchange = model?.exchange || "";
+      document.querySelectorAll("[data-technical-range]").forEach(button => {
+        button.classList.toggle("active", button.dataset.technicalRange === state.technicalTimeframe);
+      });
+      const container = document.getElementById("technicalChart");
+      container.setAttribute("aria-label", "Price with 50, 100, and 200-day Bollinger Bands");
+      document.getElementById("technicalChartTitle").textContent = model ? `${model.ticker} Bollinger range` : "No matching stock";
+      document.querySelector(".technical-indicators-section").hidden = true;
+      document.getElementById("technicalBuyerSection").hidden = false;
+      document.getElementById("technicalHolderHeading").textContent = "Position";
+      document.querySelector("#technicalBuyerSection .technical-summary-heading").textContent = "Active range";
+      document.getElementById("technicalHolderLevels").setAttribute("aria-label", "Current Bollinger position");
+      document.getElementById("technicalBuyerLevels").setAttribute("aria-label", "Active Bollinger support and resistance");
+      if (!model) {
+        document.getElementById("technicalState").textContent = "No data";
+        document.getElementById("technicalState").className = "technical-state neutral";
+        document.getElementById("technicalChartHint").textContent = "No daily adjusted-price history.";
+        document.getElementById("technicalHolderLevels").innerHTML = technicalLevelMarkup([{ label: "Current", value: "—" }]);
+        document.getElementById("technicalBuyerLevels").innerHTML = technicalLevelMarkup([{ label: "Support", value: "—" }, { label: "Resistance", value: "—" }]);
+        container.innerHTML = "";
+        return;
+      }
+      const supportText = Number.isFinite(model.support) ? technicalFormatPrice(model.support, "up") : "Find new equilibrium";
+      const resistanceText = Number.isFinite(model.resistance) ? technicalFormatPrice(model.resistance, "down") : "Price discovery";
+      const supportTone = model.supportPeriod === 200 || !model.supportPeriod ? "neg" : model.supportPeriod === 100 ? "warn" : "pos";
+      const resistanceTone = model.resistancePeriod === 200 ? "warn" : model.resistancePeriod ? "pos" : "warn";
+      document.getElementById("technicalState").textContent = model.stateName;
+      document.getElementById("technicalState").className = `technical-state ${model.tone}`;
+      document.getElementById("technicalChartHint").textContent = "Daily adjusted close · 2σ Bollinger Bands · automatically advances from 50D to 100D to 200D after a breach";
+      document.getElementById("technicalHolderLevels").innerHTML = technicalLevelMarkup([
+        { label: "Current", value: technicalFormatPrice(model.current) },
+        { label: "Position", value: model.stateName, className: model.tone === "positive" ? "pos" : model.tone === "negative" ? "neg" : model.tone === "warning" ? "warn" : "muted" },
+        { label: "Support basis", value: model.supportPeriod ? `${model.supportPeriod}-day lower band` : "Below 200-day band", className: supportTone },
+        { label: "Resistance basis", value: model.resistancePeriod ? `${model.resistancePeriod}-day upper band` : "Above 200-day band", className: resistanceTone }
+      ]);
+      document.getElementById("technicalBuyerLevels").innerHTML = technicalLevelMarkup([
+        { label: "Resistance", value: resistanceText, className: resistanceTone },
+        { label: "Upside distance", value: Number.isFinite(model.resistanceDistance) ? fmtSignedPct(model.resistanceDistance) : "Open", className: resistanceTone },
+        { label: "Support", value: supportText, className: supportTone },
+        { label: "Downside distance", value: Number.isFinite(model.supportDistance) ? fmtSignedPct(model.supportDistance) : "Uncharted", className: supportTone }
+      ]);
+
+      const cutoff = technicalRangeStart(model.latest.date, state.technicalTimeframe);
+      const startIndex = Math.max(0, model.series.findIndex(point => point.date >= cutoff));
+      const data = model.series.slice(startIndex).map((point, localIndex) => {
+        const index = startIndex + localIndex;
+        return {
+          ...point,
+          upper50: model.bands[50].upper[index], lower50: model.bands[50].lower[index],
+          upper100: model.bands[100].upper[index], lower100: model.bands[100].lower[index],
+          upper200: model.bands[200].upper[index], lower200: model.bands[200].lower[index]
+        };
+      });
+      const width = chartWidth(container, 1100);
+      const compact = width < 560;
+      const summaryHeight = document.querySelector(".technical-summary-box")?.getBoundingClientRect().height || 0;
+      const height = window.innerWidth > 980 ? Math.max(280, Math.round(summaryHeight - 6)) : 270;
+      const margin = { top: 18, right: compact ? 7 : 12, bottom: 26, left: compact ? 39 : 50 };
+      const projectionWidth = Math.max(compact ? 48 : 82, width * (compact ? 0.16 : 0.13));
+      const historyRight = width - margin.right - projectionWidth;
+      const innerW = historyRight - margin.left;
+      const x = index => margin.left + (data.length > 1 ? index / (data.length - 1) : 0) * innerW;
+      const priceValues = data.flatMap(point => [
+        point.price, point.upper50, point.lower50, point.upper100, point.lower100, point.upper200, point.lower200
+      ]).filter(Number.isFinite);
+      if (Number.isFinite(model.support)) priceValues.push(model.support);
+      if (Number.isFinite(model.resistance)) priceValues.push(model.resistance);
+      const minPrice = Math.min(...priceValues);
+      const maxPrice = Math.max(...priceValues);
+      const pricePadding = Math.max((maxPrice - minPrice) * 0.05, model.current * 0.01);
+      const ticks = technicalPriceTicks(minPrice - pricePadding, maxPrice + pricePadding, 4);
+      const plotMin = ticks[0] ?? minPrice;
+      const plotMax = ticks[ticks.length - 1] ?? maxPrice;
+      const y = value => margin.top + (plotMax - value) / (plotMax - plotMin || 1) * (height - margin.top - margin.bottom);
+      const svg = makeSvg(width, height);
+      svg.setAttribute("aria-label", `${model.ticker} price and 50, 100, and 200-day Bollinger support and resistance bands over ${state.technicalTimeframe}`);
+      ticks.forEach(value => {
+        const yy = y(value);
+        addSvgNode(svg, "line", { x1: margin.left, x2: width - margin.right, y1: yy, y2: yy, stroke: "var(--line)", "stroke-width": 1 });
+        addSvgNode(svg, "text", { x: margin.left - 4, y: yy + 3, fill: "var(--muted)", "font-size": compact ? 7 : 9, "text-anchor": "end" }, technicalFormatPrice(value));
+      });
+      addSvgNode(svg, "line", { x1: historyRight, x2: historyRight, y1: margin.top, y2: height - margin.bottom, stroke: "var(--muted)", "stroke-width": 1 });
+      const bandSeries = [
+        { period: 200, color: "var(--accent-2)", width: 1.15, dash: "5 3" },
+        { period: 100, color: "var(--warn)", width: 1.35, dash: "3 2" },
+        { period: 50, color: "var(--good)", width: 1.65, dash: "" }
+      ];
+      bandSeries.forEach(band => {
+        ["upper", "lower"].forEach(side => {
+          const key = `${side}${band.period}`;
+          const path = technicalLinePath(data, x, y, key);
+          addSvgNode(svg, "path", { d: path, fill: "none", stroke: band.color, "stroke-width": band.width, "stroke-dasharray": band.dash, opacity: 0.82, class: "technical-series-line", "data-series": `bb${band.period}`, "stroke-linecap": "round" });
+          addSvgNode(svg, "path", { d: path, fill: "none", stroke: "transparent", "stroke-width": 10, class: "technical-series-hit", "data-series": `bb${band.period}`, "pointer-events": "stroke" });
+        });
+      });
+      const pricePath = technicalLinePath(data, x, y, "price");
+      addSvgNode(svg, "path", { d: pricePath, fill: "none", stroke: "var(--text)", "stroke-width": 2.2, class: "technical-series-line", "data-series": "price", "stroke-linecap": "round" });
+      addSvgNode(svg, "path", { d: pricePath, fill: "none", stroke: "transparent", "stroke-width": 12, class: "technical-series-hit", "data-series": "price", "pointer-events": "stroke" });
+      addSvgNode(svg, "circle", { cx: historyRight, cy: y(model.current), r: 3.2, fill: "var(--accent)" });
+      let legendX = margin.left;
+      [
+        { key: "price", label: "PRICE", color: "var(--text)" },
+        { key: "bb50", label: "BB50", color: "var(--good)" },
+        { key: "bb100", label: "BB100", color: "var(--warn)" },
+        { key: "bb200", label: "BB200", color: "var(--accent-2)" }
+      ].forEach(line => {
+        addSvgNode(svg, "text", { x: legendX, y: margin.top + 10, fill: line.color, "font-size": compact ? 7 : 9, class: "technical-series-label", "data-series": line.key }, line.label);
+        legendX += line.label.length * (compact ? 4.5 : 5.8) + (compact ? 9 : 13);
+      });
+      const levelLabels = [
+        { value: model.resistance, text: model.resistancePeriod ? `R${model.resistancePeriod}` : "", color: "var(--warn)" },
+        { value: model.support, text: model.supportPeriod ? `S${model.supportPeriod}` : "", color: "var(--accent-2)" }
+      ].filter(item => Number.isFinite(item.value));
+      levelLabels.forEach(item => {
+        const rounded = technicalRoundPrice(item.value);
+        const yy = y(rounded);
+        const boxWidth = compact ? 27 : 43;
+        const boxHeight = compact ? 10 : 14;
+        const boxX = width - margin.right - boxWidth;
+        addSvgNode(svg, "line", { x1: historyRight + 3, x2: boxX - 3, y1: yy, y2: yy, stroke: item.color, "stroke-width": 1.5, "stroke-linecap": "round" });
+        addSvgNode(svg, "rect", { x: boxX, y: yy - boxHeight / 2, width: boxWidth, height: boxHeight, rx: 3, fill: "var(--surface)", stroke: item.color, "stroke-width": 1 });
+        addSvgNode(svg, "text", { x: boxX + boxWidth / 2, y: yy + (compact ? 3 : 3.5), fill: item.color, "font-size": compact ? 6 : 8, "font-weight": 700, "text-anchor": "middle" }, item.text);
+      });
+      [0, 0.33, 0.66, 1].forEach(position => {
+        const index = Math.min(data.length - 1, Math.round((data.length - 1) * position));
+        addSvgNode(svg, "text", { x: x(index), y: height - 7, fill: "var(--muted)", "font-size": compact ? 7 : 9, "text-anchor": position === 0 ? "start" : position === 1 ? "end" : "middle" }, technicalDateLabel(data[index].date));
+      });
+      container.innerHTML = "";
+      container.appendChild(svg);
+      enableTechnicalSeriesFocus(svg);
+    }
+
+    function renderSectorTechnicalLevels(items) {
+      document.getElementById("technicalHolderHeading").textContent = "Sector";
+      document.getElementById("technicalHolderLevels").innerHTML = technicalLevelMarkup(items);
+      document.getElementById("technicalBuyerSection").hidden = true;
+    }
+
+    function renderPositionTechnicalLevels(model) {
+      document.getElementById("technicalHolderHeading").textContent = "Holder";
+      document.getElementById("technicalBuyerSection").hidden = false;
+      const holderTone = ["Hold", "Profit-taking"].includes(model.holderAction) ? "pos" : model.holderAction === "Trim" ? "warn" : "neg";
+      const buyerTone = model.newBuyerAction === "Wait" ? "muted" : "pos";
+      const holderInvalidation = model.strategic && Number.isFinite(model.coreInvalidation)
+        ? model.coreInvalidation
+        : model.stateName === "Breakdown" && Number.isFinite(model.supportFailure)
+          ? model.supportFailure
+          : model.exit;
+      const buyerEntry = technicalFormatRange(model.newBuyerEntryLow, model.newBuyerEntryHigh);
+      const holderObjective = model.strategic ? model.strategicObjective : model.nextResistance;
+      const holderItems = [
+        { label: "Action", value: model.holderAction, className: holderTone, cardClass: "is-action" },
+        { label: "Why", value: model.holderReason, cardClass: "is-reason" },
+        { label: model.strategic ? "Objective" : "Resistance", value: Number.isFinite(holderObjective) ? technicalFormatPrice(holderObjective, "down") : "Price discovery" },
+        { label: "Current", value: technicalFormatPrice(model.current) },
+        { label: model.strategic ? "Core support" : "Support", value: Number.isFinite(model.strategic ? model.coreSupport : model.nextSupport) ? technicalFormatPrice(model.strategic ? model.coreSupport : model.nextSupport) : "Uncharted" },
+        { label: model.strategic ? "Core invalidation" : "Exit", value: Number.isFinite(holderInvalidation) ? `&lt;${technicalFormatPrice(holderInvalidation, "down")}` : "—", className: "neg" }
+      ];
+      const buyerItems = [
+        { label: "Action", value: model.newBuyerAction, className: buyerTone, cardClass: "is-action" },
+        { label: "Why", value: model.newBuyerReason, cardClass: "is-reason" },
+        { label: "Target", value: Number.isFinite(model.newBuyerTarget) ? technicalFormatPrice(model.newBuyerTarget, "down") : Number.isFinite(model.nextResistance) ? "Blocked" : "Price discovery", className: Number.isFinite(model.newBuyerTarget) ? "pos" : "muted" },
+        { label: model.strategic ? "Add zone" : model.newBuyerAction === "Wait" ? "Watch zone" : "Entry", value: buyerEntry, className: model.newBuyerAction === "Wait" ? "muted" : "pos" },
+        { label: "Invalidate", value: Number.isFinite(model.newBuyerInvalidation) ? `&lt;${technicalFormatPrice(model.newBuyerInvalidation, "down")}` : "—", className: "neg" },
+        { label: "Reward / risk", value: Number.isFinite(model.newBuyerRewardRisk) && model.newBuyerRewardRisk > 0 ? `${model.newBuyerRewardRisk.toFixed(1)}×` : Number.isFinite(model.decisionTarget) ? "—" : "Open" }
+      ];
+      document.getElementById("technicalHolderLevels").innerHTML = technicalLevelMarkup(holderItems);
+      document.getElementById("technicalBuyerLevels").innerHTML = technicalLevelMarkup(buyerItems);
+    }
+
+    function renderTechnicalIndicators(items) {
+      document.getElementById("technicalIndicators").innerHTML = items.map(item => `<div class="technical-indicator"><span>${item.label}</span><strong class="${item.className || ""}">${item.value}</strong></div>`).join("");
+    }
+
+    function renderSectorTechnicalPanel(subject, signalPeriod = "daily") {
+      activeTechnicalExchange = "";
+      const fullSeries = technicalResampleSeries(technicalPriceData.bySector.get(subject.sector) || [], signalPeriod);
+      const container = document.getElementById("technicalChart");
+      document.getElementById("technicalChartTitle").textContent = `${displaySector(subject.sector)} market-cap performance`;
+      document.getElementById("technicalState").textContent = "Sector aggregate";
+      document.getElementById("technicalState").className = "technical-state neutral";
+      document.getElementById("technicalChartHint").textContent = `${signalPeriod === "weekly" ? "Weekly" : "Daily"} aggregate covered-sector market capitalization · selected period starts at 100`;
+      if (!fullSeries.length) {
+        container.innerHTML = `<div class="hint">No daily sector market-cap history.</div>`;
+        renderSectorTechnicalLevels(Array.from({ length: 3 }, (_, index) => ({ label: index ? "Indicator" : "Index", value: "—" })));
+        renderTechnicalIndicators(["Trend", "Rel. strength", "Flow", "PPO", "Risk"].map(label => ({ label, value: "—" })));
+        return;
+      }
+      const cutoff = technicalRangeStart(fullSeries[fullSeries.length - 1].date, state.technicalTimeframe);
+      const visible = fullSeries.filter(point => point.date >= cutoff);
+      const base = visible[0]?.marketCap;
+      const data = visible.map(point => ({ ...point, indexed: base ? point.marketCap / base * 100 : NaN }));
+      const latestIndex = data[data.length - 1]?.indexed;
+      const change = Number.isFinite(latestIndex) ? latestIndex - 100 : NaN;
+      const latestCap = data[data.length - 1]?.marketCap;
+      renderSectorTechnicalLevels([
+        { label: "MCap index", value: Number.isFinite(latestIndex) ? latestIndex.toFixed(1) : "—" },
+        { label: "Period return", value: Number.isFinite(change) ? `${change >= 0 ? "+" : ""}${change.toFixed(1)}%` : "—", className: change >= 0 ? "pos" : "neg" },
+        { label: "Latest MCap", value: Number.isFinite(latestCap) ? `${(latestCap / 1000).toFixed(1)} tn` : "—" }
+      ]);
+      renderTechnicalIndicators(["Trend", "Rel. strength", "Flow", "PPO", "Risk"].map(label => ({ label, value: "—" })));
+      const width = chartWidth(container, 1100);
+      const height = width < 560 ? 280 : 330;
+      const margin = { top: 20, right: 12, bottom: 30, left: width < 560 ? 40 : 52 };
+      const innerW = width - margin.left - margin.right;
+      const innerH = height - margin.top - margin.bottom;
+      const values = data.map(point => point.indexed).filter(Number.isFinite);
+      const minValue = Math.min(...values);
+      const maxValue = Math.max(...values);
+      const padding = Math.max((maxValue - minValue) * 0.08, 1);
+      const yMin = minValue - padding;
+      const yMax = maxValue + padding;
+      const x = index => margin.left + (data.length > 1 ? index / (data.length - 1) : 0) * innerW;
+      const y = value => margin.top + (yMax - value) / (yMax - yMin || 1) * innerH;
+      const svg = makeSvg(width, height);
+      svg.setAttribute("aria-label", `${displaySector(subject.sector)} aggregate market-cap performance over ${state.technicalTimeframe}`);
+      for (let index = 0; index <= 4; index += 1) {
+        const value = yMin + (yMax - yMin) * index / 4;
+        const yy = y(value);
+        addSvgNode(svg, "line", { x1: margin.left, x2: width - margin.right, y1: yy, y2: yy, stroke: "var(--line)", "stroke-width": 1 });
+        addSvgNode(svg, "text", { x: margin.left - 5, y: yy + 3, fill: "var(--muted)", "font-size": 9, "text-anchor": "end" }, value.toFixed(0));
+      }
+      const path = technicalLinePath(data, x, y, "indexed");
+      addSvgNode(svg, "path", { d: path, fill: "none", stroke: "var(--accent)", "stroke-width": 2.2 });
+      [0, 0.33, 0.66, 1].forEach(position => {
+        const index = Math.min(data.length - 1, Math.round((data.length - 1) * position));
+        addSvgNode(svg, "text", { x: x(index), y: height - 8, fill: "var(--muted)", "font-size": 9, "text-anchor": position === 0 ? "start" : position === 1 ? "end" : "middle" }, technicalDateLabel(data[index].date));
+      });
+      addSvgNode(svg, "circle", { cx: x(data.length - 1), cy: y(latestIndex), r: 3.5, fill: change >= 0 ? "var(--good)" : "var(--bad)" });
+      container.innerHTML = "";
+      container.appendChild(svg);
+    }
+
+    function renderStockTechnicalPanel(subject, signalPeriod = "daily", priceOnly = false) {
+      const model = buildStockTechnicalModel(subject.ticker, signalPeriod);
+      activeTechnicalExchange = model?.exchange || technicalPriceData.exchanges.get(subject.ticker) || "";
+      const container = document.getElementById("technicalChart");
+      container.setAttribute("aria-label", priceOnly ? "Price chart and action levels" : "Daily price and technical indicators");
+      document.getElementById("technicalChartTitle").textContent = subject.ticker ? `${subject.ticker} technical position` : "No matching stock";
+      if (!model) {
+        document.getElementById("technicalState").textContent = "No data";
+        document.getElementById("technicalState").className = "technical-state neutral";
+        document.getElementById("technicalChartHint").textContent = "No daily adjusted-price history.";
+        document.getElementById("technicalHolderHeading").textContent = "Holder";
+        document.getElementById("technicalBuyerSection").hidden = false;
+        document.getElementById("technicalHolderLevels").innerHTML = technicalLevelMarkup([{ label: "Action", value: "—" }]);
+        document.getElementById("technicalBuyerLevels").innerHTML = technicalLevelMarkup([{ label: "Action", value: "—" }]);
+        renderTechnicalIndicators(["Trend", "Rel. strength", "Flow", "PPO", "Risk"].map(label => ({ label, value: "—" })));
+        container.innerHTML = "";
+        return;
+      }
+      document.getElementById("technicalState").textContent = model.stateName;
+      document.getElementById("technicalState").className = `technical-state ${model.tone}`;
+      document.getElementById("technicalChartHint").textContent = model.strategic
+        ? "Weekly adjusted close · long-term objective, add zone and structural risk levels · risk uses 20-week close volatility"
+        : "Daily adjusted close · resistance, support, entry and exit levels · risk uses 20-session close volatility";
+      renderPositionTechnicalLevels(model);
+      const flowTone = model.latestFlow >= 60 ? "pos" : model.latestFlow < 40 ? "neg" : "warn";
+      const relativeTone = model.relativeChange >= 0 ? "pos" : "neg";
+      const ppoTone = model.latestPpo >= model.latestPpoSignal ? "pos" : "neg";
+      renderTechnicalIndicators([
+        { label: "Trend", value: model.trendPositive ? "Positive" : model.current >= model.latestSma200 ? "Mixed" : "Negative", className: model.trendPositive ? "pos" : model.current >= model.latestSma200 ? "warn" : "neg" },
+        { label: "Rel. strength", value: Number.isFinite(model.relativeChange) ? `${model.relativeChange >= 0 ? "+" : ""}${(model.relativeChange * 100).toFixed(1)}%` : "—", className: relativeTone },
+        { label: "Flow", value: Number.isFinite(model.latestFlow) ? model.latestFlow.toFixed(0) : "—", className: flowTone },
+        { label: "PPO", value: Number.isFinite(model.latestPpo) ? `${model.latestPpo.toFixed(1)}%` : "—", className: ppoTone },
+        { label: model.strategic ? "20W risk" : "20D risk", value: Number.isFinite(model.riskUnit) ? `${(model.riskUnit / model.current * 100).toFixed(1)}%` : "—" }
+      ]);
+      const cutoff = technicalRangeStart(model.latest.date, state.technicalTimeframe);
+      const startIndex = Math.max(0, model.series.findIndex(point => point.date >= cutoff));
+      const data = model.series.slice(startIndex).map((point, localIndex) => {
+        const index = startIndex + localIndex;
+        return {
+          ...point,
+          ema20: model.ema20[index], sma50: model.sma50[index], sma200: model.sma200[index],
+          ppo: model.ppo[index], ppoSignal: model.ppoSignal[index], ppoHistogram: model.ppoHistogram[index],
+          relative: model.relative[index], flow: model.flow[index]
+        };
+      });
+      const relativeBase = data.map(point => point.relative).find(Number.isFinite);
+      data.forEach(point => { point.relativeIndex = Number.isFinite(point.relative) && relativeBase ? point.relative / relativeBase * 100 : NaN; });
+      const width = chartWidth(container, 1100);
+      const compact = width < 560;
+      const showIndicatorPanels = !priceOnly && !compact;
+      const summaryHeight = document.querySelector(".technical-summary-box")?.getBoundingClientRect().height || 0;
+      const desktopPriceHeight = priceOnly && window.innerWidth > 980
+        ? Math.max(245, Math.round(summaryHeight - 6))
+        : 245;
+      const height = showIndicatorPanels ? 410 : desktopPriceHeight;
+      const margin = { top: 18, right: compact ? 7 : 12, bottom: 26, left: compact ? 39 : 50 };
+      const projectionWidth = priceOnly
+        ? Math.max(compact ? 48 : 80, width * (compact ? 0.16 : 0.128))
+        : Math.max(compact ? 48 : 100, width * 0.16);
+      const historyRight = width - margin.right - projectionWidth;
+      const innerW = historyRight - margin.left;
+      const mainTop = margin.top;
+      const mainBottom = showIndicatorPanels ? 208 : height - margin.bottom;
+      const rsTop = mainBottom + 25;
+      const rsBottom = rsTop + (compact ? 40 : 36);
+      const flowTop = rsBottom + 23;
+      const flowBottom = flowTop + (compact ? 36 : 33);
+      const ppoTop = flowBottom + 23;
+      const ppoBottom = height - margin.bottom;
+      const x = index => margin.left + (data.length > 1 ? index / (data.length - 1) : 0) * innerW;
+      const priceValues = data.flatMap(point => [point.price, point.ema20, point.sma50, point.sma200]).filter(Number.isFinite);
+      priceValues.push(
+        model.strategic ? model.strategicObjective : model.nextResistance,
+        model.strategic ? model.coreSupport : model.nextSupport,
+        model.newBuyerEntryLow, model.newBuyerEntryHigh,
+        model.strategic ? model.coreInvalidation : model.newBuyerInvalidation,
+        model.supportFailure, model.exit
+      );
+      const validPriceValues = priceValues.filter(Number.isFinite);
+      const minPrice = Math.min(...validPriceValues);
+      const maxPrice = Math.max(...validPriceValues);
+      const pricePadding = Math.max((maxPrice - minPrice) * 0.05, model.current * 0.01);
+      const yMin = minPrice - pricePadding;
+      const yMax = maxPrice + pricePadding;
+      const priceTicks = technicalPriceTicks(yMin, yMax, 4);
+      const plotMin = priceTicks[0] ?? yMin;
+      const plotMax = priceTicks[priceTicks.length - 1] ?? yMax;
+      const yPrice = value => mainTop + (plotMax - value) / (plotMax - plotMin || 1) * (mainBottom - mainTop);
+      const svg = makeSvg(width, height);
+      svg.setAttribute("aria-label", showIndicatorPanels
+        ? `${subject.ticker} price, moving averages, relative strength, flow, PPO, and current action levels over ${state.technicalTimeframe}`
+        : `${subject.ticker} price, moving averages, and current action levels over ${state.technicalTimeframe}`);
+      priceTicks.forEach(value => {
+        const yy = yPrice(value);
+        addSvgNode(svg, "line", { x1: margin.left, x2: width - margin.right, y1: yy, y2: yy, stroke: "var(--line)", "stroke-width": 1 });
+        addSvgNode(svg, "text", { x: margin.left - 4, y: yy + 3, fill: "var(--muted)", "font-size": compact ? 7 : 9, "text-anchor": "end" }, technicalFormatPrice(value));
+      });
+      const activeBuyer = model.newBuyerAction !== "Wait";
+      const upperBandCenter = model.strategic ? model.strategicObjective : model.nextResistance;
+      const upperBandLow = Number.isFinite(upperBandCenter) ? upperBandCenter - 0.5 * model.riskUnit : NaN;
+      const upperBandHigh = Number.isFinite(upperBandCenter) ? upperBandCenter + 0.5 * model.riskUnit : NaN;
+      const actionBands = [
+        { low: upperBandLow, high: upperBandHigh, fill: "var(--warn)", opacity: 0.11 },
+        { low: model.newBuyerEntryLow, high: model.newBuyerEntryHigh, fill: activeBuyer ? "var(--good)" : "var(--muted)", opacity: activeBuyer ? 0.16 : 0.09 }
+      ];
+      actionBands.forEach(band => {
+        if (![band.low, band.high].every(Number.isFinite)) return;
+        const roundedLow = technicalRoundPrice(band.low);
+        const roundedHigh = technicalRoundPrice(band.high);
+        const top = Math.min(yPrice(roundedLow), yPrice(roundedHigh));
+        const bandHeight = Math.abs(yPrice(roundedLow) - yPrice(roundedHigh));
+        addSvgNode(svg, "rect", { x: historyRight, y: top, width: width - margin.right - historyRight, height: Math.max(2, bandHeight), fill: band.fill, opacity: band.opacity });
+      });
+      const decisionExit = model.strategic && Number.isFinite(model.coreInvalidation)
+        ? model.coreInvalidation
+        : model.stateName === "Breakdown" && Number.isFinite(model.supportFailure)
+          ? model.supportFailure
+          : Number.isFinite(model.newBuyerInvalidation) ? model.newBuyerInvalidation : model.exit;
+      const chartSupport = model.strategic ? model.coreSupport : model.nextSupport;
+      const chartObjective = model.strategic ? model.strategicObjective : model.nextResistance;
+      if (!priceOnly) {
+        [
+          { value: chartObjective, color: "var(--warn)", dash: "" },
+          { value: chartSupport, color: "var(--accent-2)", dash: "" },
+          { value: decisionExit, color: "var(--bad)", dash: "4 3", direction: "down" }
+        ].forEach(level => {
+          if (!Number.isFinite(level.value)) return;
+          const roundedValue = technicalRoundPrice(level.value, level.direction || "nearest");
+          addSvgNode(svg, "line", { x1: historyRight, x2: width - margin.right, y1: yPrice(roundedValue), y2: yPrice(roundedValue), stroke: level.color, "stroke-width": 1.5, "stroke-dasharray": level.dash });
+        });
+      }
+      addSvgNode(svg, "line", { x1: historyRight, x2: historyRight, y1: mainTop, y2: mainBottom, stroke: "var(--muted)", "stroke-width": 1 });
+
+      const buyerLabel = model.newBuyerAction === "Bottom-fish"
+        ? (compact ? "FISH" : "BOTTOM-FISH")
+        : model.newBuyerAction.toUpperCase();
+      const actionLabels = [
+        { value: chartObjective, text: model.strategic ? (compact ? "OBJ." : "OBJECTIVE") : "RESIST", color: "var(--warn)", direction: "down" },
+        { value: (model.newBuyerEntryLow + model.newBuyerEntryHigh) / 2, text: buyerLabel, color: activeBuyer ? "var(--good)" : "var(--muted)" },
+        { value: chartSupport, text: model.strategic ? (compact ? "CORE" : "CORE SUPPORT") : "SUPPORT", color: "var(--accent-2)", direction: "down" },
+        { value: decisionExit, text: model.strategic ? (compact ? "INVALID" : "INVALIDATE") : "EXIT", color: "var(--bad)", direction: "down" }
+      ].filter(label => Number.isFinite(label.value)).map(label => {
+        const value = technicalRoundPrice(label.value, label.direction || "nearest");
+        return { ...label, value, y: yPrice(value) };
+      });
+      actionLabels.sort((a, b) => a.y - b.y);
+      actionLabels.forEach((label, index) => {
+        label.y = Math.max(mainTop + 22, Math.min(mainBottom - 4, label.y));
+        if (index && label.y - actionLabels[index - 1].y < (compact ? 10 : 12)) label.y = actionLabels[index - 1].y + (compact ? 10 : 12);
+      });
+      for (let index = actionLabels.length - 2; index >= 0; index -= 1) {
+        if (actionLabels[index + 1].y > mainBottom - 4) actionLabels[index + 1].y = mainBottom - 4;
+        if (actionLabels[index + 1].y - actionLabels[index].y < (compact ? 10 : 12)) actionLabels[index].y = actionLabels[index + 1].y - (compact ? 10 : 12);
+      }
+      actionLabels.forEach(label => {
+        if (!priceOnly) {
+          addSvgNode(svg, "text", {
+            x: historyRight + 4, y: label.y, fill: label.color,
+            "font-size": compact ? 6 : 8, "font-weight": 700
+          }, label.text);
+          return;
+        }
+        const boxWidth = compact ? 28 : Math.min(64, projectionWidth * 0.62);
+        const boxHeight = compact ? 9 : 14;
+        const boxX = width - margin.right - boxWidth;
+        const boxY = label.y - boxHeight / 2 - 1;
+        addSvgNode(svg, "line", {
+          x1: historyRight + 3, x2: boxX - 3, y1: label.y - 1, y2: label.y - 1,
+          stroke: label.color, "stroke-width": 1.5, "stroke-linecap": "round"
+        });
+        addSvgNode(svg, "rect", {
+          x: boxX, y: boxY, width: boxWidth, height: boxHeight,
+          rx: compact ? 2 : 3, fill: "var(--surface)", stroke: label.color, "stroke-width": 1
+        });
+        addSvgNode(svg, "text", {
+          x: boxX + boxWidth / 2, y: boxY + boxHeight * 0.7, fill: label.color,
+          "font-size": compact ? 5.5 : 7, "font-weight": 700, "text-anchor": "middle"
+        }, label.text);
+      });
+
+      const primaryLines = [
+        { key: "sma200", label: model.trendLabels.long, color: "var(--muted)", width: 1.2 },
+        { key: "sma50", label: model.trendLabels.medium, color: "var(--accent-2)", width: 1.7 },
+        { key: "ema20", label: model.trendLabels.short, color: "var(--good)", width: 1.7 },
+        { key: "price", label: "PRICE", color: "var(--text)", width: 2.2 }
+      ];
+      primaryLines.forEach(line => {
+        const path = technicalLinePath(data, x, yPrice, line.key);
+        addSvgNode(svg, "path", { d: path, fill: "none", stroke: line.color, "stroke-width": line.width, class: "technical-series-line", "data-series": line.key, "stroke-linecap": "round" });
+        addSvgNode(svg, "path", { d: path, fill: "none", stroke: "transparent", "stroke-width": 12, class: "technical-series-hit", "data-series": line.key, "pointer-events": "stroke" });
+      });
+      addSvgNode(svg, "circle", { cx: historyRight, cy: yPrice(model.current), r: 3.2, fill: "var(--accent)" });
+      let legendX = margin.left;
+      [primaryLines[3], primaryLines[2], primaryLines[1], primaryLines[0]].forEach(line => {
+        addSvgNode(svg, "text", {
+          x: legendX, y: mainTop + 10, fill: line.color, "font-size": compact ? 7 : 9,
+          class: "technical-series-label", "data-series": line.key
+        }, line.label);
+        legendX += line.label.length * (compact ? 4.5 : 5.8) + (compact ? 8 : 12);
+      });
+
+      if (showIndicatorPanels) {
+        const rsValues = data.map(point => point.relativeIndex).filter(Number.isFinite);
+        const rsMin = Math.min(...rsValues, 100);
+        const rsMax = Math.max(...rsValues, 100);
+        const yRs = value => rsTop + (rsMax - value) / (rsMax - rsMin || 1) * (rsBottom - rsTop);
+        addSvgNode(svg, "line", { x1: margin.left, x2: historyRight, y1: yRs(100), y2: yRs(100), stroke: "var(--line)", "stroke-width": 1 });
+        addSvgNode(svg, "path", { d: technicalLinePath(data, x, yRs, "relativeIndex"), fill: "none", stroke: "var(--accent)", "stroke-width": 1.7 });
+        addSvgNode(svg, "text", { x: margin.left, y: rsTop - 7, fill: "var(--muted)", "font-size": 9 }, "RELATIVE STRENGTH vs VN-INDEX");
+
+        const yFlow = value => flowTop + (100 - value) / 100 * (flowBottom - flowTop);
+        addSvgNode(svg, "line", { x1: margin.left, x2: historyRight, y1: yFlow(50), y2: yFlow(50), stroke: "var(--line)", "stroke-width": 1 });
+        addSvgNode(svg, "path", { d: technicalLinePath(data, x, yFlow, "flow"), fill: "none", stroke: model.latestFlow >= 50 ? "var(--good)" : "var(--bad)", "stroke-width": 1.7 });
+        addSvgNode(svg, "text", { x: margin.left, y: flowTop - 7, fill: "var(--muted)", "font-size": 9 }, "FLOW SCORE · 50 NEUTRAL");
+
+        const histogramValues = data.map(point => point.ppoHistogram).filter(Number.isFinite);
+        const histogramMax = Math.max(...histogramValues.map(Math.abs), 0.1);
+        const yPpo = value => ppoTop + (histogramMax - value) / (2 * histogramMax) * (ppoBottom - ppoTop);
+        const zeroY = yPpo(0);
+        addSvgNode(svg, "line", { x1: margin.left, x2: historyRight, y1: zeroY, y2: zeroY, stroke: "var(--line)", "stroke-width": 1 });
+        const positiveBars = [];
+        const negativeBars = [];
+        data.forEach((point, index) => {
+          if (!Number.isFinite(point.ppoHistogram)) return;
+          const segment = `M${x(index).toFixed(2)},${zeroY.toFixed(2)}V${yPpo(point.ppoHistogram).toFixed(2)}`;
+          (point.ppoHistogram >= 0 ? positiveBars : negativeBars).push(segment);
+        });
+        if (positiveBars.length) addSvgNode(svg, "path", { d: positiveBars.join(" "), fill: "none", stroke: "var(--good)", "stroke-width": Math.max(1, innerW / Math.max(data.length, 1) * 0.7), opacity: 0.72 });
+        if (negativeBars.length) addSvgNode(svg, "path", { d: negativeBars.join(" "), fill: "none", stroke: "var(--bad)", "stroke-width": Math.max(1, innerW / Math.max(data.length, 1) * 0.7), opacity: 0.72 });
+        addSvgNode(svg, "text", { x: margin.left, y: ppoTop - 7, fill: "var(--muted)", "font-size": 9 }, "PPO MOMENTUM");
+      }
+      [0, 0.33, 0.66, 1].forEach(position => {
+        const index = Math.min(data.length - 1, Math.round((data.length - 1) * position));
+        addSvgNode(svg, "text", { x: x(index), y: height - 7, fill: "var(--muted)", "font-size": compact ? 7 : 9, "text-anchor": position === 0 ? "start" : position === 1 ? "end" : "middle" }, technicalDateLabel(data[index].date));
+      });
+      container.innerHTML = "";
+      container.appendChild(svg);
+      enableTechnicalSeriesFocus(svg);
+    }
+
+    function renderTechnicalPanel(subject, isSectorDetail) {
+      document.querySelector(".technical-indicators-section").hidden = false;
+      currentTechnicalSubject = { subject, isSectorDetail, signalPeriod: "daily", priceOnly: false };
+      document.querySelectorAll("[data-technical-range]").forEach(button => {
+        button.classList.toggle("active", button.dataset.technicalRange === state.technicalTimeframe);
+      });
+      if (isSectorDetail) renderSectorTechnicalPanel(subject);
+      else renderStockTechnicalPanel(subject);
+    }
+
+    function renderCurrentTechnicalSubject() {
+      if (!currentTechnicalSubject) return;
+      const { subject, isSectorDetail, signalPeriod = "daily", priceOnly = false } = currentTechnicalSubject;
+      document.querySelectorAll("[data-technical-range]").forEach(button => {
+        button.classList.toggle("active", button.dataset.technicalRange === state.technicalTimeframe);
+      });
+      if (isSectorDetail) renderSectorTechnicalPanel(subject, signalPeriod);
+      else renderStockTechnicalPanel(subject, signalPeriod, priceOnly);
+    }
+
+    function mountTechnicalPanel(target) {
+      const panel = document.getElementById("technicalPanel");
+      if (panel.parentElement !== target) target.appendChild(panel);
+    }
+
+    function restoreTechnicalPanel() {
+      const anchor = document.getElementById("technicalPanelAnchor");
+      const panel = document.getElementById("technicalPanel");
+      if (anchor.nextElementSibling !== panel) anchor.insertAdjacentElement("afterend", panel);
+    }
+
     function renderFundamentalDetails(model) {
       const section = document.getElementById("stockDetailsSection");
       const isSectorDetail = state.tableMode === "sectors";
@@ -4046,7 +5919,11 @@
         return;
       }
       section.hidden = false;
+      restoreTechnicalPanel();
+      document.getElementById("technicalPanel").hidden = true;
+      document.getElementById("stockDetailsTable").hidden = false;
       renderFundamentalDetailNavigation(model, subject, isSectorDetail);
+      currentTechnicalSubject = null;
       document.getElementById("stockDetailsTable").classList.toggle("sector-detail-table", isSectorDetail);
       const detailPeriods = subject.detail_periods || [];
       const periodLabels = model.annualView
@@ -4060,7 +5937,7 @@
       const detailName = isSectorDetail ? displaySector(subject.sector) : subject.ticker;
       document.getElementById("stockDetailsTitle").innerHTML = `${isSectorDetail ? "Sector" : "Stock"} Details — ${detailName} · <span class="detail-range-desktop">${periodRange}</span><span class="detail-range-mobile">${mobilePeriodRange}</span>`;
       document.getElementById("stockDetailsHint").textContent = isSectorDetail
-        ? `Consolidated from ${subject.detail_coverage || subject.total || subject.coverage || 0} stocks · relative ${fundamentalStatusText(subject)} · sector score ${fmtFundScore(subject.score)} (70% agg. ${fmtFundScore(subject.aggregate_score)} + 30% breadth ${fmtFundScore(subject.breadth_score)}) · double-click/two-tap a field for best-to-worst stocks`
+        ? `Consolidated from ${subject.detail_coverage || subject.total || subject.coverage || 0} stocks · relative ${fundamentalStatusText(subject)} · double-click/two-tap a field for best-to-worst stocks`
         : `${displaySector(subject.sector)} · ${fundamentalStatusText(subject)} · score ${fmtFundScore(subject.score)}`;
       const olderCutoff = Math.max(0, periodLabels.length - 4);
       const detailTable = document.getElementById("stockDetailsTable");
@@ -4230,6 +6107,9 @@
     }
 
     function setStatLabels(fundamentals = false) {
+      ["bestSectorStat", "worstSectorStat", "topStockStat", "worstStockStat"].forEach(id => {
+        document.getElementById(id).hidden = false;
+      });
       document.getElementById("bestSectorLabel").textContent = "Best current sector";
       document.getElementById("worstSectorLabel").textContent = "Worst current sector";
       document.getElementById("topStockLabel").textContent = fundamentals ? "Best stock ticker" : "Top stock score";
@@ -4288,12 +6168,164 @@
     }
 
     function renderDetailedView(model) {
+      if (state.detailView === "technical-analysis") {
+        renderTechnicalDetailedView(model);
+        return;
+      }
       ensureFundamentalDetailSelection(model);
       document.getElementById("stockDetailsSection").hidden = false;
       renderFundamentalDetails(model);
     }
 
+    function renderTechnicalDetailedView(model) {
+      const section = document.getElementById("stockDetailsSection");
+      const requestedTicker = state.detailTechnicalTicker || "VN-Index";
+      const isIndex = isVnIndexTicker(requestedTicker);
+      const stock = isIndex ? null : model.stockStats.find(row => row.ticker === String(requestedTicker).toUpperCase());
+      const ticker = stock?.ticker || "VN-Index";
+      state.detailTechnicalTicker = ticker;
+      section.hidden = false;
+      restoreTechnicalPanel();
+      document.getElementById("technicalPanel").hidden = false;
+      document.getElementById("stockDetailsTable").hidden = true;
+      const sectorSelect = document.getElementById("detailSectorSelect");
+      const sectors = model.sectorStats.slice().sort((a, b) => displaySector(a.sector).localeCompare(displaySector(b.sector)));
+      sectorSelect.innerHTML = `<option value="All">VN-Index</option>${sectors.map(row => `<option value="${row.sector}">${displaySector(row.sector)}</option>`).join("")}`;
+      sectorSelect.value = stock?.sector || "All";
+      document.getElementById("detailTickerSearch").value = ticker;
+      document.getElementById("stockDetailsTitle").textContent = `Bollinger Support & Resistance — ${ticker}`;
+      document.getElementById("stockDetailsHint").textContent = stock
+        ? `${displaySector(stock.sector)} · dynamic 50/100/200-day Bollinger support and resistance`
+        : "VN-Index benchmark · dynamic 50/100/200-day Bollinger support and resistance";
+      currentTechnicalSubject = null;
+      renderBollingerTechnicalPanel(buildBollingerTechnicalModel(ticker));
+    }
+
+    function updateTechnicalFilterOptions() {
+      document.getElementById("technicalRatingFilter").innerHTML = `<option value="All">All positions</option>`;
+      document.getElementById("technicalActionFilter").innerHTML = `<option value="All">All levels</option>`;
+    }
+
+    function selectedTechnicalStock(model, pool = model.stockStats) {
+      const ticker = String(state.search || "").trim().toUpperCase();
+      if (isVnIndexTicker(ticker) || isVnIndexTicker(state.selectedTechnicalTicker)) return technicalIndexRow();
+      return pool.find(row => row.ticker === ticker)
+        || pool.find(row => row.ticker === state.selectedTechnicalTicker)
+        || null;
+    }
+
+    function renderTechnicalAnalysisChart(model) {
+      const container = document.getElementById("sectorChart");
+      restoreTechnicalPanel();
+      container.innerHTML = "";
+      mountTechnicalPanel(container);
+      const filteredStocks = filteredTechnicalStocks(model);
+      const selectedStock = selectedTechnicalStock(model, filteredStocks) || filteredStocks[0] || null;
+      const subject = { ticker: selectedStock?.ticker || "", sector: selectedStock?.sector || "" };
+      document.querySelector(".technical-indicators-section").hidden = true;
+      currentTechnicalSubject = null;
+      renderBollingerTechnicalPanel(selectedStock?.technical || null);
+      document.getElementById("rotationTitle").textContent = "Bollinger Support & Resistance";
+      document.getElementById("rotationHint").textContent = `${selectedStock?.ticker || "—"} · dynamic 50/100/200-day bands`;
+      document.getElementById("marketReset").hidden = true;
+    }
+
+    function renderTechnicalAnalysisStats(model) {
+      setStatLabels(false);
+      const filteredStocks = filteredTechnicalStocks(model);
+      const selected = selectedTechnicalStock(model, filteredStocks) || filteredStocks[0] || null;
+      const technical = selected?.technical;
+      document.getElementById("bestSectorLabel").textContent = "Selected stock";
+      document.getElementById("bestSector").textContent = selected?.ticker || "-";
+      document.getElementById("bestSectorNote").textContent = selected ? `${displaySector(selected.sector)} · ${selected.rating}` : "-";
+      document.getElementById("worstSectorLabel").textContent = "Current price";
+      document.getElementById("worstSector").textContent = technical ? technicalFormatPrice(technical.current, "nearest", technical.exchange) : "-";
+      document.getElementById("worstSectorNote").textContent = "Latest adjusted close";
+      document.getElementById("topStockLabel").textContent = "Active resistance";
+      document.getElementById("topStock").textContent = technical && Number.isFinite(technical.resistance) ? technicalFormatPrice(technical.resistance, "down", technical.exchange) : "Open";
+      document.getElementById("topStockNote").textContent = technical?.resistancePeriod ? `${technical.resistancePeriod}-day upper band · ${fmtSignedPct(technical.resistanceDistance)}` : "Above 200-day upper band";
+      document.getElementById("worstStockLabel").textContent = "Active support";
+      document.getElementById("worstStock").textContent = technical && Number.isFinite(technical.support) ? technicalFormatPrice(technical.support, "up", technical.exchange) : "Uncharted";
+      document.getElementById("worstStockNote").textContent = technical?.supportPeriod ? `${technical.supportPeriod}-day lower band · ${fmtSignedPct(technical.supportDistance)}` : "Below 200-day lower band";
+    }
+
+    function technicalContextValue(level, pct, positive, exchange = "") {
+      if (!Number.isFinite(level) || !Number.isFinite(pct)) return positive ? "Open" : "Uncharted";
+      return `<span class="${positive ? "pos" : "neg"}">${fmtSignedPct(pct)}</span><br><small>${technicalFormatPrice(level, positive ? "down" : "up", exchange)}</small>`;
+    }
+
+    function renderTechnicalAnalysisTable(model) {
+      const table = document.getElementById("combinedTable");
+      const head = document.getElementById("combinedTableHead");
+      const body = document.getElementById("combinedTableRows");
+      const title = document.getElementById("tableTitle");
+      const hint = document.getElementById("tableHint");
+      setCombinedTableColumns([]);
+      body.innerHTML = "";
+      state.tableMode = "stocks";
+      document.getElementById("tableOverview").hidden = true;
+      document.getElementById("allStockRanking").hidden = true;
+      const sectorFilter = document.getElementById("technicalSectorFilter");
+      sectorFilter.hidden = false;
+      sectorFilter.innerHTML = `<option value="All">All sectors</option>${model.sectorStats.map(row => `<option value="${escapeTagText(row.sector)}">${displaySector(row.sector)}</option>`).join("")}`;
+      sectorFilter.value = state.sector;
+      table.className = "ta-stock-table";
+      title.textContent = state.sector === "All" ? "Stock Band Position" : `${displaySector(state.sector)} Stock Band Position`;
+      hint.textContent = "Sorted from the highest to lowest Bollinger-band position. Click a stock to update the chart.";
+      head.innerHTML = `<tr><th>Ticker</th><th>Position</th><th>Current</th><th>Resistance</th><th>Support</th></tr>`;
+      const rows = filteredTechnicalStocks(model);
+      if (!rows.length) {
+        body.innerHTML = `<tr><td colspan="5">No matching stocks.</td></tr>`;
+        return;
+      }
+      rows.forEach(row => {
+        const tone = row.technical.tone;
+        const resistance = Number.isFinite(row.technical.resistance) ? technicalFormatPrice(row.technical.resistance, "down", row.technical.exchange) : "Open";
+        const support = Number.isFinite(row.technical.support) ? technicalFormatPrice(row.technical.support, "up", row.technical.exchange) : "Uncharted";
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><strong>${row.ticker}</strong></td>
+          <td class="ta-rating-${tone}">${row.rating}</td>
+          <td>${technicalFormatPrice(row.technical.current, "nearest", row.technical.exchange)}</td>
+          <td class="${row.technical.resistancePeriod ? "ta-rating-warning" : "ta-rating-positive"}">${resistance}</td>
+          <td class="${row.technical.supportPeriod === 200 || !row.technical.supportPeriod ? "ta-rating-negative" : "ta-rating-positive"}">${support}</td>`;
+        tr.addEventListener("click", () => {
+          state.selectedTechnicalTicker = row.ticker;
+          renderTechnicalAnalysisChart(model);
+        });
+        body.appendChild(tr);
+      });
+    }
+
+    function renderTechnicalAnalysisHelp(model) {
+      document.getElementById("sectorViewHelp").innerHTML = `<strong>Bollinger framework:</strong> each band is the daily moving average plus or minus two standard deviations, calculated over 50, 100, and 200 sessions.`;
+      document.getElementById("rotationDeltaHelp").innerHTML = `<strong>Dynamic levels:</strong> support begins at the 50-day lower band. After a lower-band breach it advances to 100D, then 200D. Resistance independently follows the same hierarchy through the upper bands.`;
+      document.getElementById("selectedViewHelp").innerHTML = `<strong>Outside the hierarchy:</strong> below the 200-day lower band means the long-term trend is broken and price must find a new equilibrium. Above the 200-day upper band means upside price discovery.`;
+      document.getElementById("rankingIntroHelp").innerHTML = `<strong>Stock table:</strong> Position describes where the latest close sits within the three Bollinger envelopes. Resistance and support show the currently active band, not an action or target price.`;
+      document.getElementById("scoreMethodHelp").innerHTML = `<strong>Interpretation:</strong> Bollinger levels are statistical ranges. A close through a band moves the reference to the next longer horizon; the dashboard does not issue buy, trim, or sell recommendations.`;
+    }
+
+    function configureTechnicalAnalysisUi(active) {
+      document.getElementById("tableOverview").hidden = active;
+      document.getElementById("allStockRanking").hidden = active;
+      document.getElementById("technicalSectorFilter").hidden = !active;
+      document.getElementById("sectorChart").setAttribute("aria-label", active ? "Technical price chart and levels" : "Sector rotation chart");
+      if (!active) document.querySelector(".technical-indicators-section").hidden = false;
+    }
+
     function renderAll(model) {
+      configureTechnicalAnalysisUi(state.methodology === "technical-analysis");
+      if (state.methodology === "technical-analysis") {
+        state.tableMode = "stocks";
+        updateTechnicalFilterOptions();
+        document.getElementById("stockDetailsSection").hidden = true;
+        renderTechnicalAnalysisHelp(model);
+        renderTechnicalAnalysisStats(model);
+        renderTechnicalAnalysisChart(model);
+        renderTechnicalAnalysisTable(model);
+        return;
+      }
+      restoreTechnicalPanel();
       if (state.methodology === "fundamentals") {
         updateFundamentalTagOptions(model);
         ensureFundamentalDetailSelection(model);
@@ -4322,16 +6354,23 @@
       const period = document.getElementById("period");
       const isRrg = state.methodology === "relative-rotation";
       const isFundamentals = state.methodology === "fundamentals";
+      const isTechnical = state.methodology === "technical-analysis";
       document.querySelector(".grid-2").classList.toggle("fundamentals-grid", isFundamentals);
+      document.getElementById("app").classList.toggle("technical-analysis-mode", state.page === "methodology" && isTechnical);
       document.getElementById("app").classList.toggle("fundamentals-mode", state.page === "details" || state.page === "methodology" && isFundamentals);
       document.getElementById("periodLabel").textContent = "Period";
       document.getElementById("tailControl").hidden = !isRrg;
-      document.getElementById("periodControl").hidden = false;
-      document.getElementById("dateControl").hidden = isRrg || isFundamentals;
+      document.getElementById("periodControl").hidden = isTechnical;
+      document.getElementById("dateControl").hidden = isRrg || isFundamentals || isTechnical;
       document.getElementById("tagControl").hidden = !isFundamentals;
-      if (isFundamentals) {
+      document.getElementById("technicalRatingControl").hidden = true;
+      document.getElementById("technicalActionControl").hidden = true;
+      if (isTechnical) {
+        state.technicalAnalysisPeriod = "bollinger";
+      } else if (isFundamentals) {
         period.innerHTML = `<option value="quarter">Quarter</option><option value="year">Year</option>`;
         period.value = state.fundamentalPeriod;
+        document.getElementById("tagFilter").placeholder = "All tags";
       } else if (isRrg) {
         period.innerHTML = `<option value="10-50">10/50</option>`;
         period.value = state.rrgMode;
@@ -4352,7 +6391,12 @@
         ]);
         const rawRows = parseCsv(csvText);
         const coverage = parseCoverage(coverageText);
+        const coverageExchanges = new Map(parseCsv(coverageText)
+          .filter(row => row.ticker && row.exchange)
+          .map(row => [row.ticker, row.exchange.toUpperCase()]));
         const fundamentalsData = JSON.parse(fundamentalsText);
+        technicalPriceData = prepareTechnicalPriceData(rawRows, coverage, coverageExchanges);
+        technicalAnalysisCache.clear();
         const rrgData = RelativeRotation.prepare(rawRows, coverage);
         const dateInput = document.getElementById("baseDate");
         const fullModel = buildModel(rawRows, coverage, "", state.flowPeriod);
@@ -4361,6 +6405,11 @@
         dateInput.max = fullModel.latestDate || "";
         dateInput.value = state.baseDate;
         let model = fullModel;
+        if (state.page === "methodology" && state.methodology === "technical-analysis") {
+          state.search = "VN-Index";
+          state.selectedTechnicalTicker = "VN-Index";
+          document.getElementById("search").value = "VN-Index";
+        }
 
         function rebuildAndRender() {
           applyPageVisibility();
@@ -4378,6 +6427,14 @@
           }
           if (state.page === "details") {
             model = buildFundamentalModel(fundamentalsData, state.fundamentalPeriod);
+            if (state.detailView === "technical-analysis") {
+              const latestTechnicalDate = technicalPriceData.index[technicalPriceData.index.length - 1]?.date || "";
+              document.getElementById("asOf").textContent = `Technical data through ${latestTechnicalDate}`;
+              document.getElementById("coverageInfo").textContent = `${model.stockStats.length} stocks plus VN-Index`;
+              document.getElementById("signalInfo").textContent = "Dynamic 50, 100, and 200-day Bollinger support and resistance levels.";
+              renderDetailedView(model);
+              return;
+            }
             const annualView = state.fundamentalPeriod === "year";
             document.getElementById("asOf").textContent = annualView
               ? `Detailed financials through ${fundamentalsData.annual_latest_period_label}`
@@ -4391,8 +6448,14 @@
             ? buildRrgModel(rrgData)
             : state.methodology === "fundamentals"
               ? buildFundamentalModel(fundamentalsData)
-              : buildModel(rawRows, coverage, state.baseDate, state.flowPeriod);
-          if (state.methodology === "fundamentals") {
+              : state.methodology === "technical-analysis"
+                ? buildTechnicalAnalysisModel(coverage)
+                : buildModel(rawRows, coverage, state.baseDate, state.flowPeriod);
+          if (state.methodology === "technical-analysis") {
+            document.getElementById("asOf").textContent = `Technical data through ${model.latestDate}`;
+            document.getElementById("coverageInfo").textContent = `${model.stockStats.length} stocks across ${model.sectorStats.length} sectors`;
+            document.getElementById("signalInfo").textContent = "Dynamic 50, 100, and 200-day Bollinger support and resistance levels.";
+          } else if (state.methodology === "fundamentals") {
             const annualView = state.fundamentalPeriod === "year";
             document.getElementById("asOf").textContent = annualView
               ? `Structural view through ${fundamentalsData.annual_latest_period_label}`
@@ -4422,19 +6485,31 @@
           state.sector = "All";
           state.search = "";
           state.tagFilter = "";
+          state.technicalRatingFilter = "All";
+          state.technicalActionFilter = "All";
           state.tableMode = "sectors";
           state.selectedFundamentalSector = "";
           state.selectedFundamentalTicker = "";
+          state.selectedTechnicalTicker = "";
           resetSectorMetricBreakdown();
           document.getElementById("search").value = "";
           document.getElementById("tagFilter").value = "";
+          document.getElementById("technicalRatingFilter").value = "All";
+          document.getElementById("technicalActionFilter").value = "All";
         }
 
         function navigatePage(page, methodology = state.methodology, push = true) {
           if (!VALID_PAGES.has(page)) page = "home";
           if (VALID_METHODOLOGIES.has(methodology)) state.methodology = methodology;
           state.page = page;
-          if (page === "methodology") resetDashboardSelection();
+          if (page === "methodology") {
+            resetDashboardSelection();
+            if (state.methodology === "technical-analysis") {
+              state.search = "VN-Index";
+              state.selectedTechnicalTicker = "VN-Index";
+              document.getElementById("search").value = "VN-Index";
+            }
+          }
           document.getElementById("methodology").value = state.methodology;
           updateMethodologyControls();
           syncPageUrl(push);
@@ -4476,8 +6551,27 @@
           return true;
         }
 
+        function showDetailTicker(value) {
+          if (state.detailView === "technical-analysis" && isVnIndexTicker(value)) {
+            state.detailTechnicalTicker = "VN-Index";
+            renderDetailedView(model);
+            return true;
+          }
+          const ticker = String(value || "").trim().toUpperCase();
+          if (state.detailView === "technical-analysis" && model.stockStats.some(row => row.ticker === ticker)) {
+            state.detailTechnicalTicker = ticker;
+          }
+          const shown = showFundamentalTickerDetail(ticker);
+          if (shown && state.detailView === "technical-analysis") renderDetailedView(model);
+          return shown;
+        }
+
         document.getElementById("methodology").addEventListener("change", event => {
           if (event.target.value === "fundamentals") state.fundamentalPeriod = "quarter";
+          if (event.target.value === "technical-analysis") {
+            state.technicalAnalysisPeriod = "bollinger";
+            state.technicalTimeframe = "1Y";
+          }
           navigatePage("methodology", event.target.value);
         });
 
@@ -4490,8 +6584,36 @@
         document.getElementById("methodologyNav").addEventListener("click", () => navigatePage("methodology"));
         document.getElementById("detailsNav").addEventListener("click", () => navigatePage("details"));
         document.getElementById("detailPeriod").addEventListener("change", event => {
-          state.fundamentalPeriod = event.target.value;
+          state.detailView = event.target.value;
+          if (state.detailView === "fundamental-quarter") state.fundamentalPeriod = "quarter";
+          else if (state.detailView === "fundamental-year") state.fundamentalPeriod = "year";
+          else {
+            state.detailTechnicalTicker = state.tableMode === "stocks" && state.selectedFundamentalTicker
+              ? state.selectedFundamentalTicker
+              : "VN-Index";
+            state.technicalTimeframe = "1Y";
+          }
           rebuildAndRender();
+        });
+        document.getElementById("technicalTimeframes").addEventListener("click", event => {
+          const button = event.target.closest("[data-technical-range]");
+          if (!button) return;
+          state.technicalTimeframe = button.dataset.technicalRange;
+          if (state.page === "methodology" && state.methodology === "technical-analysis") renderTechnicalAnalysisChart(model);
+          else if (state.page === "details" && state.detailView === "technical-analysis") renderTechnicalDetailedView(model);
+          else renderCurrentTechnicalSubject();
+        });
+        window.addEventListener("resize", () => {
+          window.clearTimeout(technicalResizeTimer);
+          technicalResizeTimer = window.setTimeout(() => {
+            if (state.page === "methodology" && state.methodology === "technical-analysis") {
+              renderTechnicalAnalysisChart(model);
+            } else if (state.page === "details" && state.detailView === "technical-analysis") {
+              renderTechnicalDetailedView(model);
+            } else if (currentTechnicalSubject && state.page === "details") {
+              renderCurrentTechnicalSubject();
+            }
+          }, 120);
         });
         document.getElementById("period").addEventListener("change", event => {
           if (state.methodology === "fundamentals") {
@@ -4502,6 +6624,8 @@
             state.rrgMode = event.target.value;
             state.tailPoints = RelativeRotation.MODE_CONFIG[state.rrgMode].defaultTailPoints;
             document.getElementById("tailPoints").value = state.tailPoints;
+          } else if (state.methodology === "technical-analysis") {
+            state.technicalAnalysisPeriod = "bollinger";
           } else {
             state.flowPeriod = event.target.value;
           }
@@ -4525,6 +6649,11 @@
           if (state.methodology === "fundamentals") {
             state.selectedFundamentalSector = "";
             state.selectedFundamentalTicker = "";
+          } else if (state.methodology === "technical-analysis") {
+            const ticker = state.search.trim().toUpperCase();
+            state.selectedTechnicalTicker = isVnIndexTicker(ticker)
+              ? "VN-Index"
+              : model.stockStats.some(row => row.ticker === ticker) ? ticker : "";
           }
           renderAll(model);
         });
@@ -4538,50 +6667,101 @@
           state.tableMode = "stocks";
           state.selectedFundamentalSector = "";
           state.selectedFundamentalTicker = "";
+          state.selectedTechnicalTicker = "";
+          renderAll(model);
+        });
+        document.getElementById("technicalRatingFilter").addEventListener("change", event => {
+          if (state.methodology !== "technical-analysis") return;
+          state.technicalRatingFilter = event.target.value || "All";
+          state.technicalActionFilter = "All";
+          state.search = "";
+          state.selectedTechnicalTicker = "";
+          document.getElementById("search").value = "";
+          document.getElementById("technicalActionFilter").value = "All";
+          renderAll(model);
+        });
+        document.getElementById("technicalActionFilter").addEventListener("change", event => {
+          if (state.methodology !== "technical-analysis") return;
+          state.technicalActionFilter = event.target.value || "All";
+          state.technicalRatingFilter = "All";
+          state.search = "";
+          state.selectedTechnicalTicker = "";
+          document.getElementById("search").value = "";
+          document.getElementById("technicalRatingFilter").value = "All";
+          renderAll(model);
+        });
+        document.getElementById("technicalSectorFilter").addEventListener("change", event => {
+          if (state.methodology !== "technical-analysis") return;
+          state.sector = event.target.value || "All";
+          state.search = "";
+          state.tableMode = "stocks";
+          state.selectedTechnicalTicker = "";
+          document.getElementById("search").value = "";
           renderAll(model);
         });
         document.getElementById("detailSectorSelect").addEventListener("change", event => {
+          if (state.detailView === "technical-analysis") state.detailTechnicalTicker = "VN-Index";
+          if (event.target.value === "All" && state.detailView === "technical-analysis") {
+            state.tableMode = "sectors";
+            renderDetailedView(model);
+            return;
+          }
           showFundamentalSectorDetail(event.target.value);
         });
         document.getElementById("detailTickerSearch").addEventListener("input", event => {
-          showFundamentalTickerDetail(event.target.value);
+          showDetailTicker(event.target.value);
         });
         document.getElementById("detailTickerSearch").addEventListener("keydown", event => {
           if (event.key !== "Enter") return;
           event.preventDefault();
-          showFundamentalTickerDetail(event.currentTarget.value);
+          showDetailTicker(event.currentTarget.value);
         });
         document.getElementById("marketReset").addEventListener("click", () => {
           state.sector = "All";
           state.search = "";
           state.tagFilter = "";
+          state.technicalRatingFilter = "All";
+          state.technicalActionFilter = "All";
           state.tableMode = "sectors";
           state.selectedFundamentalSector = "";
           state.selectedFundamentalTicker = "";
+          state.selectedTechnicalTicker = "";
           document.getElementById("search").value = "";
           document.getElementById("tagFilter").value = "";
+          document.getElementById("technicalRatingFilter").value = "All";
+          document.getElementById("technicalActionFilter").value = "All";
           renderAll(model);
         });
         document.getElementById("tableOverview").addEventListener("click", () => {
           state.sector = "All";
           state.search = "";
           state.tagFilter = "";
+          state.technicalRatingFilter = "All";
+          state.technicalActionFilter = "All";
           state.tableMode = "sectors";
           state.selectedFundamentalSector = "";
           state.selectedFundamentalTicker = "";
+          state.selectedTechnicalTicker = "";
           document.getElementById("search").value = "";
           document.getElementById("tagFilter").value = "";
+          document.getElementById("technicalRatingFilter").value = "All";
+          document.getElementById("technicalActionFilter").value = "All";
           renderAll(model);
         });
         document.getElementById("allStockRanking").addEventListener("click", () => {
           state.sector = "All";
           state.search = "";
           state.tagFilter = "";
+          state.technicalRatingFilter = "All";
+          state.technicalActionFilter = "All";
           state.tableMode = "stocks";
           state.selectedFundamentalSector = "";
           state.selectedFundamentalTicker = "";
+          state.selectedTechnicalTicker = "";
           document.getElementById("search").value = "";
           document.getElementById("tagFilter").value = "";
+          document.getElementById("technicalRatingFilter").value = "All";
+          document.getElementById("technicalActionFilter").value = "All";
           renderAll(model);
         });
         document.addEventListener("click", event => {
