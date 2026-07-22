@@ -896,6 +896,10 @@
     }
 
     @media (min-width: 981px) {
+      #detailPage .technical-panel-body {
+        grid-template-columns: minmax(0, 2.25fr) minmax(330px, 0.9fr);
+      }
+
       .fund-table.fund-tag-table .entity-col,
       .fund-table.fund-tag-table .score-col {
         font-size: 11px;
@@ -1222,6 +1226,52 @@
       display: grid;
       grid-template-columns: repeat(5, minmax(38px, 1fr));
       gap: 4px;
+    }
+
+    .technical-axis-controls {
+      display: flex;
+      align-items: end;
+      gap: 5px;
+      margin-left: auto;
+    }
+
+    .technical-axis-controls[hidden] {
+      display: none;
+    }
+
+    .technical-axis-controls label {
+      display: grid;
+      gap: 2px;
+      color: var(--muted);
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .technical-axis-controls input {
+      width: 82px;
+      min-height: 28px;
+      padding: 4px 6px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--text);
+      background: var(--surface-2);
+      font: inherit;
+      font-size: 10px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .technical-axis-reset {
+      min-height: 28px;
+      padding: 4px 8px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--text);
+      background: var(--surface-2);
+      font: inherit;
+      font-size: 9px;
+      cursor: pointer;
     }
 
     .technical-timeframe {
@@ -1732,6 +1782,10 @@
 
       .technical-chart {
         min-height: 0;
+      }
+
+      .technical-axis-controls {
+        display: none !important;
       }
 
       .technical-indicator-strip {
@@ -2352,6 +2406,12 @@
             <button class="technical-timeframe" type="button" data-technical-range="1Y">1Y</button>
             <button class="technical-timeframe" type="button" data-technical-range="5Y">5Y</button>
           </div>
+          <div class="technical-axis-controls" id="technicalAxisControls" aria-label="Price axis controls">
+            <label>Y min<input id="technicalYMin" type="number" inputmode="decimal" aria-label="Technical chart minimum price"></label>
+            <label>Y max<input id="technicalYMax" type="number" inputmode="decimal" aria-label="Technical chart maximum price"></label>
+            <button class="technical-axis-reset" id="technicalYAxisApply" type="button">Apply</button>
+            <button class="technical-axis-reset" id="technicalYAxisAuto" type="button">Auto</button>
+          </div>
         </div>
         <div class="technical-panel-body">
           <div class="technical-chart-box">
@@ -2454,6 +2514,7 @@
     let currentTechnicalSubject = null;
     let activeTechnicalExchange = "";
     let technicalResizeTimer = null;
+    let technicalYAxis = { key: "", minimum: NaN, maximum: NaN };
     let detailReturnAvailable = false;
     let detailReturnSnapshot = null;
     let pendingDetailReturnSnapshot = null;
@@ -4695,11 +4756,24 @@
       const sectorDates = new Map();
       const index = [];
       rawRows.forEach(row => {
-        const price = Number(row.adjusted_last);
+        const adjustedClose = Number(row.adjusted_close);
+        const legacyAdjustedLast = Number(row.adjusted_last);
+        const price = Number.isFinite(adjustedClose) ? adjustedClose : legacyAdjustedLast;
         if (!row.date || !row.ticker || !Number.isFinite(price)) return;
+        const adjustedOpen = Number(row.adjusted_open);
+        const adjustedHigh = Number(row.adjusted_high);
+        const adjustedLow = Number(row.adjusted_low);
+        const open = Number.isFinite(adjustedOpen) ? adjustedOpen : price;
+        const close = price;
+        const high = Math.max(Number.isFinite(adjustedHigh) ? adjustedHigh : price, open, close);
+        const low = Math.min(Number.isFinite(adjustedLow) ? adjustedLow : price, open, close);
         const point = {
           date: row.date,
           price,
+          open,
+          high,
+          low,
+          close,
           last: Number(row.last),
           volume: Number(row.volume),
           value: Number(row.value_vnd_bn),
@@ -5538,13 +5612,20 @@
       return items.map(item => `<div class="technical-level ${item.cardClass || ""}"><span>${item.label}</span><strong class="${item.className || ""}">${item.value}</strong></div>`).join("");
     }
 
+    function technicalAxisControlValue(value) {
+      if (!Number.isFinite(value)) return "";
+      return String(technicalRoundPrice(value));
+    }
+
     function renderBollingerTechnicalPanel(model) {
       activeTechnicalExchange = model?.exchange || "";
       document.querySelectorAll("[data-technical-range]").forEach(button => {
         button.classList.toggle("active", button.dataset.technicalRange === state.technicalTimeframe);
       });
       const container = document.getElementById("technicalChart");
-      container.setAttribute("aria-label", "Price with 50, 100, and 200-day Bollinger Bands");
+      const axisControls = document.getElementById("technicalAxisControls");
+      axisControls.hidden = false;
+      container.setAttribute("aria-label", "Adjusted OHLC candlesticks with 50, 100, and 200-day Bollinger Bands");
       const technicalTitle = document.getElementById("technicalChartTitle");
       technicalTitle.textContent = model ? `${model.ticker} Bollinger range` : "No matching stock";
       if (model?.ticker && !isVnIndexTicker(model.ticker)) technicalTitle.dataset.ticker = model.ticker;
@@ -5570,7 +5651,7 @@
       const resistanceTone = model.resistancePeriod === 200 ? "warn" : model.resistancePeriod ? "pos" : "warn";
       document.getElementById("technicalState").textContent = model.stateName;
       document.getElementById("technicalState").className = `technical-state ${model.tone}`;
-      document.getElementById("technicalChartHint").textContent = "Daily adjusted close · 2σ Bollinger Bands · automatically advances from 50D to 100D to 200D after a breach";
+      document.getElementById("technicalChartHint").textContent = "Daily adjusted OHLC candles · 2σ Bollinger Bands · automatically advances from 50D to 100D to 200D after a breach";
       document.getElementById("technicalHolderLevels").innerHTML = technicalLevelMarkup([
         { label: "Current", value: technicalFormatPrice(model.current) },
         { label: "Position", value: model.stateName, className: model.tone === "positive" ? "pos" : model.tone === "negative" ? "neg" : model.tone === "warning" ? "warn" : "muted" },
@@ -5597,27 +5678,62 @@
       });
       const width = chartWidth(container, 1100);
       const compact = width < 560;
-      const summaryHeight = document.querySelector(".technical-summary-box")?.getBoundingClientRect().height || 0;
-      const height = window.innerWidth > 980 ? Math.max(280, Math.round(summaryHeight - 6)) : 270;
+      const height = window.innerWidth > 980
+        ? Math.max(400, Math.min(700, Math.round(width * 0.56)))
+        : 270;
       const margin = { top: 18, right: compact ? 7 : 12, bottom: 26, left: compact ? 39 : 50 };
       const projectionWidth = Math.max(compact ? 48 : 82, width * (compact ? 0.16 : 0.13));
       const historyRight = width - margin.right - projectionWidth;
       const innerW = historyRight - margin.left;
-      const x = index => margin.left + (data.length > 1 ? index / (data.length - 1) : 0) * innerW;
-      const priceValues = data.flatMap(point => [
-        point.price, point.upper50, point.lower50, point.upper100, point.lower100, point.upper200, point.lower200
-      ]).filter(Number.isFinite);
+      const candleStep = innerW / Math.max(1, data.length);
+      const x = index => margin.left + (index + 0.5) * candleStep;
+      const candlePriceValues = data.flatMap(point => [point.low, point.high]).filter(Number.isFinite);
+      const candleMinimum = Math.min(...candlePriceValues);
+      const candleMaximum = Math.max(...candlePriceValues);
+      const candleRange = Math.max(candleMaximum - candleMinimum, model.current * 0.02);
+      const nearbyBandLimit = candleRange * 0.18;
+      const bandPriceValues = data.flatMap(point => [
+        point.upper50, point.lower50, point.upper100, point.lower100, point.upper200, point.lower200
+      ]).filter(value => Number.isFinite(value)
+        && value >= candleMinimum - nearbyBandLimit
+        && value <= candleMaximum + nearbyBandLimit);
+      const priceValues = [...candlePriceValues, ...bandPriceValues];
       if (Number.isFinite(model.support)) priceValues.push(model.support);
       if (Number.isFinite(model.resistance)) priceValues.push(model.resistance);
       const minPrice = Math.min(...priceValues);
       const maxPrice = Math.max(...priceValues);
-      const pricePadding = Math.max((maxPrice - minPrice) * 0.05, model.current * 0.01);
-      const ticks = technicalPriceTicks(minPrice - pricePadding, maxPrice + pricePadding, 4);
-      const plotMin = ticks[0] ?? minPrice;
-      const plotMax = ticks[ticks.length - 1] ?? maxPrice;
+      const pricePadding = Math.max((maxPrice - minPrice) * 0.04, model.current * 0.008, technicalTickSize(model.current) * 2);
+      const automaticMinimum = minPrice - pricePadding;
+      const automaticMaximum = maxPrice + pricePadding;
+      const axisKey = `${model.ticker}|${state.technicalTimeframe}`;
+      if (technicalYAxis.key !== axisKey) technicalYAxis = { key: axisKey, minimum: NaN, maximum: NaN };
+      const manualAxis = [technicalYAxis.minimum, technicalYAxis.maximum].every(Number.isFinite)
+        && technicalYAxis.maximum > technicalYAxis.minimum;
+      const requestedMinimum = manualAxis ? technicalYAxis.minimum : automaticMinimum;
+      const requestedMaximum = manualAxis ? technicalYAxis.maximum : automaticMaximum;
+      const generatedTicks = technicalPriceTicks(requestedMinimum, requestedMaximum, compact ? 4 : 7);
+      const ticks = manualAxis
+        ? generatedTicks.filter(value => value >= requestedMinimum && value <= requestedMaximum)
+        : generatedTicks;
+      const plotMin = manualAxis ? requestedMinimum : (ticks[0] ?? minPrice);
+      const plotMax = manualAxis ? requestedMaximum : (ticks[ticks.length - 1] ?? maxPrice);
+      const yMinInput = document.getElementById("technicalYMin");
+      const yMaxInput = document.getElementById("technicalYMax");
+      const axisStep = technicalTickSize(model.current);
+      yMinInput.step = String(axisStep);
+      yMaxInput.step = String(axisStep);
+      yMinInput.value = technicalAxisControlValue(manualAxis ? technicalYAxis.minimum : plotMin);
+      yMaxInput.value = technicalAxisControlValue(manualAxis ? technicalYAxis.maximum : plotMax);
+      document.getElementById("technicalYAxisAuto").textContent = manualAxis ? "Reset" : "Auto";
       const y = value => margin.top + (plotMax - value) / (plotMax - plotMin || 1) * (height - margin.top - margin.bottom);
       const svg = makeSvg(width, height);
-      svg.setAttribute("aria-label", `${model.ticker} price and 50, 100, and 200-day Bollinger support and resistance bands over ${state.technicalTimeframe}`);
+      svg.setAttribute("aria-label", `${model.ticker} adjusted OHLC candlesticks and 50, 100, and 200-day Bollinger support and resistance bands over ${state.technicalTimeframe}`);
+      const defs = addSvgNode(svg, "defs", {});
+      const clipPath = addSvgNode(defs, "clipPath", { id: "technicalPricePlotClip" });
+      addSvgNode(clipPath, "rect", {
+        x: margin.left, y: margin.top, width: innerW, height: height - margin.top - margin.bottom
+      });
+      const plotLayer = addSvgNode(svg, "g", { "clip-path": "url(#technicalPricePlotClip)" });
       ticks.forEach(value => {
         const yy = y(value);
         addSvgNode(svg, "line", { x1: margin.left, x2: width - margin.right, y1: yy, y2: yy, stroke: "var(--line)", "stroke-width": 1 });
@@ -5633,17 +5749,37 @@
         ["upper", "lower"].forEach(side => {
           const key = `${side}${band.period}`;
           const path = technicalLinePath(data, x, y, key);
-          addSvgNode(svg, "path", { d: path, fill: "none", stroke: band.color, "stroke-width": band.width, "stroke-dasharray": band.dash, opacity: 0.82, class: "technical-series-line", "data-series": `bb${band.period}`, "stroke-linecap": "round" });
-          addSvgNode(svg, "path", { d: path, fill: "none", stroke: "transparent", "stroke-width": 10, class: "technical-series-hit", "data-series": `bb${band.period}`, "pointer-events": "stroke" });
+          addSvgNode(plotLayer, "path", { d: path, fill: "none", stroke: band.color, "stroke-width": band.width, "stroke-dasharray": band.dash, opacity: 0.82, class: "technical-series-line", "data-series": `bb${band.period}`, "stroke-linecap": "round" });
+          addSvgNode(plotLayer, "path", { d: path, fill: "none", stroke: "transparent", "stroke-width": 10, class: "technical-series-hit", "data-series": `bb${band.period}`, "pointer-events": "stroke" });
         });
       });
-      const pricePath = technicalLinePath(data, x, y, "price");
-      addSvgNode(svg, "path", { d: pricePath, fill: "none", stroke: "var(--text)", "stroke-width": 2.2, class: "technical-series-line", "data-series": "price", "stroke-linecap": "round" });
-      addSvgNode(svg, "path", { d: pricePath, fill: "none", stroke: "transparent", "stroke-width": 12, class: "technical-series-hit", "data-series": "price", "pointer-events": "stroke" });
-      addSvgNode(svg, "circle", { cx: historyRight, cy: y(model.current), r: 3.2, fill: "var(--accent)" });
+      const candleLayer = addSvgNode(plotLayer, "g", { class: "technical-series-line", "data-series": "price" });
+      const candleWidth = Math.max(0.7, Math.min(compact ? 4 : 8, candleStep * 0.68));
+      data.forEach((point, index) => {
+        if (![point.open, point.high, point.low, point.close].every(Number.isFinite)) return;
+        const xx = x(index);
+        const rising = point.close >= point.open;
+        const candleColor = rising ? "var(--good)" : "var(--bad)";
+        addSvgNode(candleLayer, "line", {
+          x1: xx, x2: xx, y1: y(point.high), y2: y(point.low),
+          stroke: candleColor, "stroke-width": Math.max(0.65, Math.min(1.2, candleWidth * 0.28))
+        });
+        const bodyTop = Math.min(y(point.open), y(point.close));
+        const bodyHeight = Math.max(1.1, Math.abs(y(point.open) - y(point.close)));
+        const candle = addSvgNode(candleLayer, "rect", {
+          x: xx - candleWidth / 2, y: bodyTop, width: candleWidth, height: bodyHeight,
+          fill: rising ? "var(--surface)" : candleColor, stroke: candleColor,
+          "stroke-width": Math.max(0.55, Math.min(1, candleWidth * 0.22))
+        });
+        candle.addEventListener("pointermove", event => {
+          if (event.pointerType === "mouse") showTooltip(`<strong>${model.ticker} · ${point.date}</strong><br>Open ${technicalFormatPrice(point.open)} · High ${technicalFormatPrice(point.high)}<br>Low ${technicalFormatPrice(point.low)} · Close ${technicalFormatPrice(point.close)}`, event);
+        });
+        candle.addEventListener("pointerleave", hideTooltip);
+      });
+      addSvgNode(plotLayer, "circle", { cx: x(data.length - 1), cy: y(model.current), r: 3.2, fill: "var(--accent)" });
       let legendX = margin.left;
       [
-        { key: "price", label: "PRICE", color: "var(--text)" },
+        { key: "price", label: "CANDLE", color: "var(--text)" },
         { key: "bb50", label: "BB50", color: "var(--good)" },
         { key: "bb100", label: "BB100", color: "var(--warn)" },
         { key: "bb200", label: "BB200", color: "var(--accent-2)" }
@@ -5718,6 +5854,7 @@
 
     function renderSectorTechnicalPanel(subject, signalPeriod = "daily") {
       activeTechnicalExchange = "";
+      document.getElementById("technicalAxisControls").hidden = true;
       const fullSeries = technicalResampleSeries(technicalPriceData.bySector.get(subject.sector) || [], signalPeriod);
       const container = document.getElementById("technicalChart");
       document.getElementById("technicalChartTitle").textContent = `${displaySector(subject.sector)} market-cap performance`;
@@ -5776,6 +5913,7 @@
     }
 
     function renderStockTechnicalPanel(subject, signalPeriod = "daily", priceOnly = false) {
+      document.getElementById("technicalAxisControls").hidden = true;
       const model = buildStockTechnicalModel(subject.ticker, signalPeriod);
       activeTechnicalExchange = model?.exchange || technicalPriceData.exchanges.get(subject.ticker) || "";
       const container = document.getElementById("technicalChart");
@@ -6782,13 +6920,37 @@
           }
           rebuildAndRender();
         });
+        function rerenderActiveTechnicalChart() {
+          if (state.page === "methodology" && state.methodology === "technical-analysis") renderTechnicalAnalysisChart(model);
+          else if (state.page === "details" && state.detailView === "technical-analysis") renderTechnicalDetailedView(model);
+          else renderCurrentTechnicalSubject();
+        }
         document.getElementById("technicalTimeframes").addEventListener("click", event => {
           const button = event.target.closest("[data-technical-range]");
           if (!button) return;
           state.technicalTimeframe = button.dataset.technicalRange;
-          if (state.page === "methodology" && state.methodology === "technical-analysis") renderTechnicalAnalysisChart(model);
-          else if (state.page === "details" && state.detailView === "technical-analysis") renderTechnicalDetailedView(model);
-          else renderCurrentTechnicalSubject();
+          rerenderActiveTechnicalChart();
+        });
+        const applyTechnicalAxis = () => {
+          const minimumInput = document.getElementById("technicalYMin");
+          const maximumInput = document.getElementById("technicalYMax");
+          const minimum = Number(minimumInput.value);
+          const maximum = Number(maximumInput.value);
+          const valid = [minimum, maximum].every(Number.isFinite) && maximum > minimum;
+          minimumInput.setCustomValidity(valid ? "" : "Minimum must be below maximum.");
+          maximumInput.setCustomValidity(valid ? "" : "Maximum must be above minimum.");
+          if (!valid) return;
+          technicalYAxis = { key: technicalYAxis.key, minimum, maximum };
+          rerenderActiveTechnicalChart();
+        };
+        document.getElementById("technicalYMin").addEventListener("change", applyTechnicalAxis);
+        document.getElementById("technicalYMax").addEventListener("change", applyTechnicalAxis);
+        document.getElementById("technicalYAxisApply").addEventListener("click", applyTechnicalAxis);
+        document.getElementById("technicalYAxisAuto").addEventListener("click", () => {
+          technicalYAxis = { key: technicalYAxis.key, minimum: NaN, maximum: NaN };
+          document.getElementById("technicalYMin").setCustomValidity("");
+          document.getElementById("technicalYMax").setCustomValidity("");
+          rerenderActiveTechnicalChart();
         });
         window.addEventListener("resize", () => {
           window.clearTimeout(technicalResizeTimer);
