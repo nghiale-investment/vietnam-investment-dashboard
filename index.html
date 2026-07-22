@@ -2191,8 +2191,8 @@
       <label id="periodControl">
         <span id="periodLabel">Period</span>
         <select id="period">
-          <option value="5-20">5/20</option>
-          <option value="10-50" selected>10/50</option>
+          <option value="5-20" selected>5/20</option>
+          <option value="10-50">10/50</option>
         </select>
       </label>
       <label id="tailControl" hidden>
@@ -2404,7 +2404,7 @@
       page: VALID_PAGES.has(initialParams.get("page")) ? initialParams.get("page") : "home",
       methodology: VALID_METHODOLOGIES.has(initialParams.get("method")) ? initialParams.get("method") : "flow-rotation",
       fundamentalPeriod: "quarter",
-      flowPeriod: "10-50",
+      flowPeriod: "5-20",
       rrgMode: "10-50",
       tailPoints: 15,
       sector: "All",
@@ -3588,7 +3588,7 @@
       const best = combined.slice(0, rankingCount);
       const worst = combined.slice(-rankingCount).reverse();
       document.getElementById("homeOverallCard").innerHTML = `
-        <div class="home-overall-head"><div><h2>Overall Stocks</h2><p>Equal-weight percentile ranking across Flow Rotation, Relative Rotation, and Fundamentals. Labels show each methodology's key current signal; the combined score is intentionally hidden.</p></div><button class="home-expand-button" id="homeRankingToggle" type="button" aria-expanded="${homeRankingExpanded}" aria-label="${homeRankingExpanded ? "Show top and bottom 5" : "Show top and bottom 10"}">${homeRankingExpanded ? "Show 5" : "Expand to 10"}</button></div>
+        <div class="home-overall-head"><div><h2>Overall Stocks</h2><p>Equal-weight percentile ranking across Flow Rotation, Relative Rotation, and Fundamentals. Flow uses the same 5/20 model shown below; the combined score is intentionally hidden.</p></div><button class="home-expand-button" id="homeRankingToggle" type="button" aria-expanded="${homeRankingExpanded}" aria-label="${homeRankingExpanded ? "Show top and bottom 5" : "Show top and bottom 10"}">${homeRankingExpanded ? "Show 5" : "Expand to 10"}</button></div>
         <div class="home-overall-grid">
           <div class="home-overall-block"><h3>Best ${rankingCount} overall</h3><div class="home-overall-list rank-count-${best.length}">${best.map(homeOverallStockMarkup).join("")}</div></div>
           <div class="home-overall-block"><h3>Worst ${rankingCount} overall</h3><div class="home-overall-list rank-count-${worst.length}">${worst.map(homeOverallStockMarkup).join("")}</div></div>
@@ -6414,7 +6414,7 @@
         function rebuildAndRender() {
           applyPageVisibility();
           if (state.page === "home") {
-            const homeFlowModel = buildModel(rawRows, coverage, state.baseDate, state.flowPeriod);
+            const homeFlowModel = buildModel(rawRows, coverage, state.baseDate, "5-20");
             const homeRrgModel = buildRrgModel(rrgData);
             const homeFundamentalModel = buildFundamentalModel(fundamentalsData, "quarter");
             model = homeFlowModel;
