@@ -1067,8 +1067,13 @@
     }
 
     .sector-stock-metric-row td {
-      background: color-mix(in srgb, var(--surface-2) 70%, var(--surface));
+      background: color-mix(in srgb, var(--surface-2) 24%, var(--surface));
       font-size: 0.92em;
+      transition: background-color 120ms ease;
+    }
+
+    .sector-stock-metric-row:hover td {
+      background: color-mix(in srgb, var(--accent) 12%, var(--surface));
     }
 
     .sector-stock-metric-row td:first-child {
@@ -1097,6 +1102,92 @@
 
     .fund-detail-table th {
       position: static;
+    }
+
+    .detail-period-toggle {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      width: 100%;
+      max-width: 180px;
+      gap: 2px;
+      padding: 2px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--surface-2);
+    }
+
+    .detail-period-toggle button {
+      min-width: 0;
+      padding: 4px 5px;
+      border: 0;
+      border-radius: 5px;
+      color: var(--muted);
+      background: transparent;
+      font: inherit;
+      font-size: 9px;
+      font-weight: 700;
+      line-height: 1.1;
+      cursor: pointer;
+    }
+
+    .detail-period-toggle button.active {
+      color: var(--surface);
+      background: var(--accent);
+    }
+
+    .detail-period-toggle button:focus-visible {
+      outline: 2px solid color-mix(in srgb, var(--accent) 55%, transparent);
+      outline-offset: 1px;
+    }
+
+    .financial-statement-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 5px;
+      margin: 10px 0 7px;
+    }
+
+    .financial-statement-tabs[hidden] {
+      display: none;
+    }
+
+    .financial-statement-tab {
+      min-width: 0;
+      padding: 7px 8px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      color: var(--muted);
+      background: var(--surface-2);
+      font: inherit;
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .financial-statement-tab.active {
+      border-color: var(--accent);
+      color: var(--surface);
+      background: var(--accent);
+    }
+
+    .financial-statement-row-total td {
+      font-weight: 700;
+      border-top-color: color-mix(in srgb, var(--accent) 35%, var(--line));
+    }
+
+    .financial-statement-row-subtotal td {
+      font-weight: 650;
+    }
+
+    .financial-statement-section td {
+      padding: 7px 8px;
+      color: var(--accent);
+      background: var(--surface-2);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-align: left !important;
+      text-transform: uppercase;
     }
 
     .fund-detail-table th:first-child,
@@ -2380,8 +2471,8 @@
             <label>
               Select view
               <select id="detailPeriod" aria-label="Detailed view">
-                <option value="fundamental-quarter">Fundamental Quarter</option>
-                <option value="fundamental-year">Fundamental Year</option>
+                <option value="fundamental">Fundamental</option>
+                <option value="financial-statement">Financial Statement</option>
                 <option value="technical-analysis">Technical Analysis</option>
               </select>
             </label>
@@ -2433,6 +2524,11 @@
           </aside>
         </div>
       </div>
+      <div class="financial-statement-tabs" id="financialStatementTabs" role="tablist" aria-label="Financial statement" hidden>
+        <button class="financial-statement-tab active" type="button" role="tab" data-financial-statement="income">Income Statement</button>
+        <button class="financial-statement-tab" type="button" role="tab" data-financial-statement="balance">Balance Sheet</button>
+        <button class="financial-statement-tab" type="button" role="tab" data-financial-statement="cashflow">Cash Flow</button>
+      </div>
       <table class="fund-detail-table" id="stockDetailsTable">
         <thead id="stockDetailsHead"></thead>
         <tbody id="stockDetailsRows"></tbody>
@@ -2449,8 +2545,9 @@
     const coveragePath = "0.coverage_universe.csv";
     const initialParams = new URLSearchParams(window.location.search);
     const dashboardVersion = initialParams.get("v");
+    const fundamentalsDataVersion = "financial-statements-corporate-pl-3";
     const fundamentalsPath = "fundamentals_data.json"
-      + (dashboardVersion ? `?v=${encodeURIComponent(dashboardVersion)}` : "");
+      + `?v=${encodeURIComponent(dashboardVersion || "current")}&data=${encodeURIComponent(fundamentalsDataVersion)}`;
     const PERIODS = {
       "5-20": { short: 5, long: 20, label: "5/20" },
       "10-50": { short: 10, long: 50, label: "10/50" }
@@ -2496,6 +2593,7 @@
       selectedFundamentalTicker: "",
       selectedTechnicalTicker: "",
       detailView: "fundamental-quarter",
+      financialStatement: "income",
       detailTechnicalTicker: "VN-Index",
       technicalAnalysisPeriod: "bollinger",
       technicalTimeframe: "1Y"
@@ -3695,16 +3793,23 @@
     function buildFundamentalModel(data, period = state.fundamentalPeriod) {
       const annualView = period === "year";
       const latestPeriod = annualView ? data.annual_latest_period : data.latest_period;
+      const latestRankingPoint = (history, requestedPeriod) => {
+        const requested = history.find(row => row.period === requestedPeriod);
+        if (requested && Number.isFinite(requested.score)) return requested;
+        return history.slice().reverse().find(row => Number.isFinite(row.score))
+          || requested
+          || history[history.length - 1];
+      };
       const stockStats = data.stocks.map(stock => {
         const source = annualView ? (stock.annual || {}) : stock;
         const history = annualView ? (source.periods || []) : stock.quarters;
-        const current = history.find(row => row.period === latestPeriod) || history[history.length - 1];
+        const current = latestRankingPoint(history, latestPeriod);
         return { ...stock, ...source, quarters: history, ...current, id: stock.ticker, label: stock.ticker };
       }).filter(row => row.period);
       const sectorStats = data.sectors.map(sector => {
         const source = annualView ? (sector.annual || {}) : sector;
         const history = annualView ? (source.periods || []) : sector.quarters;
-        const current = history.find(row => row.period === latestPeriod) || history[history.length - 1];
+        const current = latestRankingPoint(history, latestPeriod);
         return { ...sector, ...source, quarters: history, ...current, id: sector.sector, label: sector.sector };
       }).filter(row => row.period);
       const periods = annualView ? (data.annual_periods || []) : data.periods;
@@ -3865,7 +3970,11 @@
         else button.removeAttribute("aria-current");
       });
       document.getElementById("methodology").value = state.methodology;
-      document.getElementById("detailPeriod").value = state.detailView;
+      document.getElementById("detailPeriod").value = state.detailView === "technical-analysis"
+        ? "technical-analysis"
+        : state.detailView === "financial-statement"
+          ? "financial-statement"
+          : "fundamental";
       document.getElementById("app").classList.toggle("fundamentals-mode", state.page === "methodology" && state.methodology === "fundamentals" || state.page === "details");
       document.getElementById("app").classList.toggle("technical-analysis-mode", state.page === "methodology" && state.methodology === "technical-analysis");
     }
@@ -4039,6 +4148,9 @@
         const history = new Map(row.quarters.map(point => [point.period, point]));
         const cells = periods.map(period => {
           const point = history.get(period);
+          if (isSectorView && point?.status === "N/A") {
+            return `<td title="No companies in this sector have reported ${fundamentalPeriodLabel(model, period)}; ranking retains the previous available quarter."><span class="phase-chip phase-limited"><span class="phase-full">N/A</span><span class="phase-short">–</span><b>–</b></span></td>`;
+          }
           if (!point || !Number.isFinite(point.score)) return `<td><span class="phase-chip phase-limited"><span class="phase-full">Limited</span><span class="phase-short">–</span><b>–</b></span></td>`;
           const phase = fundamentalPhase(point);
           const short = { Strong: "S", Recover: "R", Fading: "F", Weak: "W" }[phase];
@@ -4236,7 +4348,7 @@
         setCombinedTableColumns([24, 19, 19, 19, 19]);
         table.className = "sector-table fund-table fund-tag-table";
         title.textContent = "Sector Table";
-        hint.textContent = `Default sort: Fundamental Score. Two most material Momentum and Quality tags are shown. Click/tap for sector details; double-click/two-tap for stocks.`;
+        hint.textContent = `Default sort: latest available Fundamental Score. Partial quarters are reporter-only; sectors with no new reports retain the prior score. Click/tap for sector details; double-click/two-tap for stocks.`;
         head.innerHTML = `<tr><th class="entity-col">Sector</th><th class="fund-tag-group" colspan="2">Momentum</th><th class="fund-tag-group" colspan="2">Quality</th></tr>`;
         model.sectorStats.slice().sort((a, b) => b.score - a.score).forEach(row => {
           const tr = document.createElement("tr");
@@ -4256,7 +4368,7 @@
       setCombinedTableColumns([14, 10, 19, 19, 19, 19]);
       table.className = `stock-table fund-table fund-tag-table ${showSector ? "show-sector" : "sector-drill"}`;
       title.textContent = state.sector !== "All" ? `${displaySector(state.sector)} Stock Table` : "Stock Table";
-      hint.textContent = `Default sort: Fundamental Score. Two most material Momentum and Quality tags are shown. Click a stock for details.`;
+      hint.textContent = `Default sort: each company's latest filed-quarter Fundamental Score. Two most material Momentum and Quality tags are shown. Click a stock for details.`;
       head.innerHTML = `<tr><th class="entity-col">Ticker</th>${showSector ? '<th class="fund-sector-col">Sector</th>' : ""}<th class="score-col">Score</th><th class="fund-tag-group" colspan="2">Momentum</th><th class="fund-tag-group" colspan="2">Quality</th></tr>`;
       if (!rows.length) {
         body.innerHTML = `<tr><td colspan="${showSector ? 7 : 6}">No matching tickers.</td></tr>`;
@@ -4279,6 +4391,7 @@
         return value.toLocaleString("en-US", { maximumFractionDigits: 0 });
       }
       if (format === "pct") return fmtPct(value);
+      if (format === "pct_2") return `${(value * 100).toFixed(2)}%`;
       if (format === "pp") return `${value >= 0 ? "+" : ""}${(value * 100).toFixed(2)}pp`;
       if (format === "multiple") {
         return String(metric).includes("Δ")
@@ -4287,6 +4400,8 @@
       }
       if (format === "days") return `${Math.round(value)}d`;
       if (format === "days_delta") return `${value >= 0 ? "+" : ""}${Math.round(value)}d`;
+      if (format === "shares_mn") return `${value.toLocaleString("en-US", { maximumFractionDigits: 1 })}m`;
+      if (format === "vnd") return value.toLocaleString("en-US", { maximumFractionDigits: 0 });
       if (format === "score") return fmtFundScore(value);
       return value.toLocaleString("en-US", { maximumFractionDigits: 2 });
     }
@@ -4445,6 +4560,7 @@
           row.className = "sector-stock-metric-row";
           row.dataset.sectorMetricParent = parentKey;
           row.dataset.ticker = stock.ticker;
+          row.title = `${stock.ticker} · ${item.metric}`;
           const stockPeriods = stock.detail_periods || [];
           const values = sectorPeriods.map((period, index) => {
             const stockPeriodIndex = stockPeriods.indexOf(period);
@@ -4460,7 +4576,7 @@
         });
     }
 
-    function toggleSectorMetricRows(model, sectorSubject, item, aggregateRow, olderCutoff, key) {
+    function toggleSectorMetricRows(model, sectorSubject, item, aggregateRow, olderCutoff, key, rowBuilder = sectorMetricStockRows) {
       const body = aggregateRow.parentElement;
       const existing = Array.from(body.querySelectorAll(".sector-stock-metric-row"))
         .filter(row => row.dataset.sectorMetricParent === key);
@@ -4470,7 +4586,7 @@
         aggregateRow.setAttribute("aria-expanded", "false");
         return;
       }
-      const stockRows = sectorMetricStockRows(model, sectorSubject, item, olderCutoff, key);
+      const stockRows = rowBuilder(model, sectorSubject, item, olderCutoff, key);
       let anchor = aggregateRow;
       stockRows.forEach(row => {
         anchor.insertAdjacentElement("afterend", row);
@@ -4480,12 +4596,12 @@
       aggregateRow.setAttribute("aria-expanded", "true");
     }
 
-    function enableSectorDetailDrill(row, model, sectorSubject, item, olderCutoff, key) {
+    function enableSectorDetailDrill(row, model, sectorSubject, item, olderCutoff, key, rowBuilder = sectorMetricStockRows) {
       row.classList.add("sector-detail-drill");
       row.title = "Double-click or two-tap to show or hide stocks ranked best to worst by the latest period";
       row.tabIndex = 0;
       row.setAttribute("aria-expanded", expandedSectorMetrics.has(key) ? "true" : "false");
-      const toggle = () => toggleSectorMetricRows(model, sectorSubject, item, row, olderCutoff, key);
+      const toggle = () => toggleSectorMetricRows(model, sectorSubject, item, row, olderCutoff, key, rowBuilder);
       let touchStart = null;
       let lastTouchInteractionAt = 0;
       let lastTouchToggleAt = 0;
@@ -4583,8 +4699,8 @@
         "Earnings Durability": companyType === "CK"
           ? `<p><strong>Recurring revenue % · 30%:</strong> brokerage, margin-lending, advisory, custody and underwriting revenue ÷ operating revenue.</p><p><strong>Recurring cost cover · 25%:</strong> recurring revenue ÷ absolute operating expense; higher cover means the recurring franchise funds more of the cost base.</p><p><strong>Unrealized / PBT · 20%:</strong> absolute unrealized trading result ÷ absolute PBT; lower dependence scores better.</p><p><strong>Earnings variability · 25%:</strong> robust MAD ÷ median absolute NPAT over recent history; lower is better.</p>`
           : `<p><strong>Core Earn. % · 40%:</strong> (EBIT + shared profit + signed net interest income/losses) ÷ PBT, where EBIT is gross profit − SG&amp;A. Net interest expense reduces core earnings; net interest income increases it.</p><p><strong>Non-core Earn. % · 30%:</strong> (PBT − core earnings) ÷ PBT, representing non-interest financial and other income/losses. The absolute magnitude is scored, so smaller is better.</p><p><strong>Earnings variability · 30%:</strong> robust MAD ÷ median absolute NPAT over recent history; quarterly scoring uses the latest eight rolling-12M observations. Lower, more stable earnings score better; 75% is relative to own history and 25% uses an absolute range.</p>`,
-        "Profitability & Carry": `<p><strong>EBIT margin · 25%:</strong> EBIT ÷ operating revenue.</p><p><strong>ROA · 20%:</strong> annualized NPAT ÷ average assets.</p><p><strong>ROE · 15%:</strong> annualized NPAT ÷ average equity.</p><p><strong>Investment yield · context:</strong> (FVTPL interest/dividends + AFS income + HTM income) ÷ average FVTPL, AFS and HTM assets. Margin lending is excluded.</p><p><strong>Margin lending yield · 20%:</strong> annualized lending income ÷ average margin loans.</p><p><strong>Funding cost · context:</strong> annualized interest expense ÷ average borrowings. It is shown separately but enters the score through net carry.</p><p><strong>Net carry spread · 20%:</strong> asset yield minus funding cost.</p>`,
-        "Profitability & Carry Momentum": `<p><strong>EBIT margin · 30%:</strong> operating profit ÷ operating revenue.</p><p><strong>ROA · 20%:</strong> annualized NPAT ÷ average assets.</p><p><strong>ROE · 15%:</strong> annualized NPAT ÷ average equity.</p><p><strong>Margin lending yield · 15%:</strong> annualized lending income ÷ average margin loans.</p><p><strong>Net carry spread · 20%:</strong> asset yield minus borrowing cost.</p>`,
+        "Profitability & Carry": `<p><strong>Operating margin · 25%:</strong> operating profit after operating costs, financial income/expense and G&amp;A ÷ operating income.</p><p><strong>ROA · 20%:</strong> annualized NPAT ÷ average assets.</p><p><strong>ROE · 15%:</strong> annualized NPAT ÷ average equity.</p><p><strong>Investment yield · context:</strong> (FVTPL interest/dividends + AFS income + HTM income) ÷ average FVTPL, AFS and HTM assets. Margin lending is excluded.</p><p><strong>Margin lending yield · 20%:</strong> annualized lending income ÷ average margin loans.</p><p><strong>Funding cost · context:</strong> annualized interest expense ÷ average borrowings. It is shown separately but enters the score through net carry.</p><p><strong>Net carry spread · 20%:</strong> asset yield minus funding cost.</p>`,
+        "Profitability & Carry Momentum": `<p><strong>Operating margin · 30%:</strong> operating profit after operating costs, financial income/expense and G&amp;A ÷ operating income.</p><p><strong>ROA · 20%:</strong> annualized NPAT ÷ average assets.</p><p><strong>ROE · 15%:</strong> annualized NPAT ÷ average equity.</p><p><strong>Margin lending yield · 15%:</strong> annualized lending income ÷ average margin loans.</p><p><strong>Net carry spread · 20%:</strong> asset yield minus borrowing cost.</p>`,
         "Earnings-durability Momentum": `<p><strong>Recurring revenue % · 30%:</strong> (brokerage + margin lending + advisory + custody + underwriting revenue) ÷ operating revenue.</p><p><strong>Recurring cost cover · 25%:</strong> recurring revenue ÷ absolute operating expense.</p><p><strong>Unrealized / PBT · 25%:</strong> absolute unrealized trading result ÷ absolute PBT.</p><p><strong>Earnings variability · 20%:</strong> robust MAD ÷ median absolute quarterly NPAT over the latest eight quarters.</p>`,
         "Funding & Risk Momentum": `<p><strong>Debt/Equity · 25%:</strong> adjusted borrowings ÷ equity.</p><p><strong>Short debt/current assets · 20%:</strong> short-term debt ÷ current assets.</p><p><strong>Funding gap/Equity · 20%:</strong> (debt − cash − margin loans) ÷ equity.</p><p><strong>Margin loans/Equity · 20%:</strong> margin lending ÷ equity.</p><p><strong>Equity/assets · 15%:</strong> equity ÷ total assets.</p>`,
         "Asset Quality": `<p><strong>NPL ratio · 30%:</strong> non-performing loans ÷ gross loans; lower is better.</p><p><strong>Group-2 ratio · 20%:</strong> special-mention loans ÷ gross loans; lower is better.</p><p><strong>LLR · 25%:</strong> loan-loss reserves ÷ NPLs; higher coverage is better.</p><p><strong>Credit cost · 25%:</strong> annualized provisions ÷ average loans; lower recurring cost is better.</p>`,
@@ -6199,6 +6315,7 @@
       section.hidden = false;
       restoreTechnicalPanel();
       document.getElementById("technicalPanel").hidden = true;
+      document.getElementById("financialStatementTabs").hidden = true;
       document.getElementById("stockDetailsTable").hidden = false;
       renderFundamentalDetailNavigation(model, subject, isSectorDetail);
       currentTechnicalSubject = null;
@@ -6214,13 +6331,34 @@
       const mobilePeriodRange = mobilePeriodLabels.length ? `${mobilePeriodLabels[0]} to ${mobilePeriodLabels[mobilePeriodLabels.length - 1]}` : periodRange;
       const detailName = isSectorDetail ? displaySector(subject.sector) : subject.ticker;
       document.getElementById("stockDetailsTitle").innerHTML = `${isSectorDetail ? "Sector" : "Stock"} Details — ${detailName} · <span class="detail-range-desktop">${periodRange}</span><span class="detail-range-mobile">${mobilePeriodRange}</span>`;
-      document.getElementById("stockDetailsHint").textContent = isSectorDetail
-        ? `Consolidated from ${subject.detail_coverage || subject.total || subject.coverage || 0} stocks · relative ${fundamentalStatusText(subject)} · double-click/two-tap a field for best-to-worst stocks`
-        : `${displaySector(subject.sector)} · ${fundamentalStatusText(subject)} · score ${fmtFundScore(subject.score)}`;
+      let detailHint;
+      if (isSectorDetail && !model.annualView) {
+        const reporters = Number(subject.latest_reporter_count ?? subject.detail_coverage ?? 0);
+        const reporterTotal = Number(subject.latest_reporter_total ?? subject.detail_total ?? subject.total ?? subject.coverage ?? 0);
+        const displayPeriod = fundamentalPeriodLabel(model, subject.latest_display_period || model.latestDate);
+        const rankingPeriod = fundamentalPeriodLabel(model, subject.ranking_period || subject.period);
+        detailHint = reporters === 0
+          ? `${displayPeriod}: no reports yet · ranking retains ${rankingPeriod} · double-click/two-tap a field for best-to-worst stocks`
+          : reporters < reporterTotal
+            ? `${displayPeriod}: like-for-like ${reporters}/${reporterTotal} reporters · ranking uses the partial-quarter score · double-click/two-tap a field for best-to-worst stocks`
+            : `Consolidated from ${reporterTotal} stocks · relative ${fundamentalStatusText(subject)} · double-click/two-tap a field for best-to-worst stocks`;
+      } else if (isSectorDetail) {
+        detailHint = `Consolidated from ${subject.detail_coverage || subject.total || subject.coverage || 0} stocks · relative ${fundamentalStatusText(subject)} · double-click/two-tap a field for best-to-worst stocks`;
+      } else {
+        const pending = !model.annualView && subject.latest_reported_period && subject.latest_reported_period !== model.latestDate
+          ? ` · latest filed ${fundamentalPeriodLabel(model, subject.latest_reported_period)}`
+          : "";
+        detailHint = `${displaySector(subject.sector)} · ${fundamentalStatusText(subject)} · score ${fmtFundScore(subject.score)}${pending}`;
+      }
+      document.getElementById("stockDetailsHint").textContent = detailHint;
       const olderCutoff = Math.max(0, periodLabels.length - 4);
       const detailTable = document.getElementById("stockDetailsTable");
       detailTable.style.setProperty("--detail-period-count", String(Math.max(1, periodLabels.length)));
-      document.getElementById("stockDetailsHead").innerHTML = `<tr><th>Metric</th>${periodLabels.map((label, index) => {
+      const detailPeriodToggle = `<div class="detail-period-toggle" role="group" aria-label="Fundamental period">
+        <button type="button" data-detail-fundamental-period="quarter" class="${model.annualView ? "" : "active"}" aria-pressed="${model.annualView ? "false" : "true"}">Quarter</button>
+        <button type="button" data-detail-fundamental-period="year" class="${model.annualView ? "active" : ""}" aria-pressed="${model.annualView ? "true" : "false"}">Year</button>
+      </div>`;
+      document.getElementById("stockDetailsHead").innerHTML = `<tr><th>${detailPeriodToggle}</th>${periodLabels.map((label, index) => {
         const className = index < olderCutoff ? "detail-older" : "";
         return `<th class="${className}">${label}</th>`;
       }).join("")}</tr>`;
@@ -6236,6 +6374,8 @@
         "Core EBIT YoY": "EBIT YoY",
         "OPM YoY Δ": "EBIT margin YoY Δ",
         "OPM": "EBIT margin",
+        "Operating margin YoY Δ": "Operating margin Δ",
+        "Operating margin": "Operating margin",
         "One-off %": "Non-core Earn. %",
         "Profit / premium YoY Δ": "Profit / prem. YoY",
         "Investment income / PBT": "Invest. inc. / PBT",
@@ -6307,10 +6447,12 @@
       const metricOrder = {
         "Gross margin YoY Δ": 0,
         "OPM YoY Δ": 1,
+        "Operating margin YoY Δ": 1,
         "ROE YoY Δ": 2,
         "ROA YoY Δ": 3,
         "Gross margin": 0,
         "OPM": 1,
+        "Operating margin": 1,
         "ROE": 2,
         "ROA": 3,
         "Core Earn. %": 0,
@@ -6384,6 +6526,164 @@
       });
     }
 
+    function financialStatementStockRows(model, sectorSubject, item, olderCutoff, parentKey) {
+      const sectorStatement = sectorSubject.financial_statements?.[state.fundamentalPeriod];
+      const sectorPeriods = sectorStatement?.periods || [];
+      const latestSectorPeriod = sectorPeriods[sectorPeriods.length - 1];
+      return model.stockStats
+        .filter(stock => stock.sector === sectorSubject.sector)
+        .map(stock => {
+          const stockStatement = stock.financial_statements?.[state.fundamentalPeriod];
+          const stockItem = stockStatement?.statements?.[state.financialStatement]?.rows?.find(row => row.key === item.key);
+          const latestStockIndex = (stockStatement?.periods || []).indexOf(latestSectorPeriod);
+          const latestValue = stockItem && latestStockIndex >= 0 ? stockItem.values?.[latestStockIndex] : null;
+          const rankValue = financialStatementMetricGoodness(item, latestValue);
+          return { stock, stockStatement, stockItem, latestValue, rankValue };
+        })
+        .sort((a, b) => {
+          const aValid = Number.isFinite(a.rankValue);
+          const bValid = Number.isFinite(b.rankValue);
+          if (aValid !== bValid) return bValid - aValid;
+          if (aValid && a.rankValue !== b.rankValue) return b.rankValue - a.rankValue;
+          return a.stock.ticker.localeCompare(b.stock.ticker);
+        })
+        .map(({ stock, stockStatement, stockItem }, rankIndex) => {
+          const row = document.createElement("tr");
+          row.className = "sector-stock-metric-row";
+          row.dataset.sectorMetricParent = parentKey;
+          row.dataset.ticker = stock.ticker;
+          row.title = `${stock.ticker} · ${item.label}`;
+          const stockPeriods = stockStatement?.periods || [];
+          const isGrowthRow = item.format === "pct" && /(?:yoy|growth)/i.test(item.label);
+          const values = sectorPeriods.map((period, index) => {
+            const stockPeriodIndex = stockPeriods.indexOf(period);
+            const value = stockItem && stockPeriodIndex >= 0 ? stockItem.values?.[stockPeriodIndex] : null;
+            const className = [
+              index < olderCutoff ? "detail-older" : "",
+              isGrowthRow && Number.isFinite(value) ? (value > 0 ? "pos" : value < 0 ? "neg" : "") : ""
+            ].filter(Boolean).join(" ");
+            return `<td class="${className}">${formatFundamentalDetail(value, item.format, item.label)}</td>`;
+          }).join("");
+          row.innerHTML = `<td><span class="sector-stock-rank">${rankIndex + 1}.</span><strong>${stock.ticker}</strong></td>${values}`;
+          return row;
+        });
+    }
+
+    function financialStatementMetricGoodness(item, value) {
+      if (!Number.isFinite(value)) return null;
+      const label = String(item.label || "").toLowerCase();
+      const isIncomeStatement = state.financialStatement === "income";
+      const isCostLine = isIncomeStatement && /(?:sg&a|expense|exp\.|cost|claim|commission|deduction|provision|ceded)/i.test(label);
+      const isCostRatio = isIncomeStatement && (
+        /(?:sga %|cir|avg interest rate)/i.test(label)
+        || isCostLine && String(item.format).startsWith("pct")
+      );
+      const isCostGrowth = isCostLine && /(?:yoy|growth)/i.test(label);
+      if (isCostGrowth || isCostRatio) return -value;
+      if (isCostLine) return -Math.abs(value);
+      if (/^(?:ar days|inventory days)$/i.test(label)) return -value;
+      return value;
+    }
+
+    function renderFinancialStatementDetails(model) {
+      const section = document.getElementById("stockDetailsSection");
+      const isSectorDetail = state.tableMode === "sectors";
+      const entity = isSectorDetail ? state.selectedFundamentalSector : state.selectedFundamentalTicker;
+      const subject = isSectorDetail
+        ? model.sectorStats.find(row => row.sector === entity)
+        : model.stockStats.find(row => row.ticker === entity);
+      if (!entity || !subject) {
+        section.hidden = true;
+        resetSectorMetricBreakdown();
+        return;
+      }
+      const statementSet = subject.financial_statements?.[state.fundamentalPeriod];
+      const statement = statementSet?.statements?.[state.financialStatement];
+      if (!statementSet || !statement) {
+        section.hidden = true;
+        return;
+      }
+      section.hidden = false;
+      restoreTechnicalPanel();
+      document.getElementById("technicalPanel").hidden = true;
+      document.getElementById("stockDetailsTable").hidden = false;
+      document.getElementById("stockDetailsTable").classList.toggle("sector-detail-table", isSectorDetail);
+      renderFundamentalDetailNavigation(model, subject, isSectorDetail);
+      currentTechnicalSubject = null;
+
+      const tabs = document.getElementById("financialStatementTabs");
+      tabs.hidden = false;
+      tabs.querySelectorAll("[data-financial-statement]").forEach(button => {
+        const active = button.dataset.financialStatement === state.financialStatement;
+        button.classList.toggle("active", active);
+        button.setAttribute("aria-selected", active ? "true" : "false");
+      });
+
+      const periodLabels = statementSet.period_labels || [];
+      const mobilePeriodLabels = periodLabels.slice(-4);
+      const periodRange = periodLabels.length ? `${periodLabels[0]} to ${periodLabels[periodLabels.length - 1]}` : "";
+      const mobilePeriodRange = mobilePeriodLabels.length ? `${mobilePeriodLabels[0]} to ${mobilePeriodLabels[mobilePeriodLabels.length - 1]}` : periodRange;
+      const detailName = isSectorDetail ? displaySector(subject.sector) : subject.ticker;
+      document.getElementById("stockDetailsTitle").innerHTML = `${isSectorDetail ? "Sector" : "Stock"} Financial Statements — ${detailName} · <span class="detail-range-desktop">${periodRange}</span><span class="detail-range-mobile">${mobilePeriodRange}</span>`;
+
+      if (isSectorDetail) {
+        const cohort = subject.financial_statements?.cohort || {};
+        const latestLabel = periodLabels[periodLabels.length - 1] || "Latest quarter";
+        document.getElementById("stockDetailsHint").textContent = cohort.reported > 0 && cohort.reported < cohort.total
+          ? `${latestLabel} amounts use ${cohort.reported}/${cohort.total} reporters · prior columns use all ${cohort.total} stocks · latest YoY is like-for-like · double-click/two-tap a line for best-to-worst constituents`
+          : cohort.reported === 0
+            ? `No new-quarter reporters · latest column is N/A and prior aggregate is retained · double-click/two-tap a line for best-to-worst constituents`
+            : `Consolidated from ${cohort.total || subject.detail_total || 0} stocks · double-click/two-tap a line for best-to-worst constituents`;
+      } else {
+        document.getElementById("stockDetailsHint").textContent = `${displaySector(subject.sector)} · reported statement values in VND bn unless marked otherwise`;
+      }
+
+      const olderCutoff = Math.max(0, periodLabels.length - 4);
+      const table = document.getElementById("stockDetailsTable");
+      table.style.setProperty("--detail-period-count", String(Math.max(1, periodLabels.length)));
+      const toggle = `<div class="detail-period-toggle" role="group" aria-label="Financial statement period">
+        <button type="button" data-detail-fundamental-period="quarter" class="${model.annualView ? "" : "active"}" aria-pressed="${model.annualView ? "false" : "true"}">Quarter</button>
+        <button type="button" data-detail-fundamental-period="year" class="${model.annualView ? "active" : ""}" aria-pressed="${model.annualView ? "true" : "false"}">Year</button>
+      </div>`;
+      document.getElementById("stockDetailsHead").innerHTML = `<tr><th>${toggle}</th>${periodLabels.map((label, index) => `<th class="${index < olderCutoff ? "detail-older" : ""}">${label}</th>`).join("")}</tr>`;
+
+      const body = document.getElementById("stockDetailsRows");
+      body.innerHTML = "";
+      (statement.rows || []).forEach(item => {
+        if (item.style === "section") {
+          const sectionRow = document.createElement("tr");
+          sectionRow.className = "financial-statement-section";
+          sectionRow.innerHTML = `<td colspan="${periodLabels.length + 1}">${item.label}</td>`;
+          body.appendChild(sectionRow);
+          return;
+        }
+        const row = document.createElement("tr");
+        if (item.style) row.classList.add(`financial-statement-row-${item.style}`);
+        const isGrowthRow = item.format === "pct" && /(?:yoy|growth)/i.test(item.label);
+        const cells = (item.values || []).map((value, index) => {
+          const className = [
+            index < olderCutoff ? "detail-older" : "",
+            isGrowthRow && Number.isFinite(value) ? (value > 0 ? "pos" : value < 0 ? "neg" : "") : ""
+          ].filter(Boolean).join(" ");
+          return `<td class="${className}">${formatFundamentalDetail(value, item.format, item.label)}</td>`;
+        }).join("");
+        const keyLine = item.style === "total" || item.style === "subtotal";
+        row.innerHTML = `<td>${keyLine ? `<strong>${item.label}</strong>` : item.label}</td>${cells}`;
+        body.appendChild(row);
+        if (isSectorDetail) {
+          const key = `${subject.sector}|fs|${state.fundamentalPeriod}|${state.financialStatement}|${item.key}`;
+          enableSectorDetailDrill(row, model, subject, item, olderCutoff, key, financialStatementStockRows);
+          if (expandedSectorMetrics.has(key)) {
+            let anchor = row;
+            financialStatementStockRows(model, subject, item, olderCutoff, key).forEach(stockRow => {
+              anchor.insertAdjacentElement("afterend", stockRow);
+              anchor = stockRow;
+            });
+          }
+        }
+      });
+    }
+
     function setStatLabels(fundamentals = false) {
       ["bestSectorStat", "worstSectorStat", "topStockStat", "worstStockStat"].forEach(id => {
         const card = document.getElementById(id);
@@ -6421,12 +6721,12 @@
       const annualView = state.fundamentalPeriod === "year";
       document.getElementById("sectorViewHelp").innerHTML = annualView
         ? `<strong>Annual structural history:</strong> five completed fiscal years plus latest TTM. Click or tap a sector once for consolidated Sector Details; double-click or tap it twice to drill into stocks.`
-        : `<strong>Quarter history:</strong> each cell shows the phase and score for that quarter. Click or tap a sector once for consolidated Sector Details; double-click or tap it twice to drill into stocks.`;
+        : `<strong>Quarter history:</strong> each cell shows the phase and score for that quarter. During earnings season, the newest sector cell uses only companies that have reported; N/A means none have reported. Click or tap a sector once for consolidated Sector Details; double-click or tap it twice to drill into stocks.`;
       document.getElementById("rotationDeltaHelp").innerHTML = `<strong>Four phases:</strong> Strong means both Health and Momentum are above 50; Recover has stronger Momentum but weaker Health; Fading has solid Health but weaker Momentum; Weak has both below 50. Sector inputs are relative to the coverage-universe average.`;
       document.getElementById("selectedViewHelp").innerHTML = annualView
         ? `<strong>Displayed growth:</strong> latest TTM versus the prior comparable 12 months. Structural trend uses the rolling five-year median and three-year CAGR to reduce abnormal-period distortion.`
         : `<strong>Displayed growth:</strong> top-line and bottom-line figures are the latest reported quarter versus the same quarter a year earlier. Historical normalization is used only inside ranking signals to control abnormal bases.`;
-      document.getElementById("rankingIntroHelp").innerHTML = `<strong>Fundamental Score:</strong> 50% Quality plus 50% Momentum. Tags remain visible as explanations but only adjust scores against the base direction: above 51, negative tags may deduct points; below 49, positive tags may add points; within the 49–51 neutral band, either direction can apply. Every scored dimension and input is shown in the detail table. Sector scores use consolidated financial statements and the same dimension formulas as stocks. Quarterly ROE and ROA are annualized to a 12-month run rate.`;
+      document.getElementById("rankingIntroHelp").innerHTML = `<strong>Fundamental Score:</strong> 50% Quality plus 50% Momentum. Tags remain visible as explanations but only adjust scores against the base direction: above 51, negative tags may deduct points; below 49, positive tags may add points; within the 49–51 neutral band, either direction can apply. Stocks use their latest filed quarter. A partial sector quarter uses the same reporting companies for both the new result and its comparison base; sectors with no new reports retain the previous-quarter ranking score. Quarterly ROE and ROA are annualized to a 12-month run rate.`;
       document.getElementById("scoreMethodHelp").innerHTML = `<strong>Comments:</strong> compact labels identify the main warning: Contraction, Cooling, Margin ↓, Int. burden, Cash-gap, Credit risk, B/Sheet, Reg. limit, Earn.Quality, Turnaround, Low-base, High-base, or One-off. An empty cell means no active warning.`;
     }
 
@@ -6456,7 +6756,8 @@
       }
       ensureFundamentalDetailSelection(model);
       document.getElementById("stockDetailsSection").hidden = false;
-      renderFundamentalDetails(model);
+      if (state.detailView === "financial-statement") renderFinancialStatementDetails(model);
+      else renderFundamentalDetails(model);
     }
 
     function renderTechnicalDetailedView(model) {
@@ -6469,6 +6770,7 @@
       section.hidden = false;
       restoreTechnicalPanel();
       document.getElementById("technicalPanel").hidden = false;
+      document.getElementById("financialStatementTabs").hidden = true;
       document.getElementById("stockDetailsTable").hidden = true;
       const sectorSelect = document.getElementById("detailSectorSelect");
       const sectors = model.sectorStats.slice().sort((a, b) => displaySector(a.sector).localeCompare(displaySector(b.sector)));
@@ -6822,7 +7124,7 @@
           resetSectorMetricBreakdown();
           document.getElementById("search").value = ticker;
           document.getElementById("tagFilter").value = "";
-          document.getElementById("detailPeriod").value = "fundamental-quarter";
+          document.getElementById("detailPeriod").value = "fundamental";
           navigatePage("details", "fundamentals");
           return true;
         }
@@ -6909,16 +7211,38 @@
           }
         });
         document.getElementById("detailPeriod").addEventListener("change", event => {
-          state.detailView = event.target.value;
-          if (state.detailView === "fundamental-quarter") state.fundamentalPeriod = "quarter";
-          else if (state.detailView === "fundamental-year") state.fundamentalPeriod = "year";
-          else {
+          if (event.target.value === "fundamental") {
+            state.detailView = state.fundamentalPeriod === "year" ? "fundamental-year" : "fundamental-quarter";
+          } else if (event.target.value === "financial-statement") {
+            state.detailView = "financial-statement";
+            resetSectorMetricBreakdown();
+          } else {
+            state.detailView = "technical-analysis";
             state.detailTechnicalTicker = state.tableMode === "stocks" && state.selectedFundamentalTicker
               ? state.selectedFundamentalTicker
               : "VN-Index";
             state.technicalTimeframe = "1Y";
           }
           rebuildAndRender();
+        });
+        document.getElementById("stockDetailsHead").addEventListener("click", event => {
+          const button = event.target.closest("[data-detail-fundamental-period]");
+          if (!button) return;
+          const period = button.dataset.detailFundamentalPeriod;
+          if (period !== "quarter" && period !== "year" || period === state.fundamentalPeriod) return;
+          state.fundamentalPeriod = period;
+          if (state.detailView !== "financial-statement") {
+            state.detailView = period === "year" ? "fundamental-year" : "fundamental-quarter";
+          }
+          resetSectorMetricBreakdown();
+          rebuildAndRender();
+        });
+        document.getElementById("financialStatementTabs").addEventListener("click", event => {
+          const button = event.target.closest("[data-financial-statement]");
+          if (!button || button.dataset.financialStatement === state.financialStatement) return;
+          state.financialStatement = button.dataset.financialStatement;
+          resetSectorMetricBreakdown();
+          renderDetailedView(model);
         });
         function rerenderActiveTechnicalChart() {
           if (state.page === "methodology" && state.methodology === "technical-analysis") renderTechnicalAnalysisChart(model);
