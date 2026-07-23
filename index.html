@@ -1209,8 +1209,11 @@
       font-weight: 650;
     }
 
-    .financial-statement-row-spacer td {
-      padding-bottom: 15px;
+    .financial-statement-spacer td {
+      height: 10px;
+      padding: 0;
+      border-bottom: 0;
+      background: transparent;
     }
 
     .financial-statement-section td {
@@ -2284,8 +2287,9 @@
         line-height: 1.15;
       }
 
-      .fund-detail-table .financial-statement-row-spacer td {
-        padding-bottom: 10px;
+      .fund-detail-table .financial-statement-spacer td {
+        height: 7px;
+        padding: 0;
       }
 
       .fund-detail-table th {
@@ -6427,6 +6431,14 @@
           sectionRow.className = "financial-statement-section";
           sectionRow.innerHTML = `<td colspan="${periodLabels.length + 1}">${item.label}</td>`;
           body.appendChild(sectionRow);
+          return;
+        }
+        if (item.style === "spacer") {
+          const spacerRow = document.createElement("tr");
+          spacerRow.className = "financial-statement-spacer";
+          spacerRow.setAttribute("aria-hidden", "true");
+          spacerRow.innerHTML = `<td colspan="${periodLabels.length + 1}"></td>`;
+          body.appendChild(spacerRow);
           return;
         }
         const row = document.createElement("tr");
