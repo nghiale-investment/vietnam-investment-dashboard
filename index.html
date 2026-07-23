@@ -174,6 +174,36 @@
       gap: 10px;
     }
 
+    .home-overall-switch {
+      display: inline-grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 2px;
+      margin-bottom: 4px;
+      padding: 2px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface-2);
+    }
+
+    .home-overall-switch button {
+      appearance: none;
+      min-width: 76px;
+      border: 0;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--muted);
+      padding: 5px 10px;
+      font: inherit;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .home-overall-switch button[aria-pressed="true"] {
+      background: var(--accent);
+      color: #fff;
+    }
+
     .home-expand-button {
       appearance: none;
       flex: 0 0 auto;
@@ -2331,9 +2361,8 @@
       <section class="home-hero">
         <p class="home-eyebrow">Cross-methodology snapshot</p>
         <h2>Market Overview</h2>
-        <p>Top and bottom sectors and stocks across Flow Rotation, Relative Rotation, and Fundamentals. Open a methodology for its full sector view, or use Detailed View for the consolidated sector and company financial tables.</p>
       </section>
-      <section class="home-overall-card" id="homeOverallCard" aria-label="Overall stock rankings"></section>
+      <section class="home-overall-card" id="homeOverallCard" aria-label="Overall rankings"></section>
       <div class="home-method-grid" id="homeMethodGrid" aria-label="Methodology rankings"></div>
     </div>
 
@@ -2365,7 +2394,7 @@
       </label>
       <label>
         Search ticker
-        <input id="search" type="search" placeholder="e.g. VN-Index, HDB">
+        <input id="search" type="search" placeholder="e.g. Vnindex, HDB">
       </label>
       <label id="tagControl" hidden>
         Search tag
@@ -2466,7 +2495,7 @@
             </label>
             <label>
               Ticker
-              <input id="detailTickerSearch" type="search" maxlength="12" autocomplete="off" spellcheck="false" placeholder="VN-Index or ticker" aria-label="View ticker details">
+              <input id="detailTickerSearch" type="search" maxlength="12" autocomplete="off" spellcheck="false" placeholder="Vnindex or ticker" aria-label="View ticker details">
             </label>
             <label>
               Select view
@@ -2539,13 +2568,13 @@
 
   <div id="tooltip" class="tooltip"></div>
 
-  <script src="relative_rotation.js?v=50-center-1"></script>
+  <script src="relative_rotation.js?v=15x-scale-1"></script>
   <script>
     const pricePath = "0.pricedata.csv";
     const coveragePath = "0.coverage_universe.csv";
     const initialParams = new URLSearchParams(window.location.search);
     const dashboardVersion = initialParams.get("v");
-    const fundamentalsDataVersion = "financial-statements-corporate-pl-3";
+    const fundamentalsDataVersion = "vnindex-detail-1";
     const fundamentalsPath = "fundamentals_data.json"
       + `?v=${encodeURIComponent(dashboardVersion || "current")}&data=${encodeURIComponent(fundamentalsDataVersion)}`;
     const PERIODS = {
@@ -2594,7 +2623,7 @@
       selectedTechnicalTicker: "",
       detailView: "fundamental-quarter",
       financialStatement: "income",
-      detailTechnicalTicker: "VN-Index",
+      detailTechnicalTicker: "Vnindex",
       technicalAnalysisPeriod: "bollinger",
       technicalTimeframe: "1Y"
     };
@@ -2607,6 +2636,7 @@
     const expandedSectorMetrics = new Set();
     const FUNDAMENTAL_DOUBLE_TAP_MS = 550;
     let homeRankingExpanded = false;
+    let homeOverallMode = "stocks";
     let technicalPriceData = { byTicker: new Map(), index: [], bySector: new Map(), exchanges: new Map() };
     let technicalAnalysisCache = new Map();
     let currentTechnicalSubject = null;
@@ -3509,7 +3539,7 @@
     function rrgTooltip(point, model) {
       const staleNote = point.staleSessions > 0 ? `<br>Stale price: ${point.staleSessions} session${point.staleSessions === 1 ? "" : "s"}` : "";
       const ratioMomentum = Number.isFinite(point.ratioMomentum) ? point.ratioMomentum - 1 : NaN;
-      return `<strong>${state.tableMode === "sectors" ? displaySector(point.label) : point.label}</strong> — ${point.date}<br>${model.mode.label} · VN-Index<br>Relative Strength ${fmtRrg(point.x)}<br>Relative Momentum ${fmtRrg(point.y)}<br>RRG score ${fmtRrg(point.score)} · ${point.quadrant}<br>${model.mode.momentumLookback}D entity return ${fmtSignedPct(point.entityReturn)}<br>${model.mode.momentumLookback}D VN-Index return ${fmtSignedPct(point.benchmarkReturn)}<br>Relative outperformance ${fmtSignedPct(point.relativeOutperformance)}<br>Raw RS-Ratio ${fmtRrg(point.rawRatio)} · 10D ratio momentum ${fmtSignedPct(ratioMomentum)}<br>Raw RS-Momentum ${fmtRrg(point.rawMomentum)}${staleNote}`;
+      return `<strong>${state.tableMode === "sectors" ? displaySector(point.label) : point.label}</strong> — ${point.date}<br>${model.mode.label} · VN-Index<br>Relative Strength ${fmtRrg(point.x)}<br>Relative Momentum ${fmtRrg(point.y)}<br>RRG score ${fmtRrg(point.score)} · ${point.quadrant}<br>${model.mode.momentumLookback}D entity return ${fmtSignedPct(point.entityReturn)}<br>${model.mode.momentumLookback}D VN-Index return ${fmtSignedPct(point.benchmarkReturn)}<br>Relative outperformance ${fmtSignedPct(point.relativeOutperformance)}<br>Unsmoothed RS-Ratio ${fmtRrg(point.rawRatio)} · 10D ratio momentum ${fmtSignedPct(ratioMomentum)}<br>Unsmoothed RS-Momentum ${fmtRrg(point.rawMomentum)}${staleNote}`;
     }
 
     function focusRrgEntity(entityId) {
@@ -3629,11 +3659,12 @@
       const innerW = width - margin.left - margin.right;
       const innerH = height - margin.top - margin.bottom;
       const rrgCenter = RelativeRotation.DISPLAY_CENTER || 50;
+      const rrgMultiplier = RelativeRotation.DISPLAY_MULTIPLIER || 1;
       const farthestDeviation = Math.max(...allPoints.flatMap(point => [
         Math.abs(point.x - rrgCenter),
         Math.abs(point.y - rrgCenter)
       ]));
-      const axisSpan = Math.max(2.5, farthestDeviation * 1.2 + 0.2);
+      const axisSpan = Math.max(2.5 * rrgMultiplier, farthestDeviation * 1.2 + 0.2 * rrgMultiplier);
       const xSpan = axisSpan;
       const ySpan = axisSpan;
       const x = value => margin.left + ((value - (rrgCenter - xSpan)) / (2 * xSpan)) * innerW;
@@ -3737,7 +3768,7 @@
         rows = sortRrgRows(selectedRrgStockRows(model));
         title.textContent = state.sector !== "All" ? `${displaySector(state.sector)} Stock Ranking` : parsedRrgTickers(model).length ? "Custom Basket Ranking" : "Stock Ranking";
         hint.textContent = state.sector !== "All" || parsedRrgTickers(model).length
-          ? `${rows.length} selected stocks; scores remain normalized against the full eligible universe`
+          ? `${rows.length} selected stocks; filters do not change their Relative Rotation scores`
           : "All eligible stocks ranked by equal-weight Relative Strength and Relative Momentum";
       }
       if (!rows.length) {
@@ -3786,7 +3817,7 @@
       document.getElementById("sectorViewHelp").innerHTML = `<strong>How to read the axes:</strong> Relative Strength (horizontal) shows performance versus the VN-Index over the rolling ${model.mode.normalizationWindow}-session comparison: above 50 is outperforming, below 50 is underperforming. Relative Momentum (vertical) asks whether that relative performance has improved or weakened versus ${model.mode.momentumLookback} sessions earlier: above 50 is improving, below 50 is slowing.`;
       document.getElementById("rotationDeltaHelp").innerHTML = `<strong>Four quadrants:</strong> Leading = outperforming and the lead is widening. Weakening = still outperforming, but the lead is narrowing versus ${model.mode.momentumLookback} sessions earlier. Lagging = underperforming and the gap is widening. Improving = still underperforming, but the gap is narrowing versus ${model.mode.momentumLookback} sessions earlier.`;
       document.getElementById("selectedViewHelp").innerHTML = `<strong>Reading the tail:</strong> each point is one trading day; the latest point is the sector's current position. Moving right or up is positive, while moving left or down is negative. On touch screens, tap once to focus and double-tap the same sector to open its stocks.`;
-      document.getElementById("rankingIntroHelp").innerHTML = `<strong>RRG score:</strong> the average of Relative Strength and Relative Momentum. A higher score means stronger relative performance and momentum combined.`;
+      document.getElementById("rankingIntroHelp").innerHTML = `<strong>RRG score:</strong> the average of Relative Strength and Relative Momentum on the displayed 0–100 scale. A higher score means stronger relative performance and momentum combined.`;
       document.getElementById("scoreMethodHelp").innerHTML = `<strong>Stable ranking:</strong> all coordinates are calculated before display filters are applied, so sector clicks and ticker searches never change an entity's score.`;
     }
 
@@ -3846,14 +3877,17 @@
       return `<span class="home-overall-signal ${className}"><b>${label}:</b> ${escapeTagText(value || "-")}</span>`;
     }
 
-    function homeOverallStockMarkup(row, index) {
+    function homeOverallEntityMarkup(row, index) {
       const fundamentalClass = row.fundamentalTag?.polarity === "positive"
         ? "quadrant-leading"
         : row.fundamentalTag
           ? "quadrant-lagging"
           : "";
-      return `<div class="home-overall-stock" data-ticker="${escapeTagText(row.ticker)}">
-        <div class="home-overall-ticker"><span>${index + 1}.</span><strong>${escapeTagText(row.ticker)}</strong></div>
+      const entityAttribute = row.entityType === "stock"
+        ? ` data-ticker="${escapeTagText(row.entity)}"`
+        : ` data-sector="${escapeTagText(row.entity)}"`;
+      return `<div class="home-overall-stock"${entityAttribute}>
+        <div class="home-overall-ticker"><span>${index + 1}.</span><strong>${escapeTagText(row.displayLabel)}</strong></div>
         <div class="home-overall-signals">
           ${homeOverallSignal("Flow", row.flowState, `flow-state-${flowStateTone(row.flowState)}`)}
           ${homeOverallSignal("Relative", row.rrgQuadrant, quadrantClass(row.rrgQuadrant))}
@@ -3862,40 +3896,51 @@
       </div>`;
     }
 
-    function renderHomeOverallStocks(flowStocks, rrgStocks, fundamentalStocks, rankingCount) {
-      const flowByTicker = new Map(flowStocks.map(row => [row.ticker, row]));
-      const rrgByTicker = new Map(rrgStocks.map(row => [row.label, row]));
-      const fundamentalByTicker = new Map(fundamentalStocks.map(row => [row.ticker, row]));
-      const flowRanks = homePercentileRanks(flowStocks, "ticker");
-      const rrgRanks = homePercentileRanks(rrgStocks, "label");
-      const fundamentalRanks = homePercentileRanks(fundamentalStocks, "ticker");
-      const combined = [...flowByTicker.keys()].filter(ticker => rrgByTicker.has(ticker) && fundamentalByTicker.has(ticker)).map(ticker => {
-        const flow = flowByTicker.get(ticker);
-        const rrg = rrgByTicker.get(ticker);
-        const fundamental = fundamentalByTicker.get(ticker);
+    function renderHomeOverallRankings(flowRows, rrgRows, fundamentalRows, rankingCount, entityType) {
+      const isSector = entityType === "sector";
+      const flowKey = isSector ? "sector" : "ticker";
+      const rrgKey = "label";
+      const fundamentalKey = isSector ? "sector" : "ticker";
+      const flowByEntity = new Map(flowRows.map(row => [row[flowKey], row]));
+      const rrgByEntity = new Map(rrgRows.map(row => [row[rrgKey], row]));
+      const fundamentalByEntity = new Map(fundamentalRows.map(row => [row[fundamentalKey], row]));
+      const flowRanks = homePercentileRanks(flowRows, flowKey);
+      const rrgRanks = homePercentileRanks(rrgRows, rrgKey);
+      const fundamentalRanks = homePercentileRanks(fundamentalRows, fundamentalKey);
+      const combined = [...flowByEntity.keys()].filter(entity => rrgByEntity.has(entity) && fundamentalByEntity.has(entity)).map(entity => {
+        const flow = flowByEntity.get(entity);
+        const rrg = rrgByEntity.get(entity);
+        const fundamental = fundamentalByEntity.get(entity);
         return {
-          ticker,
-          overallRank: (flowRanks.get(ticker) + rrgRanks.get(ticker) + fundamentalRanks.get(ticker)) / 3,
+          entity,
+          entityType,
+          displayLabel: isSector ? displaySector(entity) : entity,
+          overallRank: (flowRanks.get(entity) + rrgRanks.get(entity) + fundamentalRanks.get(entity)) / 3,
           flowState: flow.flowState,
           rrgQuadrant: rrg.quadrant,
           fundamental,
           fundamentalTag: primaryFundamentalTag(fundamental)
         };
-      }).sort((a, b) => b.overallRank - a.overallRank || a.ticker.localeCompare(b.ticker));
+      }).sort((a, b) => b.overallRank - a.overallRank || a.entity.localeCompare(b.entity));
       const best = combined.slice(0, rankingCount);
       const worst = combined.slice(-rankingCount).reverse();
+      const noun = isSector ? "Sectors" : "Stocks";
+      const description = `Equal-weight percentile ranking across Flow Rotation, Relative Rotation, and Fundamentals.${isSector ? " Five sectors are shown in each direction." : ""}`;
+      const expandButton = isSector ? "" : `<button class="home-expand-button" id="homeRankingToggle" type="button" aria-expanded="${homeRankingExpanded}" aria-label="${homeRankingExpanded ? "Show top and bottom 5" : "Show top and bottom 10"}">${homeRankingExpanded ? "Show 5" : "Expand to 10"}</button>`;
       document.getElementById("homeOverallCard").innerHTML = `
-        <div class="home-overall-head"><div><h2>Overall Stocks</h2><p>Equal-weight percentile ranking across Flow Rotation, Relative Rotation, and Fundamentals. Flow uses the same 5/20 model shown below; the combined score is intentionally hidden.</p></div><button class="home-expand-button" id="homeRankingToggle" type="button" aria-expanded="${homeRankingExpanded}" aria-label="${homeRankingExpanded ? "Show top and bottom 5" : "Show top and bottom 10"}">${homeRankingExpanded ? "Show 5" : "Expand to 10"}</button></div>
+        <div class="home-overall-head"><div><div class="home-overall-switch" role="group" aria-label="Overall ranking view"><button type="button" data-home-overall-mode="stocks" aria-pressed="${!isSector}">Stocks</button><button type="button" data-home-overall-mode="sectors" aria-pressed="${isSector}">Sectors</button></div><p>${description}</p></div>${expandButton}</div>
         <div class="home-overall-grid">
-          <div class="home-overall-block"><h3>Best ${rankingCount} overall</h3><div class="home-overall-list rank-count-${best.length}">${best.map(homeOverallStockMarkup).join("")}</div></div>
-          <div class="home-overall-block"><h3>Worst ${rankingCount} overall</h3><div class="home-overall-list rank-count-${worst.length}">${worst.map(homeOverallStockMarkup).join("")}</div></div>
+          <div class="home-overall-block"><h3>Best ${rankingCount} ${noun}</h3><div class="home-overall-list rank-count-${best.length}">${best.map(homeOverallEntityMarkup).join("")}</div></div>
+          <div class="home-overall-block"><h3>Worst ${rankingCount} ${noun}</h3><div class="home-overall-list rank-count-${worst.length}">${worst.map(homeOverallEntityMarkup).join("")}</div></div>
         </div>`;
     }
 
     function renderHomeRankings(flowModel, rrgModel, fundamentalModel) {
-      const overallRankingCount = homeRankingExpanded ? 10 : 5;
+      const overallRankingCount = homeOverallMode === "stocks" && homeRankingExpanded ? 10 : 5;
       const methodologyRankingCount = 5;
-      document.getElementById("signalInfo").textContent = "Methodology rankings show five; Overall Stocks can expand to ten.";
+      document.getElementById("signalInfo").textContent = homeOverallMode === "stocks"
+        ? "Methodology rankings show five; Overall Stocks can expand to ten."
+        : "Methodology and Overall Sector rankings show five.";
       scoreStocks(flowModel.stockStats);
       const flowSectors = flowModel.sectorStats.filter(row => Number.isFinite(row.score)).slice().sort((a, b) => b.score - a.score);
       const flowStocks = flowModel.stockStats.filter(row => Number.isFinite(row.score)).slice().sort((a, b) => b.score - a.score);
@@ -3938,7 +3983,13 @@
           stockValue: row => fmtFundScore(row.score)
         }
       ];
-      renderHomeOverallStocks(flowStocks, rrgStocks, fundamentalStocks, overallRankingCount);
+      renderHomeOverallRankings(
+        homeOverallMode === "sectors" ? flowSectors : flowStocks,
+        homeOverallMode === "sectors" ? rrgSectors : rrgStocks,
+        homeOverallMode === "sectors" ? fundamentalSectors : fundamentalStocks,
+        overallRankingCount,
+        homeOverallMode === "sectors" ? "sector" : "stock"
+      );
       document.getElementById("homeMethodGrid").innerHTML = cards.map(card => {
         const topSectors = card.sectors.slice(0, methodologyRankingCount).map(row => ({ ...row, homeLabel: card.sectorLabel(row) }));
         const bottomSectors = card.sectors.slice().reverse().slice(0, methodologyRankingCount).map(row => ({ ...row, homeLabel: card.sectorLabel(row) }));
@@ -3954,10 +4005,19 @@
           </div>
         </section>`;
       }).join("");
-      document.getElementById("homeRankingToggle").addEventListener("click", () => {
-        homeRankingExpanded = !homeRankingExpanded;
-        renderHomeRankings(flowModel, rrgModel, fundamentalModel);
+      document.querySelectorAll("[data-home-overall-mode]").forEach(button => {
+        button.addEventListener("click", () => {
+          homeOverallMode = button.dataset.homeOverallMode;
+          renderHomeRankings(flowModel, rrgModel, fundamentalModel);
+        });
       });
+      const rankingToggle = document.getElementById("homeRankingToggle");
+      if (rankingToggle) {
+        rankingToggle.addEventListener("click", () => {
+          homeRankingExpanded = !homeRankingExpanded;
+          renderHomeRankings(flowModel, rrgModel, fundamentalModel);
+        });
+      }
     }
 
     function applyPageVisibility() {
@@ -4664,9 +4724,21 @@
       const sectorSelect = document.getElementById("detailSectorSelect");
       const tickerSearch = document.getElementById("detailTickerSearch");
       const sectors = model.sectorStats.slice().sort((a, b) => displaySector(a.sector).localeCompare(displaySector(b.sector)));
-      sectorSelect.innerHTML = sectors.map(row => `<option value="${row.sector}">${displaySector(row.sector)}</option>`).join("");
-      sectorSelect.value = subject.sector || sectors[0]?.sector || "";
+      const stockContext = isSectorDetail
+        ? ""
+        : `<option value="__current_stock__">${displaySector(subject.sector)} · ${subject.ticker}</option>`;
+      sectorSelect.innerHTML = `<option value="All">Vnindex</option>${stockContext}${sectors.map(row => `<option value="${row.sector}">${displaySector(row.sector)}</option>`).join("")}`;
+      sectorSelect.value = isSectorDetail ? (subject.sector || sectors[0]?.sector || "") : "__current_stock__";
       tickerSearch.value = isSectorDetail ? "" : subject.ticker;
+    }
+
+    function renderIndexDetailNavigation(model) {
+      const sectorSelect = document.getElementById("detailSectorSelect");
+      const tickerSearch = document.getElementById("detailTickerSearch");
+      const sectors = model.sectorStats.slice().sort((a, b) => displaySector(a.sector).localeCompare(displaySector(b.sector)));
+      sectorSelect.innerHTML = `<option value="__current_index__">Vnindex</option>${sectors.map(row => `<option value="${row.sector}">${displaySector(row.sector)}</option>`).join("")}`;
+      sectorSelect.value = "__current_index__";
+      tickerSearch.value = "Vnindex";
     }
 
     function dimensionHelpMarkup(dimension, isSectorDetail, companyType) {
@@ -5536,7 +5608,7 @@
     function buildBollingerTechnicalModel(ticker) {
       const normalizedTicker = String(ticker || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
       const isIndex = normalizedTicker === "VNINDEX";
-      const displayTicker = isIndex ? "VN-Index" : normalizedTicker;
+      const displayTicker = isIndex ? "Vnindex" : normalizedTicker;
       const series = isIndex ? technicalPriceData.index : (technicalPriceData.byTicker.get(normalizedTicker) || []);
       if (!series.length) return null;
       const prices = series.map(point => point.price);
@@ -5666,9 +5738,9 @@
     }
 
     function technicalIndexRow() {
-      const technical = buildBollingerTechnicalModel("VN-Index");
+      const technical = buildBollingerTechnicalModel("Vnindex");
       return technical ? {
-        ticker: "VN-Index",
+        ticker: "Vnindex",
         sector: "Benchmark",
         technical,
         rating: technical.stateName,
@@ -6300,6 +6372,71 @@
       if (anchor.nextElementSibling !== panel) anchor.insertAdjacentElement("afterend", panel);
     }
 
+    function renderIndexFundamentalDetails(model) {
+      const section = document.getElementById("stockDetailsSection");
+      const indexView = model.data.index_view || {};
+      const subject = indexView[state.fundamentalPeriod];
+      if (!subject?.rows?.length) {
+        section.hidden = true;
+        return;
+      }
+      section.hidden = false;
+      restoreTechnicalPanel();
+      document.getElementById("technicalPanel").hidden = true;
+      document.getElementById("financialStatementTabs").hidden = true;
+      document.getElementById("stockDetailsTable").hidden = false;
+      document.getElementById("stockDetailsTable").classList.remove("sector-detail-table");
+      renderIndexDetailNavigation(model);
+      currentTechnicalSubject = null;
+
+      const periodLabels = subject.period_labels || [];
+      const mobilePeriodLabels = periodLabels.slice(-4);
+      const periodRange = periodLabels.length ? `${periodLabels[0]} to ${periodLabels[periodLabels.length - 1]}` : "";
+      const mobilePeriodRange = mobilePeriodLabels.length ? `${mobilePeriodLabels[0]} to ${mobilePeriodLabels[mobilePeriodLabels.length - 1]}` : periodRange;
+      const title = state.detailView === "financial-statement" ? "Vnindex Financial Statements" : "Vnindex Fundamentals";
+      document.getElementById("stockDetailsTitle").innerHTML = `${title} · <span class="detail-range-desktop">${periodRange}</span><span class="detail-range-mobile">${mobilePeriodRange}</span>`;
+
+      const cohort = indexView.cohort || {};
+      const latestPartial = Number(cohort.reported) > 0 && Number(cohort.reported) < Number(cohort.total);
+      document.getElementById("stockDetailsHint").textContent = latestPartial
+        ? `HOSE aggregate across ${cohort.total} covered listed companies · latest period uses ${cohort.reported} reporters and like-for-like comparisons · non-financial section covers ${cohort.non_financial_total} companies`
+        : `HOSE aggregate across ${cohort.total || 0} covered listed companies · non-financial section covers ${cohort.non_financial_total || 0} companies`;
+
+      const olderCutoff = Math.max(0, periodLabels.length - 4);
+      const table = document.getElementById("stockDetailsTable");
+      table.style.setProperty("--detail-period-count", String(Math.max(1, periodLabels.length)));
+      const toggle = `<div class="detail-period-toggle" role="group" aria-label="Vnindex period">
+        <button type="button" data-detail-fundamental-period="quarter" class="${model.annualView ? "" : "active"}" aria-pressed="${model.annualView ? "false" : "true"}">Quarter</button>
+        <button type="button" data-detail-fundamental-period="year" class="${model.annualView ? "active" : ""}" aria-pressed="${model.annualView ? "true" : "false"}">Year</button>
+      </div>`;
+      document.getElementById("stockDetailsHead").innerHTML = `<tr><th>${toggle}</th>${periodLabels.map((label, index) => `<th class="${index < olderCutoff ? "detail-older" : ""}">${label}</th>`).join("")}</tr>`;
+
+      const body = document.getElementById("stockDetailsRows");
+      body.innerHTML = "";
+      subject.rows.forEach(item => {
+        if (item.style === "section") {
+          const sectionRow = document.createElement("tr");
+          sectionRow.className = "financial-statement-section";
+          sectionRow.innerHTML = `<td colspan="${periodLabels.length + 1}">${item.label}</td>`;
+          body.appendChild(sectionRow);
+          return;
+        }
+        const row = document.createElement("tr");
+        if (item.style) row.classList.add(`financial-statement-row-${item.style}`);
+        const isGrowthRow = item.format === "pct" && /(?:yoy|growth)/i.test(item.label);
+        const cells = (item.values || []).map((value, index) => {
+          const className = [
+            index < olderCutoff ? "detail-older" : "",
+            isGrowthRow && Number.isFinite(value) ? (value > 0 ? "pos" : value < 0 ? "neg" : "") : ""
+          ].filter(Boolean).join(" ");
+          return `<td class="${className}">${formatFundamentalDetail(value, item.format, item.label)}</td>`;
+        }).join("");
+        const keyLine = item.style === "total" || item.style === "subtotal";
+        row.innerHTML = `<td>${keyLine ? `<strong>${item.label}</strong>` : item.label}</td>${cells}`;
+        body.appendChild(row);
+      });
+    }
+
     function renderFundamentalDetails(model) {
       const section = document.getElementById("stockDetailsSection");
       const isSectorDetail = state.tableMode === "sectors";
@@ -6731,6 +6868,7 @@
     }
 
     function ensureFundamentalDetailSelection(model) {
+      if (state.tableMode === "index") return;
       if (state.tableMode === "sectors") {
         const sectorExists = model.sectorStats.some(row => row.sector === state.selectedFundamentalSector);
         if (!sectorExists) {
@@ -6754,6 +6892,10 @@
         renderTechnicalDetailedView(model);
         return;
       }
+      if (state.tableMode === "index") {
+        renderIndexFundamentalDetails(model);
+        return;
+      }
       ensureFundamentalDetailSelection(model);
       document.getElementById("stockDetailsSection").hidden = false;
       if (state.detailView === "financial-statement") renderFinancialStatementDetails(model);
@@ -6762,10 +6904,10 @@
 
     function renderTechnicalDetailedView(model) {
       const section = document.getElementById("stockDetailsSection");
-      const requestedTicker = state.detailTechnicalTicker || "VN-Index";
+      const requestedTicker = state.detailTechnicalTicker || "Vnindex";
       const isIndex = isVnIndexTicker(requestedTicker);
       const stock = isIndex ? null : model.stockStats.find(row => row.ticker === String(requestedTicker).toUpperCase());
-      const ticker = stock?.ticker || "VN-Index";
+      const ticker = stock?.ticker || "Vnindex";
       state.detailTechnicalTicker = ticker;
       section.hidden = false;
       restoreTechnicalPanel();
@@ -6774,7 +6916,7 @@
       document.getElementById("stockDetailsTable").hidden = true;
       const sectorSelect = document.getElementById("detailSectorSelect");
       const sectors = model.sectorStats.slice().sort((a, b) => displaySector(a.sector).localeCompare(displaySector(b.sector)));
-      sectorSelect.innerHTML = `<option value="All">VN-Index</option>${sectors.map(row => `<option value="${row.sector}">${displaySector(row.sector)}</option>`).join("")}`;
+      sectorSelect.innerHTML = `<option value="All">Vnindex</option>${sectors.map(row => `<option value="${row.sector}">${displaySector(row.sector)}</option>`).join("")}`;
       sectorSelect.value = stock?.sector || "All";
       document.getElementById("detailTickerSearch").value = ticker;
       document.getElementById("stockDetailsTitle").textContent = `Bollinger Support & Resistance — ${ticker}`;
@@ -6994,9 +7136,9 @@
         dateInput.value = state.baseDate;
         let model = fullModel;
         if (state.page === "methodology" && state.methodology === "technical-analysis") {
-          state.search = "VN-Index";
-          state.selectedTechnicalTicker = "VN-Index";
-          document.getElementById("search").value = "VN-Index";
+          state.search = "Vnindex";
+          state.selectedTechnicalTicker = "Vnindex";
+          document.getElementById("search").value = "Vnindex";
         }
 
         function rebuildAndRender() {
@@ -7093,9 +7235,9 @@
           if (page === "methodology") {
             resetDashboardSelection();
             if (state.methodology === "technical-analysis") {
-              state.search = "VN-Index";
-              state.selectedTechnicalTicker = "VN-Index";
-              document.getElementById("search").value = "VN-Index";
+              state.search = "Vnindex";
+              state.selectedTechnicalTicker = "Vnindex";
+              document.getElementById("search").value = "Vnindex";
             }
           }
           document.getElementById("methodology").value = state.methodology;
@@ -7164,9 +7306,24 @@
           return true;
         }
 
+        function showIndexDetail() {
+          state.sector = "All";
+          state.search = "Vnindex";
+          state.tagFilter = "";
+          state.tableMode = "index";
+          state.selectedFundamentalTicker = "VNINDEX";
+          resetSectorMetricBreakdown();
+          document.getElementById("search").value = "Vnindex";
+          document.getElementById("tagFilter").value = "";
+          if (state.page === "details") renderDetailedView(model);
+          else renderAll(model);
+          return true;
+        }
+
         function showDetailTicker(value) {
-          if (state.detailView === "technical-analysis" && isVnIndexTicker(value)) {
-            state.detailTechnicalTicker = "VN-Index";
+          if (isVnIndexTicker(value)) {
+            if (state.detailView !== "technical-analysis") return showIndexDetail();
+            state.detailTechnicalTicker = "Vnindex";
             renderDetailedView(model);
             return true;
           }
@@ -7220,7 +7377,7 @@
             state.detailView = "technical-analysis";
             state.detailTechnicalTicker = state.tableMode === "stocks" && state.selectedFundamentalTicker
               ? state.selectedFundamentalTicker
-              : "VN-Index";
+              : "Vnindex";
             state.technicalTimeframe = "1Y";
           }
           rebuildAndRender();
@@ -7325,7 +7482,7 @@
           } else if (state.methodology === "technical-analysis") {
             const ticker = state.search.trim().toUpperCase();
             state.selectedTechnicalTicker = isVnIndexTicker(ticker)
-              ? "VN-Index"
+              ? "Vnindex"
               : model.stockStats.some(row => row.ticker === ticker) ? ticker : "";
           }
           renderAll(model);
@@ -7373,16 +7530,31 @@
           renderAll(model);
         });
         document.getElementById("detailSectorSelect").addEventListener("change", event => {
-          if (state.detailView === "technical-analysis") state.detailTechnicalTicker = "VN-Index";
-          if (event.target.value === "All" && state.detailView === "technical-analysis") {
-            state.tableMode = "sectors";
-            renderDetailedView(model);
+          const sector = event.target.value;
+          if (sector.startsWith("__")) return;
+          if (state.detailView === "technical-analysis") {
+            state.detailTechnicalTicker = "Vnindex";
+            if (sector === "All") {
+              state.tableMode = "index";
+              renderDetailedView(model);
+              return;
+            }
+          } else if (sector === "All") {
+            showIndexDetail();
             return;
           }
-          showFundamentalSectorDetail(event.target.value);
+          showFundamentalSectorDetail(sector);
         });
         document.getElementById("detailTickerSearch").addEventListener("input", event => {
-          showDetailTicker(event.target.value);
+          const value = event.target.value;
+          if (state.detailView !== "technical-analysis" && !value.trim()) {
+            const fallbackSector = model.sectorStats.some(row => row.sector === state.selectedFundamentalSector)
+              ? state.selectedFundamentalSector
+              : model.sectorStats.filter(row => Number.isFinite(row.score)).sort((a, b) => b.score - a.score)[0]?.sector;
+            if (fallbackSector) showFundamentalSectorDetail(fallbackSector);
+            return;
+          }
+          showDetailTicker(value);
         });
         document.getElementById("detailTickerSearch").addEventListener("keydown", event => {
           if (event.key !== "Enter") return;

@@ -19,8 +19,11 @@
   const EPSILON = 1e-12;
   const INTERNAL_CENTER = 100;
   const DISPLAY_CENTER = 50;
+  const DISPLAY_MULTIPLIER = 15;
 
   const isFiniteNumber = value => Number.isFinite(value);
+  const toDisplayScale = value =>
+    DISPLAY_CENTER + (value - INTERNAL_CENTER) * DISPLAY_MULTIPLIER;
 
   function classifyQuadrant(x, y) {
     if (x >= DISPLAY_CENTER && y >= DISPLAY_CENTER) return "Leading";
@@ -260,8 +263,8 @@
     const internalX = calc.x[id]?.[index];
     const internalY = calc.y[id]?.[index];
     if (!entity || !isFiniteNumber(internalX) || !isFiniteNumber(internalY)) return null;
-    const x = internalX - INTERNAL_CENTER + DISPLAY_CENTER;
-    const y = internalY - INTERNAL_CENTER + DISPLAY_CENTER;
+    const x = toDisplayScale(internalX);
+    const y = toDisplayScale(internalY);
     const lookbackIndex = index - calc.config.momentumLookback;
     const entityReturn = lookbackIndex >= 0 && isFiniteNumber(entity.levels[lookbackIndex])
       ? entity.levels[index] / entity.levels[lookbackIndex] - 1
@@ -277,11 +280,11 @@
       index,
       x,
       y,
-      score: (x + y) / 2,
+      score: Math.max(0, Math.min(100, (x + y) / 2)),
       relativePrice: calc.relativePrice[id][index],
-      rawRatio: calc.rawRatio[id][index] - INTERNAL_CENTER + DISPLAY_CENTER,
+      rawRatio: toDisplayScale(calc.rawRatio[id][index]),
       ratioMomentum: calc.ratioMomentum[id][index],
-      rawMomentum: calc.rawMomentum[id][index] - INTERNAL_CENTER + DISPLAY_CENTER,
+      rawMomentum: toDisplayScale(calc.rawMomentum[id][index]),
       entityReturn,
       benchmarkReturn,
       relativeOutperformance: lookbackIndex >= 0 && isFiniteNumber(calc.relativePrice[id][lookbackIndex])
@@ -324,6 +327,7 @@
     MODE_CONFIG,
     MAX_STALE_SESSIONS,
     DISPLAY_CENTER,
+    DISPLAY_MULTIPLIER,
     calculate,
     classifyQuadrant,
     constructWeightedIndex,
