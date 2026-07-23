@@ -2585,7 +2585,7 @@
     const coveragePath = "0.coverage_universe.csv";
     const initialParams = new URLSearchParams(window.location.search);
     const dashboardVersion = initialParams.get("v");
-    const fundamentalsDataVersion = "vnindex-detail-1";
+    const fundamentalsDataVersion = "vnindex-sector-drilldown-1";
     const fundamentalsPath = "fundamentals_data.json"
       + `?v=${encodeURIComponent(dashboardVersion || "current")}&data=${encodeURIComponent(fundamentalsDataVersion)}`;
     const PERIODS = {
@@ -4667,9 +4667,18 @@
       aggregateRow.setAttribute("aria-expanded", "true");
     }
 
-    function enableSectorDetailDrill(row, model, sectorSubject, item, olderCutoff, key, rowBuilder = sectorMetricStockRows) {
+    function enableSectorDetailDrill(
+      row,
+      model,
+      sectorSubject,
+      item,
+      olderCutoff,
+      key,
+      rowBuilder = sectorMetricStockRows,
+      drillTitle = "Double-click or two-tap to show or hide stocks ranked best to worst by the latest period"
+    ) {
       row.classList.add("sector-detail-drill");
-      row.title = "Double-click or two-tap to show or hide stocks ranked best to worst by the latest period";
+      row.title = drillTitle;
       row.tabIndex = 0;
       row.setAttribute("aria-expanded", expandedSectorMetrics.has(key) ? "true" : "false");
       const toggle = () => toggleSectorMetricRows(model, sectorSubject, item, row, olderCutoff, key, rowBuilder);
@@ -6410,8 +6419,8 @@
       const cohort = indexView.cohort || {};
       const latestPartial = Number(cohort.reported) > 0 && Number(cohort.reported) < Number(cohort.total);
       document.getElementById("stockDetailsHint").textContent = latestPartial
-        ? `HOSE aggregate across ${cohort.total} covered listed companies · latest period uses ${cohort.reported} reporters and like-for-like comparisons · non-financial section covers ${cohort.non_financial_total} companies`
-        : `HOSE aggregate across ${cohort.total || 0} covered listed companies · non-financial section covers ${cohort.non_financial_total || 0} companies`;
+        ? `HOSE aggregate across ${cohort.total} covered listed companies · latest period uses ${cohort.reported} reporters and like-for-like comparisons · non-financial section covers ${cohort.non_financial_total} companies · double-click/two-tap a metric for sector aggregates`
+        : `HOSE aggregate across ${cohort.total || 0} covered listed companies · non-financial section covers ${cohort.non_financial_total || 0} companies · double-click/two-tap a metric for sector aggregates`;
 
       const olderCutoff = Math.max(0, periodLabels.length - 4);
       const table = document.getElementById("stockDetailsTable");
@@ -6453,7 +6462,76 @@
         const keyLine = item.style === "total" || item.style === "subtotal";
         row.innerHTML = `<td>${keyLine ? `<strong>${item.label}</strong>` : item.label}</td>${cells}`;
         body.appendChild(row);
+        if ((item.sector_values || []).length) {
+          const key = `VNINDEX|${state.fundamentalPeriod}|${item.key}`;
+          enableSectorDetailDrill(
+            row,
+            model,
+            null,
+            item,
+            olderCutoff,
+            key,
+            indexMetricSectorRows,
+            "Double-click or two-tap to show or hide sectors ranked best to worst by the latest period"
+          );
+          if (expandedSectorMetrics.has(key)) {
+            let anchor = row;
+            indexMetricSectorRows(model, null, item, olderCutoff, key).forEach(sectorRow => {
+              anchor.insertAdjacentElement("afterend", sectorRow);
+              anchor = sectorRow;
+            });
+          }
+        }
       });
+    }
+
+    function indexMetricSectorGoodness(item, value) {
+      if (!Number.isFinite(value)) return null;
+      const lowerIsBetter = new Set([
+        "net_de",
+        "net_debt_ebitda",
+        "cost_of_debt",
+        "net_interest_ebit",
+        "ccc"
+      ]);
+      return lowerIsBetter.has(item.key) ? -value : value;
+    }
+
+    function indexMetricSectorRows(model, _subject, item, olderCutoff, parentKey) {
+      return (item.sector_values || [])
+        .map(entry => {
+          const values = entry.values || [];
+          const latestValue = values[values.length - 1];
+          return {
+            ...entry,
+            values,
+            rankValue: indexMetricSectorGoodness(item, latestValue)
+          };
+        })
+        .sort((a, b) => {
+          const aValid = Number.isFinite(a.rankValue);
+          const bValid = Number.isFinite(b.rankValue);
+          if (aValid !== bValid) return bValid - aValid;
+          if (aValid && a.rankValue !== b.rankValue) return b.rankValue - a.rankValue;
+          return displaySector(a.sector).localeCompare(displaySector(b.sector));
+        })
+        .map((entry, rankIndex) => {
+          const row = document.createElement("tr");
+          row.className = "sector-stock-metric-row index-sector-metric-row";
+          row.dataset.sectorMetricParent = parentKey;
+          row.dataset.sector = entry.sector;
+          row.title = `${displaySector(entry.sector)} · ${item.label}`;
+          const isGrowthRow = item.format === "pct" && /(?:yoy|growth)/i.test(item.label);
+          const cells = entry.values.map((value, index) => {
+            const className = [
+              index < olderCutoff ? "detail-older" : "",
+              isGrowthRow && Number.isFinite(value) ? (value > 0 ? "pos" : value < 0 ? "neg" : "") : ""
+            ].filter(Boolean).join(" ");
+            return `<td class="${className}">${formatFundamentalDetail(value, item.format, item.label)}</td>`;
+          }).join("");
+          row.innerHTML = `<td><span class="sector-stock-rank">${rankIndex + 1}.</span><strong>${displaySector(entry.sector)}</strong></td>${cells}`;
+          return row;
+        });
     }
 
     function renderFundamentalDetails(model) {
