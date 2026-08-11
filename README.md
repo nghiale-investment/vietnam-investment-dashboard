@@ -20,9 +20,10 @@ consume them.
 ## Contents
 
 All mirrored research documents are stored under `RAW/`, using paths relative
-to `Research Vault/01.RAW`. A file is eligible only when its filename contains
-a valid `YYYYMMDD` date within the inclusive 14-day window ending on the current
-date in `Asia/Ho_Chi_Minh`. Undated Markdown and older files are excluded.
+to `Research Vault/01.RAW`. Every Markdown file anywhere under RAW is eligible
+when it was added or modified inside the inclusive 14-day window ending on the
+current date in `Asia/Ho_Chi_Minh`. Filename and document date do not control
+eligibility, so newly added undated or older-dated documents are included.
 
 ## Primary-machine publishing
 
