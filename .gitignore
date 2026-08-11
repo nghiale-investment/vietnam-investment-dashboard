@@ -1,0 +1,7 @@
+# Keep this repository Markdown-only, apart from this safeguard file.
+*
+!.gitignore
+!README.md
+!RAW/
+!RAW/**/
+!RAW/**/*.md
