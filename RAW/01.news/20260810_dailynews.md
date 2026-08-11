@@ -1,8 +1,8 @@
 ---
 source: WhatsApp Web
 chat_name: "Manulife - SSI; Manulife - SHS; Manulife - Vietcap; HSC - Manulife"
-capture_window: 2026-08-10 00:00 to 2026-08-10 16:59 Asia/Ho_Chi_Minh
-captured_at: 2026-08-10 16:59 Asia/Ho_Chi_Minh
+capture_window: 2026-08-10 00:00 to 2026-08-10 17:26 Asia/Ho_Chi_Minh
+captured_at: 2026-08-11 15:32 Asia/Ho_Chi_Minh
 capture_method: browser_dom_visible_page
 status: raw_capture
 ---
@@ -13,7 +13,7 @@ status: raw_capture
 
 Monday's broker flow was led by the continued SOE and state-capital restructuring theme. SSI and Vietcap both highlighted Decision 40/2026/QD-TTg, effective 5 August, as a legal and policy foundation for restructuring State capital and potentially resolving long-standing free-float and ownership issues in listed SOEs and subsidiaries. Vietcap identified potential beneficiaries across energy, financials, industrial parks, industrials and other SOE-linked names, including GAS, BSR, BID, CTG, VCB, BVH, BCM, GVR, PHR, SZC, ACV, HVN, CTR, VEA and VTP. Intraday and closing market updates showed the theme continuing to lift BCM, GAS, GVR, SZC, ACV and PLX, while SSI said the broader market rally had become more dispersed beyond SOEs.
 
-Market performance was positive but liquidity stayed cautious. SSI said VN-Index rose 0.7% by noon to 1,780.40, with strong breadth, leadership from SOE stocks, gains in financials and logistics, and Vingroup stocks slightly pulling back. Vietcap's midday note similarly reported VN-Index up 0.7%, morning turnover down 13% DoD to USD284mn and foreign net selling of USD12mn concentrated in TCB, VHM and FPT. Vietcap's market wrap said VN-Index closed up 0.49%, MTD up 2.36%, QTD down 4.48% and YTD down 0.43%, with combined turnover of USD713mn, down 2% DoD, and foreign net selling of USD10.6mn. Vietcap attributed the stronger afternoon recovery to banks after several lenders announced deposit-rate cuts over the weekend, with top foreign buys DMX, SHB and VNM and top sells TCB, VHM and FPT. SSI's market outlook remained constructive but cautious, noting that the relief rally improved sentiment while tight liquidity and elevated interest rates are still expected to persist through year-end.
+Market performance was positive but liquidity stayed cautious. A later SSI close note added after the prior capture said the VN-Index rose another 0.49% to 1,776.77, the rebound broadened beyond SOEs, Vingroup names retreated, foreign investors net sold VND281bn concentrated in TCB and VHM, and turnover stayed stagnant at VND18.9tn, showing no new capital inflows. SSI said VN-Index rose 0.7% by noon to 1,780.40, with strong breadth, leadership from SOE stocks, gains in financials and logistics, and Vingroup stocks slightly pulling back. Vietcap's midday note similarly reported VN-Index up 0.7%, morning turnover down 13% DoD to USD284mn and foreign net selling of USD12mn concentrated in TCB, VHM and FPT. Vietcap's market wrap said VN-Index closed up 0.49%, MTD up 2.36%, QTD down 4.48% and YTD down 0.43%, with combined turnover of USD713mn, down 2% DoD, and foreign net selling of USD10.6mn. Vietcap attributed the stronger afternoon recovery to banks after several lenders announced deposit-rate cuts over the weekend, with top foreign buys DMX, SHB and VNM and top sells TCB, VHM and FPT. SSI's market outlook remained constructive but cautious, noting that the relief rally improved sentiment while tight liquidity and elevated interest rates are still expected to persist through year-end.
 
 Macro and policy items focused on oil, liquidity, banks, cultural infrastructure, maritime infrastructure and land reform. SSI said Brent moved above USD84-85/bbl as uncertainty persisted around reopening the Strait of Hormuz, Iran-Oman talks had not yet produced a definitive route, and attacks on Saudi and ADNOC-linked assets added supply concerns. SSI also said SBV injected a net VND24.3tn through OMO during 3-7 August, system credit grew 8.21% YTD as of 27 July versus deposit growth around 5.8%, and average lending rates remained around 10.5%, leaving funding pressure despite liquidity-support measures. Banking-sector asset quality weakened, with NPLs at 27 listed/registered banks exceeding VND310tn at end-1H26, up nearly VND48tn YTD, and the average NPL ratio rising to 2.01% from 1.85%. SSI also captured a draft Cultural Industry Development Law targeting cultural industries at 7% of GDP by 2030, while HSC discussed Resolution 218/NQ-CP on developing Vietnam into a strong maritime nation, which supported GMD sentiment through potential seaport, logistics and connectivity investment. The visible Sunday sidebar also included a land-law draft note from another room, but this run only captured established target rooms.
 
@@ -24,7 +24,7 @@ Earnings and broker-update captions were dominated by SHS and HSC. SHS posted vi
 ## Capture Notes
 
 - Login/session: user-authorized WhatsApp Web session.
-- Scope: messages visible in Manulife - SSI, Manulife - SHS, Manulife - Vietcap, and HSC - Manulife for 2026-08-10 through 16:59 Asia/Ho_Chi_Minh.
+- Scope: messages visible in Manulife - SSI, Manulife - SHS, Manulife - Vietcap, and HSC - Manulife for 2026-08-10 through 17:26 Asia/Ho_Chi_Minh.
 - Media: text and visible links captured; pictures, charts, image tables, documents, audio, videos and PDFs ignored unless visible text/captions were available.
 - WhatsApp long-message expansion limitation: several SHS PDF-caption messages, Vietcap's Daily Crunch, midday highlights and market wrap, and HSC's real-estate/GMD messages still ended with Read more after the available expansion pass.
 - No message was sent, forwarded, reacted to, downloaded, or otherwise modified.
@@ -321,3 +321,21 @@ GMD – Share price rose 4.2% in this morning’s session , which we believe was
 
 HSC's view : We view the resolution as po… Read more
 13:15
+
+### 17:26 - Manulife - SSI
+Market wrap – Mon, Aug 10, 2026
+
+Rebound broadened beyond SOEs, signaling improving sentiment
+
+•	The market extended rebound into the 3rd week with the VNIndex hiking another +0.49% to 1776.77pts.
+
+•	Boosted by renewed anticipation of potential state divestment under Decision 40, a number of SOE stocks continued to secure robust gains, namely, those with clearer state divestment plans (BCM +7% and GVR +7% announced plans to reduce state holding from 96% to 65% and from 95% to 75% respectively) and those with state holding over 90% which must take steps to ensure public company status under the Securities Law (GAS +7%, BSR +2.7%).
+
+•	Yet, today’s rebound extended well beyond state-owned enterprises, marking one of the broadest rally sessions in recent months. This suggests that sentiment has improved, with investors likely responding to attractive valuations across the broader market.
+
+•	Vingroup (VIC -3%; VHM -1.9%; VPL -0.6%), meanwhile, retreated, as is often the case when the broader market gains momentum.
+
+•	Recent rebound triggered some profit-taking activities from foreign investors, net selling VND281bn (USD10.7mn) today, withdrawing heavily from TCB and VHM. 
+
+•	Trading turnover stayed stagnant at VND18.9tn (USD719mn), reflecting no new capital inflows.
+
