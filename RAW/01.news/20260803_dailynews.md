@@ -135,4 +135,4 @@ https://hsc-vn.zoom.us/j/94367653913?pwd=4nKlTKn4VAKrl1HteKQ6TxbcosuV1c.1
 
 Webinar ID: 943 6765 3913
 
-Passcode: 219585
+Passcode: redacted

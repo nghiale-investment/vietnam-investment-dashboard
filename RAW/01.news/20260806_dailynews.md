@@ -85,7 +85,7 @@ SSI's Vietnam August 2026 Strategy group call will take place at 3:00 PM GMT+7 o
 
 Webinar ID: 997 0407 9207
 
-Passcode: 0608
+Passcode: redacted
 
 The team will share views on Vietnam's macroeconomic and equity-market outlook, including recent market performance, capital flows and liquidity, key investment themes, catalysts and stock ideas.
 
@@ -109,7 +109,7 @@ The Vietnam August 2026 Strategy group call is starting now. Join/Register: http
 
 Webinar ID: 997 0407 9207
 
-Passcode: 0608
+Passcode: redacted
 
 ### 08:23 - Manulife - SHS
 Morning team,
@@ -228,7 +228,7 @@ Link: https://hsc-vn.zoom.us/j/91916294659?pwd=ci89hJrW8NzHxJ6wEdmSsY9YzAS0TF.1
 
 Meeting ID: 919 1629 4659
 
-Passcode: 470993
+Passcode: redacted
 
 ### 14:52 - HSC - Manulife
 2Q26 Earnings Call Schedule this afternoon VN-time
@@ -237,7 +237,7 @@ MBB Self-hosted - at 3pm
 
 Link: https://mbbic1h2026.mbbank.com.vn/
 
-Passcode: MB1688
+Passcode: redacted
 
 VNM Self-hosted Vietnamese-English translation - at 3pm
 

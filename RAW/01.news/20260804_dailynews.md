@@ -144,7 +144,7 @@ The stock market has enjoyed an extended streak of winning sessions, rebounding 
 DXG & DXS HSC - at 10am
 Link: https://hsc-vn.zoom.us/j/93670468039?pwd=PA0uzNBhOtP66AkwUUd5puGLJRFhNh.1
 Meeting ID: 936 7046 8039
-Passcode: 829319
+Passcode: redacted
 
 DGW Self - hosted (Vietnamese session) - at 10am
 Link: https://us06web.zoom.us/j/81921989707?pwd=GixZyylEbo8bZIrWqGaU6pnj8y13JG.1
@@ -166,12 +166,12 @@ The VNIndex continued its upward momentum, rising +0.35% to 1769.04 points by no
 KBC HSC - at 3pm
 Link: https://hsc-vn.zoom.us/j/97104866721?pwd=uYI4Joiuv6qKmirRrsg3mBAB6W5G5U.1
 ID: 971 0486 6721
-Passcode: 192434
+Passcode: redacted
 
 MWG & BHX Self - hosted - at 3pm
 Link: https://us02web.zoom.us/j/81363302582?pwd=08qLo4DHfieO50wq4aF0x03Q1LF7bl.1
 ID: 813 6330 2582
-Passcode: 565662
+Passcode: redacted
 
 DMX Self - hosted - at 3:45pm
 Webinar (Register and Join): https://us02web.zoom.us/j/82816944859?pwd=SXG4jk7vREKbjnsr2jOaCcJR6bGUEy.1

@@ -96,7 +96,7 @@ Link: https://hsc-vn.zoom.us/j/94587659849?pwd=OqKSAL1N9yJdwMZdJvAOFFi6R6TUKr.1
 
 Meeting ID: 945 8765 9849
 
-Passcode: 511062
+Passcode: redacted
 
 ### 09:49 - Manulife - Vietcap
 VCB +5%
@@ -133,7 +133,7 @@ Access Link : https://teams.microsoft.com/meet/443521013961369?p=lsZORdb1NoCCKq9
 
 Meeting ID: 952 1598 0380
 
-Passcode: 3107
+Passcode: redacted
 
 ### 11:30 - Manulife - SSI
 #SSI Research - HDB 2Q26 Results Review
@@ -176,22 +176,22 @@ H1 2026 TOI +25% YoY and PBT +37% YoY (completing 51% of our 2026 forecasts; exc
 VIC Self-hosted - at 2pm
 Link: https://vingroup-meeting.webex.com/wbxmjs/joinservice/sites/vingroup-meeting/meeting/download/d8df101779e6425fbb1fef60b5f39ca5?MTID=md9e712aa5b57cc668bc01397eb53b667
 Meeting number (access code): 2516 753 8695
-Meeting password: VIC#2Q2026
+Meeting password: redacted
 
 PVI Self-hosted - at 2pm
 Link: https://teams.microsoft.com/meet/43387310351763?p=EuABFnRxgWqvP323W7
 Meeting ID: 433 873 103 517 63
-Passcode: se3vk9rD
+Passcode: redacted
 
 CTD HSC - at 3pm
 Link: https://hsc-vn.zoom.us/j/99264072983?pwd=5GW90VvWgPXjdp7kAaqn5JaLP2nHmS.1
 Meeting ID: 992 6407 2983
-Passcode: 026621
+Passcode: redacted
 
 FPT Self-hosted - at 3:45pm
 Link: https://fho.webex.com/fho/j.php?MTID=m03e2ea1b1f7a0d1d7d43850261a49d7b
 Meeting number: 2512 968 0010
-Password: FPT2026
+Password: redacted
 
 ### 14:13 - Manulife - SSI
 #SSI Research - STB 2Q26 Business results

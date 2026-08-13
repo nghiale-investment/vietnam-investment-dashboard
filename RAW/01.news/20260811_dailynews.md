@@ -1,8 +1,8 @@
 ---
 source: WhatsApp Web
 chat_name: "Manulife - SSI; Manulife - SHS; Manulife - Vietcap; HSC - Manulife"
-capture_window: 2026-08-10 16:59 to 2026-08-11 15:32 Asia/Ho_Chi_Minh
-captured_at: 2026-08-11 15:32 Asia/Ho_Chi_Minh
+capture_window: 2026-08-10 16:59 to 2026-08-11 19:23 Asia/Ho_Chi_Minh
+captured_at: 2026-08-12 15:30 Asia/Ho_Chi_Minh
 capture_method: browser_dom_visible_page
 status: raw_capture
 ---
@@ -19,13 +19,18 @@ Company news was broad. SSI's morning highlights included ACV airport expansion 
 
 Broker research added two major initiation or update themes. SHS initiated DP3 with an Increase Weight recommendation and VND84,600/share target, implying roughly 41% upside, based on stable pharmaceutical-sector growth, strong 6M26 results that already exceeded full-year profit guidance, a strategic shift back toward market-share gains, the Trang Due plant as a medium-term capacity driver, net cash equal to about 33% of market cap, ROE of 29.1%, low P/E versus peers and a dividend yield around 6.6%, while flagging herb-input and CNY/VND risk, regulated pricing, competition and low liquidity. HSC initiated GEL at Buy with a VND47,000 target, presenting GELEX's infrastructure platform as exposure to Vietnam's infrastructure build-out and BT/reciprocal-land mechanism revival, with FY26-27 as foundation years and a 5Y net profit CAGR forecast of 40.6% including FY29-30 stretch estimates. HSC's same roundup remained cautious on residential developers despite 2Q26 earnings beats from divestments and bulk sales, saw tactical support but resistance around VN-Index 1,760-1,800, upgraded DGW forecasts and kept Buy, flagged Vietnam's widening US trade imbalance and possible US scrutiny, updated on DMX July revenue, viewed Resolution 218 as positive for GMD and the port sector, maintained Hold on PLX after its treasury-share sale plan, and noted GAS strength after Decision 40 and upcoming board-election EGM.
 
+
+Post-close updates added later showed the market ended August 11 with modest profit-taking rather than a breakdown. SSI said VN-Index slipped 0.19% to 1,773.41 after a two-week rebound, but breadth stayed resilient, with industrials, brokers and consumer discretionary names still positive while state-owned energy names weakened as the divestment theme cooled. Vietcap's market wrap also recorded VN-Index down 0.19%, MTD up 2.17%, combined turnover down 9% DoD to USD646mn, foreign net selling of USD28.8mn led by TCB, VHM and FPT, and foreign buying in VNM, FRT and LPB. FRT, DGW and VJC stayed firm, while GAS, VCB, CTG, BID and BSR weighed on the index.
+
 ## Capture Notes
 
 - Login/session: user-authorized WhatsApp Web session.
-- Scope: market-relevant messages visible in Manulife - SSI, Manulife - SHS, Manulife - Vietcap, and HSC - Manulife from immediately after 2026-08-10 16:59 through 2026-08-11 15:32 Asia/Ho_Chi_Minh.
+- Scope: market-relevant messages visible in Manulife - SSI, Manulife - SHS, Manulife - Vietcap, and HSC - Manulife from immediately after 2026-08-10 16:59 through 2026-08-11 19:23 Asia/Ho_Chi_Minh.
 - Media: text and visible links captured; pictures, charts, image tables, documents, audio, videos and PDFs ignored unless visible text/captions were available.
 - SHS DP3 was captured from the visible PDF-caption text and link; the PDF itself was not downloaded.
 - HSC 09:00 appeared in the chat list as a photo/media item, but the visible message text was captured after Read more expansion; media was not downloaded.
+- SSI 17:31 and Vietcap 19:23 evening wraps were captured during the 2026-08-12 retry pass and appended to this file.
+- SSI 17:31 and Vietcap 19:23 remained partially collapsed after available Read more expansion and are marked in the messages.
 - No message was sent, forwarded, reacted to, downloaded, or otherwise modified.
 
 ## Messages
@@ -313,3 +318,56 @@ Rủi ro cần theo dõi gồm: (i) giá dược liệu đầu vào và tỷ gi�
 Quý khách có thể tải báo cáo đầy đủ tại: https://www.shs.com.vn/bao-cao-phan-tich/dp3-dong-luc-tang-truong-den-tu-hoat-dong-kinh-doanh-cot-loi
 14:39
 
+
+
+### 17:31 - Manulife - SSI
+Market wrap – Tue, Aug 11, 2026
+
+Profit-Taking Emerged, but Market Breadth Remained Resilient
+
+•	Profit-taking accelerated after two weeks of rebound, with the VN-Index edging down 0.19% to 1,773.41. 
+
+•	Nevertheless, market breadth remained healthy, as gainers and decliners were broadly balanced.
+
+•	Industrials (led by GEE +7%; GEX +1.2%; VJC +1.4%), Brokerage (+0.8%), and Consumer Discretionary names (FRT +7%; MWG +0.3%; DGW +2.1%; PET +1.7%) traded in positive territory, while the Energy sector (-2.5%), which is heavily represented by state-owned enterprises, came under pressure as enthusiasm surrounding the state divestment theme cooled.
+
+•	HCM (+2.1%) remained one of the best performing stocks YTD (+32%) on lingering M&A speculation. 
+
+•	Gain-realization acti… Read more
+
+### 19:23 - Manulife - Vietcap
+Vietcap's Market Wrap
+
+
+
+VNI Performance
+
+1D: -0.19%, MTD: +2.17%, QTD: -4.66%, YTD: -0.62%
+Combined turnover: $646mn, -9% DOD (HOSE: $604mn, -10% DOD)
+
+
+Foreign Activity
+
+Net flow: -US$28.8mn
+
+Top 3 Buys: VNM $2.3mn, FRT $2.3mn, LPB $2.1mn
+Top 3 Sells: TCB -$8.4mn, VHM -$7.0mn, FPT -$3.9mn
+
+
+Market colors
+
+
+
+VN-Index inched down -0.19%, giving back the morning's gains in a late-session fade, though breadth remained positive at 162 advancers vs 155 decliners. LPB and VHM led the positive side, while GAS reversed sharply from yesterday's rally to become the heaviest drag, joined by VCB, CTG, BID, and BSR. 
+
+
+
+FRT +7%
+
+-No specific news. #2 in foreign net buying. Foreign net buying accounted for 29% of total volume.
+
+
+
+DGW +2%
+
+-Extended the rally following the Chairman'… Read more

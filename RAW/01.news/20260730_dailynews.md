@@ -83,7 +83,7 @@ https://hsc-vn.zoom.us/j/96665472394?pwd=6i3WpKiQPATCtLPOpSWeI97oMALOEl.1
 
 Meeting ID: 966 6547 2394
 
-Passcode: 627045
+Passcode: redacted
 
 ### 09:52 - HSC - Manulife
 MWG/DMX - DMX has officially been approved for listing on HOSE. The first trading day is also set for 06/08/2026, at a reference price of VND80,000 per share. Trading band +/-20% on first trading day.
@@ -129,7 +129,7 @@ Link: https://vingroup-meeting.webex.com/vingroup-meeting/j.php?MTID=mcb6531339f
 
 Meeting number (access code): 2512 819 7584
 
-Meeting password: VPL#2Q2026
+Meeting password: redacted
 
 VHM Self-hosted - at 4pm
 
@@ -137,7 +137,7 @@ Link: https://vingroup-meeting.webex.com/wbxmjs/joinservice/sites/vingroup-meeti
 
 Meeting number (access code): 2515 632 8318
 
-Meeting password: VHM#2Q2026
+Meeting password: redacted
 
 ### 13:47 - Manulife - Vietcap
 MWG +3%
