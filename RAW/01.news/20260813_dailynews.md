@@ -1,8 +1,8 @@
 ---
 source: WhatsApp Web
 chat_name: "Manulife - SSI; Manulife - SHS; Manulife - Vietcap; HSC - Manulife"
-capture_window: 2026-08-12 15:30 to 2026-08-13 17:22 Asia/Ho_Chi_Minh
-captured_at: 2026-08-13 17:22 Asia/Ho_Chi_Minh
+capture_window: 2026-08-12 15:30 to 2026-08-13 18:06 Asia/Ho_Chi_Minh
+captured_at: 2026-08-17 09:43 Asia/Ho_Chi_Minh
 capture_method: browser_dom_visible_page
 status: raw_capture
 ---
@@ -26,6 +26,7 @@ The captured broker messages also included specific investment read-throughs. HS
 - Media: text and links captured; pictures, charts, image tables, documents, audio, and videos ignored unless visible text was available.
 - Read more controls: expanded where visible before extraction.
 - Exclusions: HSC - Manulife meeting-link/passcode messages at 14:02 on 2026-08-12 were outside the capture window and not saved.
+- Incremental rerun: one message posted after the prior 17:22 cutoff was added on 2026-08-17. No other in-scope August 13 messages were found after that cutoff.
 
 ## Messages
 
@@ -258,6 +259,17 @@ DMX: Q3 could surpass Q2, headroom for profit margins
 	•	BNPL: avg payback 9 months (up to 18). Interest subsidy 8-10% paid by brands; default rate <2%
 
 	•	Home Credit 5-yr agreement: up to 100tn dong (~$4bn) capital guaranteed
+
+### 18:06 - Manulife - Vietcap
+Vietcap Market Wrap
+
+VN-Index fell 1.54% to 1,765.63. Turnover increased 35% to approximately USD760mn. Foreign investors were net sellers of USD21mn, with net buying in GEX, LPB and SSI and net selling in TCB, VHM and VIC.
+
+At the Prime Minister and SBV meeting, system credit reached VND20,260tn, up 8.98% YTD. USD/VND was quoted at 26,290-26,360. The reported bad-debt ratio was 3.31% versus 3.44% at end-2025, or 1.51% excluding five banks under special control. The system loan-to-deposit ratio was 107.7%, implying an estimated VND2,000tn funding gap. Real-estate credit grew 8.3%, while bad debt in the sector rose 10.5%. The inflation forecast was 4.5%-5.2%.
+
+Policy measures discussed included linking 2027 credit quotas to banks' compliance with rate-cut requests, prioritizing 35 infrastructure projects with combined investment of VND1,700tn, refinancing a VND50tn rental-housing program, and using OMO and FX swaps to support liquidity. Vietcap's read-through favored large state-owned banks and well-funded private banks.
+
+MSR proposed its first cash dividend of VND1,000 per share, a 2.6% yield and approximately USD42mn payout. Net debt to EBITDA was 2.1x at end-Q2 2026; management expected leverage below 1.7x by year-end and net cash in 2027.
 
 	•	Renovation CapEx doubled this year to improve customer experience; most opex remain variable (including rental)
 
