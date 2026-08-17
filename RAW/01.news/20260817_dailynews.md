@@ -1,8 +1,8 @@
 ---
 source: WhatsApp Web
 chat_name: "Manulife - SSI; Manulife - SHS; Manulife - Vietcap; HSC - Manulife"
-capture_window: 2026-08-17 00:00 to 2026-08-17 09:43 Asia/Ho_Chi_Minh
-captured_at: 2026-08-17 09:43 Asia/Ho_Chi_Minh
+capture_window: 2026-08-17 00:00 to 2026-08-17 16:13 Asia/Ho_Chi_Minh
+captured_at: 2026-08-17 16:13 Asia/Ho_Chi_Minh
 capture_method: browser_dom_visible_page
 status: raw_capture
 ---
@@ -11,14 +11,17 @@ status: raw_capture
 
 ## News Summary
 
-Monday's broker flow reviewed a 2.2% weekly VN-Index decline to 1,729.1, a continuing system funding gap despite 8.98% YTD credit growth, and Vietnam's Tier 2 status in a US transshipment-risk assessment. Company research focused on FPT's 14% seven-month earnings growth, HSC initiations or estimate changes for VGI and VHC, and SSI corporate updates spanning infrastructure, banks, steel, retail, energy and capital raising. No substantive text news was posted in Manulife - SHS by the 09:43 cutoff.
+Monday's broker flow reviewed a 2.2% weekly VN-Index decline to 1,729.1, a continuing system funding gap despite 8.98% YTD credit growth, and Vietnam's Tier 2 status in a US transshipment-risk assessment. Company research focused on FPT's 14% seven-month earnings growth, HSC initiations or estimate changes for VGI and VHC, and SSI corporate updates spanning infrastructure, banks, steel, retail, energy and capital raising.
+
+Later updates through 16:13 added a cautious SSI market outlook and Vietcap's end-of-day market wrap. SSI said the market remained constrained by tight liquidity and funding costs after a two-day 3.61% correction, with tariff concerns and the revived state-capital restructuring theme still shaping positioning. SSI expected range-bound trading, supported by low valuation and FTSE upgrade inflows expected from September, while noting the indicative FTSE EM-tracking constituent list as a potential catalyst. Vietcap's wrap showed the VN-Index down 0.09% on sharply lower turnover of USD561mn, with net foreign selling of USD22.2mn. VIC remained the main index drag, while CII rallied on a Thu Thiem land-auction catalyst, GAS rose on strong preliminary results, and MWG gained after its chairman completed a registered 1mn-share purchase. No substantive post-09:43 text news was found in Manulife - SHS or HSC - Manulife.
 
 ## Capture Notes
 
 - Login/session: user-authorized WhatsApp Web session.
-- Capture cutoff: 09:43 Asia/Ho_Chi_Minh.
+- Capture cutoff: 16:13 Asia/Ho_Chi_Minh.
 - Media: two image-only posts in Manulife - SHS were ignored. Webinar reminders without substantive research content were not reproduced.
 - Read more controls: expanded where visible before extraction.
+- Rerun scope: post-09:43 text in Manulife - SSI, Manulife - SHS, Manulife - Vietcap, and HSC - Manulife. Live webinar registration details and passcodes were not preserved.
 
 ## Messages
 
@@ -57,3 +60,60 @@ HSC morning research:
 - HSC maintained Buy on VHC but reduced the target price to VND65,500 from VND73,200 after cutting earnings estimates by an average 5%. Three-year earnings CAGR was forecast at 7.4%; forward P/E was 7.2x versus a 10.3x historical average.
 - FPT reported July sales of VND4.5tn, up 19%, and profit of VND830bn, up 16%. Seven-month sales reached VND30.8tn and profit VND5.9tn, both up 14%; signed revenue was VND31.4tn, up 32%. HSC maintained Buy with a VND94,200 target and 11.2x forward P/E.
 - Dividend events included BID's 6.8433% stock distribution and SSI's VND1,000 cash dividend plus 20% stock distribution.
+
+### 09:55 - Manulife - SSI
+Market outlook:
+
+- The stock market underwent correction (-3.61% in 2 days) following a streak of +7% gains since late Jul.
+- Flows are still predominantly driven by liquidity conditions and fundings costs which remain tight and elevated respectively. Last weeks' government meetings highlighted constraints in monetary policy and challenges in infra project execution. Investors might have expected more from these meetings in terms of government supportive measures and might have come away somewhat underwhelmed.
+- Concerns over US tariff are still lingering. Vietnam rising to become the country with the #1 trade surplus with the US in 1H26 poses increased risk. That said, our base-case scenario remains that there is no major regime shift with tariff for Vietnam stay close to previous reciprocal tariff rate of ~20%.
+- State divestment theme has also been recently revived with Decision 40 on State capital restructuring and optimization. However, it is important to note that the Decision makes clear that State capital restructuring extends beyond simple divestment, which has traditionally been the market's primary focus, to also include mergers, consolidation, and the maintenance or even increase of State ownership. SOE stocks with State ownership greater than 90% and clearer divestment plan have been receiving extra boost.
+- Looking forward, we view that the market will remain range-bound, still hamper by capital constraints and costs while supported by crisis-low valuations and FTSE market upgrade with concrete inflows starting Sep.
+- FTSE is set to release the indicative list of EM-tracking constituents on Fri, Sep 21, a potential catalyst that could rekindle investor enthusiasm around Vietnam's market upgrade.
+
+### 15:01 - Manulife - SSI
+Reminder: SSI Webinar - SOE Reform: The Clock Starts with Decision 40.
+
+Join us today at 3:00 PM (GMT+7) for a discussion on Decision 40 and Official Telegram 52, the August 2026 restructuring submissions, the nationwide restructuring plan expected in 4Q26, and implications for listed SOEs and state-owned banks.
+
+Registration link, webinar ID, and passcode were omitted from the saved capture.
+
+### 15:43 - Manulife - Vietcap
+Vietcap's Market Wrap:
+
+VNI Performance:
+
+- 1D: -0.09%, MTD: -0.48%, QTD: -7.13%, YTD: -3.20%
+- Combined turnover: $561mn, -29% DOD (HOSE: $526mn, -28% DOD)
+
+Foreign Activity:
+
+- Net flow: -US$22.2mn
+- Top 3 Buys: TCB $2.3mn, VNM $1.7mn, HDB $1.1mn
+- Top 3 Sells: VIC -$9.0mn, VHM -$4.0mn, ACB -$3.6mn
+
+Market Colors:
+
+VN-Index pared morning losses during afternoon trading on significantly lower day-over-day liquidity, dragged down predominantly by VIC.
+
+CII +6%:
+
+HCMC has approved the auction plan for the 6,446 sqm land plot 1.K3.4.HH (previously known as Plot 3-5) in Thu Thiem New Urban Area. The plot has a preliminary starting price of VND1.9tn (USD72mn).
+
+The auction is expected to take place in September. It is part of HCMC's broader plan to auction 8 land plots in Thu Thiem including plots that were unsuccessfully auctioned in 2021.
+
+Plot 3-5 is relatively close to CII's Thu Thiem land plots supporting sentiment for CII and other real estate stocks.
+
+GAS +4%:
+
+Consolidated revenue +39% YoY and PBT +20% YoY (completing 81% and 78% of our respective 2026 forecasts).
+
+MWG +2%:
+
+Chairman completed the purchase of 1 million MWG shares, as previously registered, via order matching between 31 July and 13 August 2026.
+
+FOL color:
+
+- MWG: 7% prem. High demand;
+- REE: 0% prem. Low demand;
+- PNJ: 0% prem. Low demand.
