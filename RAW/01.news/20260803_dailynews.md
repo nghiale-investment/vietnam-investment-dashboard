@@ -131,8 +131,8 @@ HSC Webinar: The Valuation Disconnect
 When: Aug 3, 2026 03:30 PM Vietnam
 
 Join from PC, Mac, iPad, or Android:
-https://hsc-vn.zoom.us/j/94367653913?pwd=4nKlTKn4VAKrl1HteKQ6TxbcosuV1c.1
+https://hsc-vn.zoom.us/j/94367653913?pwd=redacted
 
-Webinar ID: 943 6765 3913
+Webinar ID: redacted
 
 Passcode: redacted

@@ -68,7 +68,7 @@ Group call at 3:00 PM GMT+7, Thursday, 6 August 2026.
 
 Registration: https://zoom.us/webinar/register/WN_gyNbOEyYSJK1pzIdsgGlGg
 
-Webinar ID: 997 0407 9207
+Webinar ID: redacted
 
 Passcode: redacted
 

@@ -83,7 +83,7 @@ Reminder: SSI Vietnam August 2026 Strategy Call.
 
 SSI's Vietnam August 2026 Strategy group call will take place at 3:00 PM GMT+7 on Thursday, 6 August 2026. Registration: https://zoom.us/webinar/register/WN_gyNbOEyYSJK1pzIdsgGlGg
 
-Webinar ID: 997 0407 9207
+Webinar ID: redacted
 
 Passcode: redacted
 
@@ -107,7 +107,7 @@ Starting Now: SSI Vietnam August 2026 Strategy Call.
 
 The Vietnam August 2026 Strategy group call is starting now. Join/Register: https://zoom.us/webinar/register/WN_gyNbOEyYSJK1pzIdsgGlGg
 
-Webinar ID: 997 0407 9207
+Webinar ID: redacted
 
 Passcode: redacted
 
@@ -224,9 +224,9 @@ DXG is currently trading on a 54.1% discount to RNAV, wide versus its three-year
 ### 09:43 - HSC - Manulife
 NVL HSC 2Q26 Earnings Call at 10am today.
 
-Link: https://hsc-vn.zoom.us/j/91916294659?pwd=ci89hJrW8NzHxJ6wEdmSsY9YzAS0TF.1
+Link: https://hsc-vn.zoom.us/j/91916294659?pwd=redacted
 
-Meeting ID: 919 1629 4659
+Meeting ID: redacted
 
 Passcode: redacted
 

@@ -13,7 +13,7 @@ status: raw_capture
 
 Monday's broker flow reviewed a 2.2% weekly VN-Index decline to 1,729.1, a continuing system funding gap despite 8.98% YTD credit growth, and Vietnam's Tier 2 status in a US transshipment-risk assessment. Company research focused on FPT's 14% seven-month earnings growth, HSC initiations or estimate changes for VGI and VHC, and SSI corporate updates spanning infrastructure, banks, steel, retail, energy and capital raising.
 
-Later updates through 16:13 added a cautious SSI market outlook and Vietcap's end-of-day market wrap. SSI said the market remained constrained by tight liquidity and funding costs after a two-day 3.61% correction, with tariff concerns and the revived state-capital restructuring theme still shaping positioning. SSI expected range-bound trading, supported by low valuation and FTSE upgrade inflows expected from September, while noting the indicative FTSE EM-tracking constituent list as a potential catalyst. Vietcap's wrap showed the VN-Index down 0.09% on sharply lower turnover of USD561mn, with net foreign selling of USD22.2mn. VIC remained the main index drag, while CII rallied on a Thu Thiem land-auction catalyst, GAS rose on strong preliminary results, and MWG gained after its chairman completed a registered 1mn-share purchase. No substantive post-09:43 text news was found in Manulife - SHS or HSC - Manulife.
+Later updates through 16:13 added a cautious SSI market outlook and Vietcap's end-of-day market wrap. SSI said the market remained constrained by tight liquidity and funding costs after a two-day 3.61% correction, with tariff concerns and the revived state-capital restructuring theme still shaping positioning. SSI expected range-bound trading, supported by low valuation and FTSE upgrade inflows expected from September, while noting the indicative FTSE EM-tracking constituent list as a potential catalyst. Vietcap's wrap showed the VN-Index down 0.09% on sharply lower turnover of USD561mn, with net foreign selling of USD22.2mn. VIC remained the main index drag, while CII rallied on a Thu Thiem land-auction catalyst, GAS rose on strong preliminary results, and MWG gained after its chairman completed a registered 1mn-share purchase. A rerun on 2026-08-18 found an additional SSI 16:26 market-wrap message that had been missed after the prior cutoff: SSI described buyers returning to SOEs and value plays as the VN-Index stabilized near 1,727, with flow concentrated in SOE/state-invested names, historically cheap stocks, and selected real estate and consumer tickers. No substantive post-09:43 text news was found in Manulife - SHS or HSC - Manulife.
 
 ## Capture Notes
 
@@ -22,6 +22,7 @@ Later updates through 16:13 added a cautious SSI market outlook and Vietcap's en
 - Media: two image-only posts in Manulife - SHS were ignored. Webinar reminders without substantive research content were not reproduced.
 - Read more controls: expanded where visible before extraction.
 - Rerun scope: post-09:43 text in Manulife - SSI, Manulife - SHS, Manulife - Vietcap, and HSC - Manulife. Live webinar registration details and passcodes were not preserved.
+- Repair note: 2026-08-18 rerun found a missed Manulife - SSI message at 16:26 on 2026-08-17. The visible WhatsApp message remained truncated behind `Read more`; the reliable visible portion was appended below and the limitation is preserved.
 
 ## Messages
 
@@ -117,3 +118,16 @@ FOL color:
 - MWG: 7% prem. High demand;
 - REE: 0% prem. Low demand;
 - PNJ: 0% prem. Low demand.
+
+### 16:26 - Manulife - SSI
+Market wrap - Mon, Aug 17, 2026
+
+Buyers Returned to SOEs and Value Plays as the VNIndex Stabilized
+
+- The VNIndex extended correction in the morning before recovering to reference level at 1727pts at the close.
+
+- Concerns over system liquidity, credit capacity and funding costs continued to weigh on the market. As such, recovery was observed gradual and cautious.
+
+- In the afternoon, more stocks climbed to positive territory and market breadth became even between gainers and losers.
+
+- Capital flows were captured by 3 groups of stocks: SOE stocks, including GAS +4.1%, BSR +2.6%, PVT +1.8%, PHR +5.2%, DPR +2.4%, POW +0.8%, boosted by Decision 40 on State capital restructuring and optimization; stocks with historical-low valuations, including FPT +0.7%, SSI +1%, and NLG +4.2%; visible message truncated after this point behind `Read more`.

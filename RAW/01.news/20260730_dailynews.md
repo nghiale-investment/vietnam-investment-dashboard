@@ -79,9 +79,9 @@ Time: Jul 30, 2026 10:00 AM Vietnam
 
 Join Zoom Meeting
 
-https://hsc-vn.zoom.us/j/96665472394?pwd=6i3WpKiQPATCtLPOpSWeI97oMALOEl.1
+https://hsc-vn.zoom.us/j/96665472394?pwd=redacted
 
-Meeting ID: 966 6547 2394
+Meeting ID: redacted
 
 Passcode: redacted
 

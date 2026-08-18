@@ -92,9 +92,9 @@ Down 6% over the past 1M, OCB is now trading on an FY26F P/B of 0.83x, 38% below
 ### 09:41 - HSC - Manulife
 PVD HSC - 2Q26 Earnings Call - at 10am today
 
-Link: https://hsc-vn.zoom.us/j/94587659849?pwd=OqKSAL1N9yJdwMZdJvAOFFi6R6TUKr.1
+Link: https://hsc-vn.zoom.us/j/94587659849?pwd=redacted
 
-Meeting ID: 945 8765 9849
+Meeting ID: redacted
 
 Passcode: redacted
 
@@ -131,7 +131,7 @@ Due to technical issue, we would like to update the earnings call's access link 
 
 Access Link : https://teams.microsoft.com/meet/443521013961369?p=lsZORdb1NoCCKq9Vdb
 
-Meeting ID: 952 1598 0380
+Meeting ID: redacted
 
 Passcode: redacted
 
@@ -180,12 +180,12 @@ Meeting password: redacted
 
 PVI Self-hosted - at 2pm
 Link: https://teams.microsoft.com/meet/43387310351763?p=EuABFnRxgWqvP323W7
-Meeting ID: 433 873 103 517 63
+Meeting ID: redacted
 Passcode: redacted
 
 CTD HSC - at 3pm
-Link: https://hsc-vn.zoom.us/j/99264072983?pwd=5GW90VvWgPXjdp7kAaqn5JaLP2nHmS.1
-Meeting ID: 992 6407 2983
+Link: https://hsc-vn.zoom.us/j/99264072983?pwd=redacted
+Meeting ID: redacted
 Passcode: redacted
 
 FPT Self-hosted - at 3:45pm
